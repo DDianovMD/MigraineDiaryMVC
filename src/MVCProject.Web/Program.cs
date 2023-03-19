@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MigraineDiary.Web.Data;
 using MigraineDiary.Web.Data.DbModels;
+using MigraineDiary.Web.Services;
+using MigraineDiary.Web.Services.Contracts;
 
 namespace MigraineDiary.Web
 {
@@ -24,7 +26,10 @@ namespace MigraineDiary.Web
                 options.Lockout.MaxFailedAccessAttempts = 10;
 
             }).AddEntityFrameworkStores<ApplicationDbContext>();
+
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddScoped<IHeadacheService, HeadacheService>();
 
             var app = builder.Build();
 

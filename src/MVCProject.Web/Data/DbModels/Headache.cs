@@ -7,7 +7,7 @@ namespace MigraineDiary.Web.Data.DbModels
     {
         public Headache()
         {
-            this.Id = new Guid().ToString();
+            this.Id = Guid.NewGuid().ToString();
             this.SharedWith = new List<ApplicationUser>();
             this.MedicationsTaken = new List<Medication>();    
         }
@@ -16,7 +16,7 @@ namespace MigraineDiary.Web.Data.DbModels
         /// Primary key.
         /// </summary>
         [Key]
-        public string Id { get; init; }
+        public string Id { get; set; }
 
         /// <summary>
         /// When did the headache start?

@@ -11,5 +11,19 @@ namespace MigraineDiary.Web.Data
             : base(options)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Headache>()
+                .HasOne(x => x.Patient)
+                .WithMany(x => x.Headaches)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            base.OnModelCreating(modelBuilder);
+        }
+
+        public DbSet<Headache> Headaches { get; set; }
+
+        public DbSet<Medication> Medications { get; set; }
     }
 }

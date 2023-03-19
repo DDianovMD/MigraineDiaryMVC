@@ -7,7 +7,7 @@ namespace MigraineDiary.Web.Data.DbModels
     {
         public Medication()
         {
-            this.Id = new Guid().ToString();
+            this.Id = Guid.NewGuid().ToString();
             this.Headaches = new List<Headache>();
         }
 
@@ -28,7 +28,7 @@ namespace MigraineDiary.Web.Data.DbModels
         /// Medication generic name. This property can be set only by administrator.
         /// </summary>
         [MaxLength(50)]
-        public string GenericName { get; set; }
+        public string? GenericName { get; set; }
 
         /// <summary>
         /// Medication dosage in a single pill.
@@ -63,7 +63,7 @@ namespace MigraineDiary.Web.Data.DbModels
         /// <summary>
         /// When was the entity created?
         /// </summary>
-        public DateTime CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
 
         /// <summary>
         /// When was the entity deleted?
