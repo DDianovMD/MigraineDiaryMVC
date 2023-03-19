@@ -31,10 +31,23 @@ namespace MigraineDiary.Web.Data.DbModels
         public DateTime EndTime { get; set; }
 
         /// <summary>
-        /// Calculated property for headache duration based on Onset and EndTime properties.
+        /// Headache days duration.
         /// </summary>
         [Required]
-        public TimeSpan HeadacheDuration { get; set; }
+        public int DurationDays { get; set; }
+
+        /// <summary>
+        /// Headache hours duration.
+        /// </summary>
+        [Required]
+        public int DurationHours { get; set; }
+
+        /// <summary>
+        /// Headache minutes duration.
+        /// </summary>
+        [Required]
+        public int DurationMinutes { get; set; }
+
 
         /// <summary>
         /// Where was the pain localized - frontal, occipital, parietal, unilateral, bilateral?

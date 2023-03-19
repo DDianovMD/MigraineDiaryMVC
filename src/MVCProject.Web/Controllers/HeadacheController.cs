@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MigraineDiary.Web.Data;
 using MigraineDiary.Web.Data.DbModels;
 using MigraineDiary.Web.Models;
@@ -37,6 +38,43 @@ namespace MigraineDiary.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(HeadacheAddFormModel addModel, string currentUserId)
         {
+            // Get current user's Id if ModelState is not valid and it's needed to be routed.
+            // If not routed on next submission currentUserId is null and ModelState is not valid again.
+            ViewData["currentUserId"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Reset custom added model errors for next validation cycle.
+            // If reset is skipped even with correct data submission on next user input, ModelState continues to not be valid!
+            ModelState[nameof(addModel.EndTime)]?.Errors.Clear();
+
+            // Check if all forms submitted have values.
+            if (!ModelState.IsValid)
+            {
+                return View(addModel);
+            }
+
+            // Get the headache duration so it can be custom validated not only if data is submitted.
+            Dictionary<string, int> headacheDuration = this.headacheService.CalculateDuration(addModel.Onset, addModel.EndTime);
+
+            // Custom headache duration validations.
+
+            // If headache ended before it started scenario.
+            if (headacheDuration["Days"] < 0 ||
+                headacheDuration["Hours"] < 0 ||
+                headacheDuration["Minutes"] < 0)
+            {
+                ModelState.AddModelError(nameof(addModel.EndTime), "Края на главоболието не може да бъде преди началото му.");
+
+                return View(addModel);
+            }
+            // Else if headache ended at the moment it just started scenario.
+            else if (headacheDuration["Days"] <= 0 &&
+                     headacheDuration["Hours"] <= 0 &&
+                     headacheDuration["Minutes"] == 0)
+            {
+                ModelState.AddModelError(nameof(addModel.EndTime), "Началото и краят на главоболието не могат да съвпадат.");
+            }
+
+            // Check again for added model errors on custom validation.
             if (!ModelState.IsValid)
             {
                 return View(addModel);
@@ -49,7 +87,9 @@ namespace MigraineDiary.Web.Controllers
                 AuraDescriptionNotes = addModel.AuraDescriptionNotes,
                 Onset = addModel.Onset,
                 EndTime = addModel.EndTime,
-                HeadacheDuration = this.headacheService.CalculateDuration(addModel.EndTime, addModel.Onset),
+                DurationDays = headacheDuration["Days"],
+                DurationHours = headacheDuration["Hours"],
+                DurationMinutes = headacheDuration["Minutes"],
                 Severity = addModel.Severity,
                 LocalizationSide = addModel.LocalizationSide,
                 PainCharacteristics = addModel.PainCharacteristics,

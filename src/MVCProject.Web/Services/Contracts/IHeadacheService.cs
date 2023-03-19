@@ -2,6 +2,6 @@
 {
     public interface IHeadacheService
     {
-        public TimeSpan CalculateDuration(DateTime endtime, DateTime onset);
+        public Dictionary<string, int> CalculateDuration(DateTime onset, DateTime endtime);
     }
 }

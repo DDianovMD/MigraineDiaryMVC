@@ -4,9 +4,16 @@ namespace MigraineDiary.Web.Services
 {
     public class HeadacheService : IHeadacheService
     {
-        public TimeSpan CalculateDuration(DateTime endTime, DateTime onset)
+        public Dictionary<string, int> CalculateDuration(DateTime onset, DateTime endtime)
         {
-            return endTime - onset;
+            TimeSpan headacheDuration = endtime - onset;
+            Dictionary<string, int> daysHoursMinutes = new Dictionary<string, int>();
+
+            daysHoursMinutes.Add("Days", headacheDuration.Days);
+            daysHoursMinutes.Add("Hours", headacheDuration.Hours);
+            daysHoursMinutes.Add("Minutes", headacheDuration.Minutes);
+            
+            return daysHoursMinutes;
         }
     }
 }
