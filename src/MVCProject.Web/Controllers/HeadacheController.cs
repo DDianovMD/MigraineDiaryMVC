@@ -125,5 +125,15 @@ namespace MigraineDiary.Web.Controllers
 
             return RedirectToAction(actionName, controllerName);
         }
+
+        public async Task<IActionResult> GetAll()
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ViewData["currentUserId"] = userId;
+
+            var registeredHeadaches = await headacheService.GetRegisteredHeadachesAsync(userId); 
+
+            return View(registeredHeadaches);
+        }
     }
 }

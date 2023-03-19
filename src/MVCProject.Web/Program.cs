@@ -30,6 +30,7 @@ namespace MigraineDiary.Web
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddScoped<IHeadacheService, HeadacheService>();
+            builder.Services.AddScoped<IMedicationService, MedicationService>();
 
             var app = builder.Build();
 
