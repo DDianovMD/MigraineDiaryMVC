@@ -56,6 +56,6 @@ namespace MigraineDiary.Web.Models
         [Display(Name = "Провокиращи фактори")]
         public string? Triggers { get; set; }
 
-        public ICollection<UsedMedicationViewModel> UsedMedications { get; set; }
+        public IEnumerable<UsedMedicationViewModel> UsedMedications { get; set; }
     }
 }

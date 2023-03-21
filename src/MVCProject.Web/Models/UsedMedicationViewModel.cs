@@ -13,7 +13,6 @@ namespace MigraineDiary.Web.Models
         public decimal NumberOfTakenPills { get; set; }
 
         public decimal DosageTaken { get; set; }
-
-        public string HeadacheId { get; set; }
     }
 }
+

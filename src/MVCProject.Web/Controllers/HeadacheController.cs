@@ -131,7 +131,7 @@ namespace MigraineDiary.Web.Controllers
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             ViewData["currentUserId"] = userId;
 
-            var registeredHeadaches = await headacheService.GetRegisteredHeadachesAsync(userId); 
+            ICollection<RegisteredHeadacheViewModel> registeredHeadaches = await headacheService.GetRegisteredHeadachesAsync(userId); 
 
             return View(registeredHeadaches);
         }

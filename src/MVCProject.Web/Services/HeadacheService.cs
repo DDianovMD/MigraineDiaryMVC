@@ -8,9 +8,9 @@ namespace MigraineDiary.Web.Services
     public class HeadacheService : IHeadacheService
     {
         private readonly ApplicationDbContext dbContext;
-        private readonly MedicationService medicationService;
+        private readonly IMedicationService medicationService;
 
-        public HeadacheService(ApplicationDbContext dbContext, MedicationService medicationService)
+        public HeadacheService(ApplicationDbContext dbContext, IMedicationService medicationService)
         {
             this.dbContext = dbContext;
             this.medicationService = medicationService;
@@ -30,8 +30,9 @@ namespace MigraineDiary.Web.Services
 
         public async Task<ICollection<RegisteredHeadacheViewModel>> GetRegisteredHeadachesAsync(string userId)
         {
-            var headaches =  await this.dbContext.Headaches
+            RegisteredHeadacheViewModel[] headaches =  await this.dbContext.Headaches
                 .Where(p => p.PatientId == userId)
+                .Include(h => h.MedicationsTaken)
                 .Select(h => new RegisteredHeadacheViewModel
                 {
                     Id = h.Id,
@@ -50,18 +51,16 @@ namespace MigraineDiary.Web.Services
                     Aura = h.Aura,
                     AuraDescriptionNotes = h.AuraDescriptionNotes,
                     Triggers = h.Triggers,
-                    UsedMedications = new HashSet<UsedMedicationViewModel>()
-                }).ToArrayAsync();
-
-            var userUsedMedications = await medicationService.GetUsedMedicationsAsync(userId);
-
-            foreach (var headache in headaches)
-            {
-                foreach (var medication in userUsedMedications.Where(m => m.HeadacheId == headache.Id))
-                {
-                    headache.UsedMedications.Add(medication);
-                }
-            }
+                    UsedMedications = h.MedicationsTaken.Select(m => new UsedMedicationViewModel
+                    {
+                        Name = m.Name,
+                        Units = m.Units,
+                        DosageTaken = this.medicationService.CalculateWholeTakenDosage(m.SinglePillDosage, m.NumberOfTakenPills),
+                        NumberOfTakenPills = m.NumberOfTakenPills,
+                        SinglePillDosage = m.SinglePillDosage,
+                    })
+                })
+                .ToArrayAsync();
 
             return headaches;
         }
