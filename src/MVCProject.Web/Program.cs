@@ -31,6 +31,7 @@ namespace MigraineDiary.Web
 
             builder.Services.AddScoped<IHeadacheService, HeadacheService>();
             builder.Services.AddScoped<IMedicationService, MedicationService>();
+            builder.Services.AddScoped<IHIT6ScaleService, HIT6ScaleService>();
 
             var app = builder.Build();
 

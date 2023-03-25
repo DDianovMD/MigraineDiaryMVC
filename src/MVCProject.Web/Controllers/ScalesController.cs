@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using MigraineDiary.Web.Data;
 using MigraineDiary.Web.Data.DbModels;
 using MigraineDiary.Web.Models;
+using MigraineDiary.Web.Services;
+using MigraineDiary.Web.Services.Contracts;
 using System.Security.Claims;
 
 namespace MigraineDiary.Web.Controllers
@@ -11,10 +13,13 @@ namespace MigraineDiary.Web.Controllers
     public class ScalesController : Controller
     {
         private readonly ApplicationDbContext dbContext;
+        private readonly IHIT6ScaleService HIT6ScaleService;
 
-        public ScalesController(ApplicationDbContext dbContext)
+        public ScalesController(ApplicationDbContext dbContext,
+            IHIT6ScaleService HIT6scaleService)
         {
             this.dbContext = dbContext;
+            this.HIT6ScaleService = HIT6scaleService;
         }
 
         public IActionResult Index()
@@ -67,62 +72,32 @@ namespace MigraineDiary.Web.Controllers
 
             // Custom model validation for left questions unanswered and sent with default value
             // or sent with changed radio button's value through page's HTML.
-            if (addModel.FifthQuestionAnswer == "NoAnswer" ||
-                (addModel.FirstQuestionAnswer != "Never" &&
-                addModel.FirstQuestionAnswer != "Rarely" &&
-                addModel.FirstQuestionAnswer != "Sometimes" &&
-                addModel.FirstQuestionAnswer != "Very often" &&
-                addModel.FirstQuestionAnswer != "Always"))
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.FirstQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.FirstQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
             
-            if (addModel.SecondQuestionAnswer == "NoAnswer" ||
-                (addModel.SecondQuestionAnswer != "Never" &&
-                addModel.SecondQuestionAnswer != "Rarely" &&
-                addModel.SecondQuestionAnswer != "Sometimes" &&
-                addModel.SecondQuestionAnswer != "Very often" &&
-                addModel.SecondQuestionAnswer != "Always"))
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.SecondQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.SecondQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
             
-            if (addModel.ThirdQuestionAnswer == "NoAnswer" ||
-                (addModel.ThirdQuestionAnswer != "Never" &&
-                addModel.ThirdQuestionAnswer != "Rarely" &&
-                addModel.ThirdQuestionAnswer != "Sometimes" &&
-                addModel.ThirdQuestionAnswer != "Very often" &&
-                addModel.ThirdQuestionAnswer != "Always"))
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.ThirdQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.ThirdQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
             
-            if (addModel.FourthQuestionAnswer == "NoAnswer" ||
-                (addModel.FourthQuestionAnswer != "Never" &&
-                addModel.FourthQuestionAnswer != "Rarely" &&
-                addModel.FourthQuestionAnswer != "Sometimes" &&
-                addModel.FourthQuestionAnswer != "Very often" &&
-                addModel.FourthQuestionAnswer != "Always"))
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.FourthQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.FourthQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
             
-            if (addModel.FifthQuestionAnswer == "NoAnswer" ||
-                (addModel.FifthQuestionAnswer != "Never" &&
-                addModel.FifthQuestionAnswer != "Rarely" &&
-                addModel.FifthQuestionAnswer != "Sometimes" &&
-                addModel.FifthQuestionAnswer != "Very often" &&
-                addModel.FifthQuestionAnswer != "Always"))
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.FifthQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.FifthQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
             
-            if (addModel.SixthQuestionAnswer == "NoAnswer" ||
-                (addModel.SixthQuestionAnswer != "Never" &&
-                addModel.SixthQuestionAnswer != "Rarely" &&
-                addModel.SixthQuestionAnswer != "Sometimes" &&
-                addModel.SixthQuestionAnswer != "Very often" &&
-                addModel.SixthQuestionAnswer != "Always"))
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.SixthQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.SixthQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
@@ -134,6 +109,16 @@ namespace MigraineDiary.Web.Controllers
             }
 
             // Assign valid answers to DbModel
+            string[] answers = new string[]
+            {
+                addModel.FirstQuestionAnswer,
+                addModel.SecondQuestionAnswer,
+                addModel.ThirdQuestionAnswer,
+                addModel.FourthQuestionAnswer,
+                addModel.FifthQuestionAnswer,
+                addModel.SixthQuestionAnswer,
+            };
+
             HIT6Scale HIT6Scale = new HIT6Scale()
             {
                 FirstQuestionAnswer = addModel.FirstQuestionAnswer,
@@ -143,9 +128,7 @@ namespace MigraineDiary.Web.Controllers
                 FifthQuestionAnswer = addModel.FifthQuestionAnswer,
                 SixthQuestionAnswer = addModel.SixthQuestionAnswer,
                 PatientId = currentUserId,
-                // TODO: Add HIT6ScaleService and implement method to calculate total score and assign it.
-                
-                // TotalScore = HIT6ScaleService.CalculateTotalScore(); - must be implemented.
+                TotalScore = this.HIT6ScaleService.CalculateTotalScore(answers),
             };
 
             await this.dbContext.HIT6Scales.AddAsync(HIT6Scale);
