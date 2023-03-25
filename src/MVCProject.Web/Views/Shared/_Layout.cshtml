@@ -1,5 +1,9 @@
 ﻿@inject SignInManager<ApplicationUser> SignInManager
 
+@{
+    ViewData["currentUserId"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,10 +34,13 @@
                         @if (SignInManager.IsSignedIn(User))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Headache" asp-action="Add">Регистрирай главоболие</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Headache" asp-action="Add" asp-route-currentUserId=@ViewData["currentUserId"]>Регистрирай главоболие</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Headache" asp-action="GetAll">Моите главоболия</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Headache" asp-action="GetAll" asp-route-currentUserId=@ViewData["currentUserId"]>Моите главоболия</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Scales" asp-action="AddHIT6Scale" asp-route-currentUserId=@ViewData["currentUserId"]>Добави HIT6 скала</a>
                             </li>
                         }
                     </ul>
