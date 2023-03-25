@@ -19,11 +19,18 @@ namespace MigraineDiary.Web.Data
                 .WithMany(x => x.Headaches)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<HIT6Scale>()
+                .HasOne(x => x.Patient)
+                .WithMany(x => x.HIT6Scales)
+                .OnDelete(DeleteBehavior.NoAction);
+
             base.OnModelCreating(modelBuilder);
         }
 
         public DbSet<Headache> Headaches { get; set; }
 
         public DbSet<Medication> Medications { get; set; }
+
+        public DbSet<HIT6Scale> HIT6Scales { get; set; }
     }
 }

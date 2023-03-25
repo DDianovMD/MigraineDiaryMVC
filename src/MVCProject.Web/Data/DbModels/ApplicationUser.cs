@@ -12,6 +12,8 @@ namespace MigraineDiary.Web.Data.DbModels
         {
             this.Headaches = new List<Headache>();
             this.SharedWithMe = new List<Headache>();
+            this.HIT6Scales = new List<HIT6Scale>();
+            this.SharedHIT6ScalesWithMe = new List<HIT6Scale>();
         }
 
         /// <summary>
@@ -48,6 +50,18 @@ namespace MigraineDiary.Web.Data.DbModels
         /// </summary>
         [InverseProperty("SharedWith")]
         public ICollection<Headache> SharedWithMe { get; set;}
+
+        /// <summary>
+        /// HIT6 scales registered by user in role "Patient".
+        /// </summary>
+        [InverseProperty("Patient")]
+        public ICollection<HIT6Scale> HIT6Scales { get; set;}
+
+        /// <summary>
+        /// Patient's registered HIT6 scales shared with user in role "Doctor".
+        /// </summary>
+        [InverseProperty("SharedWith")]
+        public ICollection<HIT6Scale> SharedHIT6ScalesWithMe { get; set; }
 
     }
 }
