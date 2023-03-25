@@ -16,7 +16,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Migraine Diary</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -26,21 +26,21 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Начало</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Начало</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Поверителност</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Поверителност</a>
                         </li>
                         @if (SignInManager.IsSignedIn(User))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Headache" asp-action="Add" asp-route-currentUserId=@ViewData["currentUserId"]>Регистрирай главоболие</a>
+                                <a class="nav-link text-white" asp-area="" asp-controller="Headache" asp-action="Add" asp-route-currentUserId=@ViewData["currentUserId"]>Регистрирай главоболие</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Headache" asp-action="GetAll" asp-route-currentUserId=@ViewData["currentUserId"]>Моите главоболия</a>
+                                <a class="nav-link text-white" asp-area="" asp-controller="Headache" asp-action="GetAll" asp-route-currentUserId=@ViewData["currentUserId"]>Моите главоболия</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Scales" asp-action="AddHIT6Scale" asp-route-currentUserId=@ViewData["currentUserId"]>Добави HIT6 скала</a>
+                                <a class="nav-link text-white" asp-area="" asp-controller="Scales" asp-action="AddHIT6Scale" asp-route-currentUserId=@ViewData["currentUserId"]>Добави HIT6 скала</a>
                             </li>
                         }
                     </ul>
@@ -55,9 +55,9 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer bg-primary h-5 text-white">
         <div class="container">
-            &copy; 2023 - @DateTime.UtcNow.Year - <a asp-area="" asp-controller="Home" asp-action="Privacy">Поверителност</a>
+            &copy; 2023 - @DateTime.UtcNow.Year - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-white">Поверителност</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
