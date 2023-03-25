@@ -1,5 +1,6 @@
 ﻿using MigraineDiary.Web.Data.Common.Contracts;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MigraineDiary.Web.Data.DbModels
 {
@@ -8,7 +9,6 @@ namespace MigraineDiary.Web.Data.DbModels
         public Medication()
         {
             this.Id = Guid.NewGuid().ToString();
-            this.Headaches = new List<Headache>();
         }
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace MigraineDiary.Web.Data.DbModels
         /// </summary>
         [Required]
         [MaxLength(50)]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         /// <summary>
         /// Medication generic name. This property can be set only by administrator.
@@ -42,7 +42,7 @@ namespace MigraineDiary.Web.Data.DbModels
         /// </summary>
         [Required]
         [MaxLength(5)]
-        public string Units { get; set; }
+        public string Units { get; set; } = null!;
 
         /// <summary>
         /// How many pills did the patient take while in pain.
@@ -51,9 +51,17 @@ namespace MigraineDiary.Web.Data.DbModels
         public decimal NumberOfTakenPills { get; set; } // 1 / 1,25 / 1,5 еtc...
 
         /// <summary>
-        /// Many to many relation with headaches.
+        /// One to many relation with headaches.
         /// </summary>
-        public ICollection<Headache> Headaches { get; set; }
+        [Required]
+        public string HeadacheId { get; set; } = null!;
+
+        /// <summary>
+        /// Navigational property.
+        /// </summary>
+        [Required]
+        [ForeignKey(nameof(HeadacheId))]
+        public Headache Headache { get; set; } = null!;
 
         /// <summary>
         /// Boolean flag indicating if the entity is soft deleted.

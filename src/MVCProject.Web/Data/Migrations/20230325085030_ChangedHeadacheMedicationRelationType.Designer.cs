@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MigraineDiary.Web.Data;
 
@@ -11,9 +12,10 @@ using MigraineDiary.Web.Data;
 namespace MigraineDiary.Web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230325085030_ChangedHeadacheMedicationRelationType")]
+    partial class ChangedHeadacheMedicationRelationType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +36,7 @@ namespace MigraineDiary.Web.Migrations
 
                     b.HasIndex("SharedWithMeId");
 
-                    b.ToTable("ApplicationUserHeadache", (string)null);
+                    b.ToTable("ApplicationUserHeadache");
                 });
 
             modelBuilder.Entity("ApplicationUserHIT6Scale", b =>
@@ -49,7 +51,7 @@ namespace MigraineDiary.Web.Migrations
 
                     b.HasIndex("SharedWithId");
 
-                    b.ToTable("ApplicationUserHIT6Scale", (string)null);
+                    b.ToTable("ApplicationUserHIT6Scale");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -332,7 +334,7 @@ namespace MigraineDiary.Web.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("Headaches", (string)null);
+                    b.ToTable("Headaches");
                 });
 
             modelBuilder.Entity("MigraineDiary.Web.Data.DbModels.HIT6Scale", b =>
@@ -390,7 +392,7 @@ namespace MigraineDiary.Web.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("HIT6Scales", (string)null);
+                    b.ToTable("HIT6Scales");
                 });
 
             modelBuilder.Entity("MigraineDiary.Web.Data.DbModels.Medication", b =>
@@ -435,7 +437,7 @@ namespace MigraineDiary.Web.Migrations
 
                     b.HasIndex("HeadacheId");
 
-                    b.ToTable("Medications", (string)null);
+                    b.ToTable("Medications");
                 });
 
             modelBuilder.Entity("ApplicationUserHeadache", b =>
