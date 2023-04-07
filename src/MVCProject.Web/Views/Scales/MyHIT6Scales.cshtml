@@ -17,8 +17,8 @@ else
         <div class="row">
             @foreach (var scale in Model)
             {
-                <h4>HIT-6 скала № @scaleCounter, Дата на добавяне: @scale.CreatedOn.ToShortDateString()</h4>
-                <hr />
+                <h4 class="text-center">HIT-6 скала № @scaleCounter</h4>
+                <p class="text-center mb-5">Дата на добавяне: @scale.CreatedOn.ToShortDateString()</p>
                 <p><i>1. Когато имате главоболие, колко често болката е много силна?</i></p>
                 @if (scale.FirstQuestionAnswer == "Never")
                 {
@@ -161,7 +161,13 @@ else
                     <p>Отговор: винаги.</p>
                 }
 
+                <p><b>Резултат: <a href="#" title="Разбери как да тълкуваш резултата като кликнеш тук.">@scale.TotalScore</a> точки.</b></p>
                 scaleCounter++;
+                
+                <div class="mb-3">
+                <a asp-controller="Scales" asp-action="EditHIT6Scale" asp-route-id="@scale.Id" class="btn btn-warning border-dark">Редактирай</a>
+                </div>
+                <hr />
             }
         </div>
     </div>

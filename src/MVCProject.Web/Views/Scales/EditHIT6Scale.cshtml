@@ -1,0 +1,86 @@
+﻿@model HIT6ScaleViewModel
+
+@{
+    ViewData["Title"] = "Редактирай HIT6 скала";
+}
+
+<header>
+    <h1>Редактиране на HIT-6 скала.</h1>
+</header>
+<main>
+    <section>
+        <form asp-controller="Scales" asp-action="EditHIT6Scale" asp-route-currentUserId=@ViewData["currentUserId"] method="post">
+            <div class="mb-3">
+                <label asp-for="FirstQuestionAnswer">
+                    1. Когато имате главоболие, колко често болката е много силна?
+                </label> <br />
+                <input type="radio" asp-for="FirstQuestionAnswer" value="Never" /> Никога<br />
+                <input type="radio" asp-for="FirstQuestionAnswer" value="Rarely" /> Рядко<br />
+                <input type="radio" asp-for="FirstQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="FirstQuestionAnswer" value="Very often" /> Много често<br />
+                <input type="radio" asp-for="FirstQuestionAnswer" value="Always" /> Винаги<br />
+                <span asp-validation-for="FirstQuestionAnswer" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="SecondQuestionAnswer">
+                    2. Колко често главоболията са ограничавали Вашите обичайни дейности, напр.<br />
+                    домакинска работа, професионална работа, учебна дейност, социални активности?
+                </label> <br />
+                <input type="radio" asp-for="SecondQuestionAnswer" value="Never" /> Никога<br />
+                <input type="radio" asp-for="SecondQuestionAnswer" value="Rarely" /> Рядко<br />
+                <input type="radio" asp-for="SecondQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="SecondQuestionAnswer" value="Very often" /> Много често<br />
+                <input type="radio" asp-for="SecondQuestionAnswer" value="Always" /> Винаги<br />
+                <span asp-validation-for="SecondQuestionAnswer" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ThirdQuestionAnswer">
+                    3. Когато имате главоболие, колко често Ви се е приисквало да полегнете?
+                </label> <br />
+                <input type="radio" asp-for="ThirdQuestionAnswer" value="Never" /> Никога<br />
+                <input type="radio" asp-for="ThirdQuestionAnswer" value="Rarely" /> Рядко<br />
+                <input type="radio" asp-for="ThirdQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="ThirdQuestionAnswer" value="Very often" /> Много често<br />
+                <input type="radio" asp-for="ThirdQuestionAnswer" value="Always" /> Винаги<br />
+                <span asp-validation-for="ThirdQuestionAnswer" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="FourthQuestionAnswer">
+                    4. Колко често сте се чувствали твърде изморени за извършване на Вашите<br />
+                    професионални и всекидневни задължения заради Вашите главоболия?
+                </label> <br />
+                <input type="radio" asp-for="FourthQuestionAnswer" value="Never" /> Никога<br />
+                <input type="radio" asp-for="FourthQuestionAnswer" value="Rarely" /> Рядко<br />
+                <input type="radio" asp-for="FourthQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="FourthQuestionAnswer" value="Very often" /> Много често<br />
+                <input type="radio" asp-for="FourthQuestionAnswer" value="Always" /> Винаги<br />
+                <span asp-validation-for="FourthQuestionAnswer" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="FifthQuestionAnswer">
+                    5. Колко често Ви е идвало до гуша или сте се чувствали раздразнени поради Вашите главоболия?
+                </label> <br />
+                <input type="radio" asp-for="FifthQuestionAnswer" value="Never" /> Никога<br />
+                <input type="radio" asp-for="FifthQuestionAnswer" value="Rarely" /> Рядко<br />
+                <input type="radio" asp-for="FifthQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="FifthQuestionAnswer" value="Very often" /> Много често<br />
+                <input type="radio" asp-for="FifthQuestionAnswer" value="Always" /> Винаги<br />
+                <span asp-validation-for="FifthQuestionAnswer" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="SixthQuestionAnswer">
+                    6. Колко често главоболията са пречили на концентрацията Ви?
+                </label> <br />
+                <input type="radio" asp-for="SixthQuestionAnswer" value="Never" /> Никога<br />
+                <input type="radio" asp-for="SixthQuestionAnswer" value="Rarely" /> Рядко<br />
+                <input type="radio" asp-for="SixthQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="SixthQuestionAnswer" value="Very often" /> Много често<br />
+                <input type="radio" asp-for="SixthQuestionAnswer" value="Always" /> Винаги<br />
+                <span asp-validation-for="SixthQuestionAnswer" class="text-danger"></span>
+            </div>
+
+            <input type="submit" class="btn btn-primary" value="Запази" onclick="confirmEdit();" />
+        </form>
+    </section>
+</main>
+<script src="~/js/confirmEdit.js"></script>
