@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MigraineDiary.Web.Data;
 using MigraineDiary.Web.Data.DbModels;
 using MigraineDiary.Web.Models;
@@ -65,7 +66,7 @@ namespace MigraineDiary.Web.Controllers
 
             // Check if all Model properties have values.
             // Here default values are evaluated as valid so it's needed custom validation if this one pass.
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
             {
                 return View(addModel);
             }
@@ -76,27 +77,27 @@ namespace MigraineDiary.Web.Controllers
             {
                 ModelState.AddModelError(nameof(addModel.FirstQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
-            
+
             if (this.HIT6ScaleService.ValidateAnswer(addModel.SecondQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.SecondQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
-            
+
             if (this.HIT6ScaleService.ValidateAnswer(addModel.ThirdQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.ThirdQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
-            
+
             if (this.HIT6ScaleService.ValidateAnswer(addModel.FourthQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.FourthQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
-            
+
             if (this.HIT6ScaleService.ValidateAnswer(addModel.FifthQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.FifthQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
-            
+
             if (this.HIT6ScaleService.ValidateAnswer(addModel.SixthQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.SixthQuestionAnswer), "Необходимо е да отбележите отговор.");
@@ -139,6 +140,44 @@ namespace MigraineDiary.Web.Controllers
             string controllerName = nameof(HomeController).Substring(0, nameof(HomeController).Length - "Controller".Length);
 
             return RedirectToAction(actionName, controllerName);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MyHIT6Scales()
+        {
+            // Get current user's Id
+            ViewData["currentUserId"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Get user's scales ordered by last added first
+            HIT6Scale[] currentUserScales = await dbContext.HIT6Scales
+                                                      .Where(x => x.IsDeleted == false && x.PatientId == (string)ViewData["currentUserId"]!)
+                                                      .AsNoTracking()
+                                                      .OrderByDescending(x => x.CreatedOn)
+                                                      .ToArrayAsync();
+
+            // Initialize collection of view models
+            List<HIT6ScaleViewModel> scalesViewModels = new List<HIT6ScaleViewModel>();
+
+            // Fill the collection of view models
+            foreach (var scale in currentUserScales)
+            {
+                HIT6ScaleViewModel currentScale = new HIT6ScaleViewModel
+                {
+                    Id = scale.Id,
+                    FirstQuestionAnswer = scale.FirstQuestionAnswer,
+                    SecondQuestionAnswer = scale.SecondQuestionAnswer,
+                    ThirdQuestionAnswer = scale.ThirdQuestionAnswer,
+                    FourthQuestionAnswer = scale.FourthQuestionAnswer,
+                    FifthQuestionAnswer = scale.FifthQuestionAnswer,
+                    SixthQuestionAnswer = scale.SixthQuestionAnswer,
+                    TotalScore = scale.TotalScore,
+                    CreatedOn = scale.CreatedOn,
+                };
+
+                scalesViewModels.Add(currentScale);
+            }
+
+            return View(scalesViewModels);
         }
     }
 }
