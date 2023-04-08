@@ -92,8 +92,8 @@ else
 
                 <p>
                     <i>
-                    4. Колко често сте се чувствали твърде изморени за извършване на Вашите<br />
-                    професионални и всекидневни задължения заради Вашите главоболия?
+                        4. Колко често сте се чувствали твърде изморени за извършване на Вашите<br />
+                        професионални и всекидневни задължения заради Вашите главоболия?
                     </i>
                 </p>
                 @if (scale.FourthQuestionAnswer == "Never")
@@ -162,13 +162,16 @@ else
                 }
 
                 <p><b>Резултат: <a href="#" title="Разбери как да тълкуваш резултата като кликнеш тук.">@scale.TotalScore</a> точки.</b></p>
-                scaleCounter++;
-                
+
                 <div class="mb-3">
-                <a asp-controller="Scales" asp-action="EditHIT6Scale" asp-route-id="@scale.Id" class="btn btn-warning border-dark">Редактирай</a>
+                    <a asp-controller="Scales" asp-action="EditHIT6Scale" asp-route-id="@scale.Id" class="btn btn-warning border-dark">Редактирай</a>
+
+                    <a asp-controller="Scales" asp-action="DeleteHIT6Scale" asp-route-hit6scaleId="@scale.Id" asp-route-currentUserId=@ViewData["currentUserId"] class="btn btn-danger border-dark" style="position:relative; right: -30px;" onclick="confirmDelete(@scaleCounter);">Изтрий</a>
                 </div>
                 <hr />
+                scaleCounter++;
             }
         </div>
     </div>
 }
+<script src="~/js/confirmDelete.js"></script>

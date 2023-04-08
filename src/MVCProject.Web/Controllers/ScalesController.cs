@@ -335,5 +335,45 @@ namespace MigraineDiary.Web.Controllers
 
             return RedirectToAction(actionName, controllerName);
         }
+
+        public async Task<IActionResult> DeleteHIT6Scale(string hit6scaleId, string currentUserId)
+        {
+            // Get current user's Id.
+            ViewData["currentUserId"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Check if hacker is trying to change userId through page's HTML with other user's Id.
+            // Return NotFound if sent user Id is different.
+            if (currentUserId != ViewData["currentUserId"]!.ToString())
+            {
+                return NotFound();
+            }
+
+            // Get HIT-6 scale that is going to be deleted.
+            HIT6Scale? HIT6Scale = await this.dbContext.HIT6Scales.FirstOrDefaultAsync(x => x.Id == hit6scaleId);
+
+            // Boolean flag evaluating if logged user has the scale that is going to be edited.
+            bool loggedUserHasScale = this.dbContext.Users
+                                                    .Where(x => x.Id == currentUserId)
+                                                    .Include(x => x.HIT6Scales)
+                                                    .Any(x => x.HIT6Scales.Any(x => x.Id == hit6scaleId));
+
+            if (HIT6Scale != null && loggedUserHasScale)
+            {
+                HIT6Scale.IsDeleted = true;
+                HIT6Scale.DeletedOn = DateTime.UtcNow;
+
+                await this.dbContext.SaveChangesAsync();
+
+                // Get controller's name and action's name without using magic strings.
+                string actionName = nameof(ScalesController.MyHIT6Scales);
+                string controllerName = nameof(ScalesController).Substring(0, nameof(ScalesController).Length - "Controller".Length);
+
+                return RedirectToAction(actionName, controllerName);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
     }
 }
