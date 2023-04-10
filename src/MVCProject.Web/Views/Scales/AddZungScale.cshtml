@@ -1,0 +1,241 @@
+﻿@model ZungScaleAddModel
+
+@{
+    ViewData["Title"] = "Add Zung's scale for anxiety";
+}
+
+<header>
+    <h1 class="text-center">Скала на Zung за тревожност</h1>
+</header>
+<main>
+    <section class="text-center">
+        <h3 class="mb-3">
+            Моля, посочете доколко следните твърдения се отнасят за Вас.
+        </h3>
+    </section>
+    <section>
+        <form asp-controller="Scales" asp-action="AddZungScale" asp-route-currentUserId=@ViewData["currentUserId"] method="post">
+            <div class="mb-3">
+                <label asp-for="FirstQuestionAnswer">
+                    1. Чувствам се по-нервен и тревожен от обикновено.
+                </label> <br />
+                <input type="radio" asp-for="FirstQuestionAnswer" value="NoAnswer" checked="checked" style="display: none;" />
+                <input type="radio" asp-for="FirstQuestionAnswer" value="Never or rarely" /> Никога или рядко<br />
+                <input type="radio" asp-for="FirstQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="FirstQuestionAnswer" value="Often" /> Често<br />
+                <input type="radio" asp-for="FirstQuestionAnswer" value="Very often or always" /> Много често или винаги<br />
+                <span asp-validation-for="FirstQuestionAnswer" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="SecondQuestionAnswer">
+                    2. Страхувам се без причина.
+                </label> <br />
+                <input type="radio" asp-for="SecondQuestionAnswer" value="NoAnswer" checked="checked" style="display: none;" />
+                <input type="radio" asp-for="SecondQuestionAnswer" value="Never or rarely" /> Никога или рядко<br />
+                <input type="radio" asp-for="SecondQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="SecondQuestionAnswer" value="Often" /> Често<br />
+                <input type="radio" asp-for="SecondQuestionAnswer" value="Very often or always" /> Много често или винаги<br />
+                <span asp-validation-for="SecondQuestionAnswer" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ThirdQuestionAnswer">
+                    3. Разстройвам се лесно или изпадам в паника.
+                </label> <br />
+                <input type="radio" asp-for="ThirdQuestionAnswer" value="NoAnswer" checked="checked" style="display: none;" />
+                <input type="radio" asp-for="ThirdQuestionAnswer" value="Never or rarely" /> Никога или рядко<br />
+                <input type="radio" asp-for="ThirdQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="ThirdQuestionAnswer" value="Often" /> Често<br />
+                <input type="radio" asp-for="ThirdQuestionAnswer" value="Very often or always" /> Много често или винаги<br />
+                <span asp-validation-for="ThirdQuestionAnswer" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="FourthQuestionAnswer">
+                    4. Чувствам се, че се разпадам и че катастрофирам.
+                </label> <br />
+                <input type="radio" asp-for="FourthQuestionAnswer" value="NoAnswer" checked="checked" style="display: none;" />
+                <input type="radio" asp-for="FourthQuestionAnswer" value="Never or rarely" /> Никога или рядко<br />
+                <input type="radio" asp-for="FourthQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="FourthQuestionAnswer" value="Often" /> Често<br />
+                <input type="radio" asp-for="FourthQuestionAnswer" value="Very often or always" /> Много често или винаги<br />
+                <span asp-validation-for="FourthQuestionAnswer" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="FifthQuestionAnswer">
+                    5. Чувствам, че всичко е наред и нищо лошо няма да се случи.
+                </label> <br />
+                <input type="radio" asp-for="FifthQuestionAnswer" value="NoAnswer" checked="checked" style="display: none;" />
+                <input type="radio" asp-for="FifthQuestionAnswer" value="Never or rarely" /> Никога или рядко<br />
+                <input type="radio" asp-for="FifthQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="FifthQuestionAnswer" value="Often" /> Често<br />
+                <input type="radio" asp-for="FifthQuestionAnswer" value="Very often or always" /> Много често или винаги<br />
+                <span asp-validation-for="FifthQuestionAnswer" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="SixthQuestionAnswer">
+                    6. Ръцете и краката ми треперят.
+                </label> <br />
+                <input type="radio" asp-for="SixthQuestionAnswer" value="NoAnswer" checked="checked" style="display: none;" />
+                <input type="radio" asp-for="SixthQuestionAnswer" value="Never or rarely" /> Никога или рядко<br />
+                <input type="radio" asp-for="SixthQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="SixthQuestionAnswer" value="Often" /> Често<br />
+                <input type="radio" asp-for="SixthQuestionAnswer" value="Very often or always" /> Много често или винаги<br />
+                <span asp-validation-for="SixthQuestionAnswer" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="SeventhQuestionAnswer">
+                    7. Имам болки в главата, шията или в гърба.
+                </label> <br />
+                <input type="radio" asp-for="SeventhQuestionAnswer" value="NoAnswer" checked="checked" style="display: none;" />
+                <input type="radio" asp-for="SeventhQuestionAnswer" value="Never or rarely" /> Никога или рядко<br />
+                <input type="radio" asp-for="SeventhQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="SeventhQuestionAnswer" value="Often" /> Често<br />
+                <input type="radio" asp-for="SeventhQuestionAnswer" value="Very often or always" /> Много често или винаги<br />
+                <span asp-validation-for="SeventhQuestionAnswer" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="EighthQuestionAnswer">
+                    8. Чувствам се слаб и се уморявам лесно.
+                </label> <br />
+                <input type="radio" asp-for="EighthQuestionAnswer" value="NoAnswer" checked="checked" style="display: none;" />
+                <input type="radio" asp-for="EighthQuestionAnswer" value="Never or rarely" /> Никога или рядко<br />
+                <input type="radio" asp-for="EighthQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="EighthQuestionAnswer" value="Often" /> Често<br />
+                <input type="radio" asp-for="EighthQuestionAnswer" value="Very often or always" /> Много често или винаги<br />
+                <span asp-validation-for="EighthQuestionAnswer" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="NinthQuestionAnswer">
+                    9. Чувствам се спокоен и мога да седя лесно.
+                </label> <br />
+                <input type="radio" asp-for="NinthQuestionAnswer" value="NoAnswer" checked="checked" style="display: none;" />
+                <input type="radio" asp-for="NinthQuestionAnswer" value="Never or rarely" /> Никога или рядко<br />
+                <input type="radio" asp-for="NinthQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="NinthQuestionAnswer" value="Often" /> Често<br />
+                <input type="radio" asp-for="NinthQuestionAnswer" value="Very often or always" /> Много често или винаги<br />
+                <span asp-validation-for="NinthQuestionAnswer" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="TenthQuestionAnswer">
+                    10. Усещам, че сърцето ми бие бързо.
+                </label> <br />
+                <input type="radio" asp-for="TenthQuestionAnswer" value="NoAnswer" checked="checked" style="display: none;" />
+                <input type="radio" asp-for="TenthQuestionAnswer" value="Never or rarely" /> Никога или рядко<br />
+                <input type="radio" asp-for="TenthQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="TenthQuestionAnswer" value="Often" /> Често<br />
+                <input type="radio" asp-for="TenthQuestionAnswer" value="Very often or always" /> Много често или винаги<br />
+                <span asp-validation-for="TenthQuestionAnswer" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="EleventhQuestionAnswer">
+                    11. Имам пристъпи от световъртеж.
+                </label> <br />
+                <input type="radio" asp-for="EleventhQuestionAnswer" value="NoAnswer" checked="checked" style="display: none;" />
+                <input type="radio" asp-for="EleventhQuestionAnswer" value="Never or rarely" /> Никога или рядко<br />
+                <input type="radio" asp-for="EleventhQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="EleventhQuestionAnswer" value="Often" /> Често<br />
+                <input type="radio" asp-for="EleventhQuestionAnswer" value="Very often or always" /> Много често или винаги<br />
+                <span asp-validation-for="EleventhQuestionAnswer" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="TwelfthQuestionAnswer">
+                    12.Имам припадъци или имам чувството, че ще припадна.
+                </label> <br />
+                <input type="radio" asp-for="TwelfthQuestionAnswer" value="NoAnswer" checked="checked" style="display: none;" />
+                <input type="radio" asp-for="TwelfthQuestionAnswer" value="Never or rarely" /> Никога или рядко<br />
+                <input type="radio" asp-for="TwelfthQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="TwelfthQuestionAnswer" value="Often" /> Често<br />
+                <input type="radio" asp-for="TwelfthQuestionAnswer" value="Very often or always" /> Много често или винаги<br />
+                <span asp-validation-for="TwelfthQuestionAnswer" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ThirteenthQuestionAnswer">
+                    13. Мога лесно да вдишвам и да издишвам.
+                </label> <br />
+                <input type="radio" asp-for="ThirteenthQuestionAnswer" value="NoAnswer" checked="checked" style="display: none;" />
+                <input type="radio" asp-for="ThirteenthQuestionAnswer" value="Never or rarely" /> Никога или рядко<br />
+                <input type="radio" asp-for="ThirteenthQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="ThirteenthQuestionAnswer" value="Often" /> Често<br />
+                <input type="radio" asp-for="ThirteenthQuestionAnswer" value="Very often or always" /> Много често или винаги<br />
+                <span asp-validation-for="ThirteenthQuestionAnswer" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="FourteenthQuestionAnswer">
+                    14. Имам чувство на изтръпване пръстите на ръцете или краката.
+                </label> <br />
+                <input type="radio" asp-for="FourteenthQuestionAnswer" value="NoAnswer" checked="checked" style="display: none;" />
+                <input type="radio" asp-for="FourteenthQuestionAnswer" value="Never or rarely" /> Никога или рядко<br />
+                <input type="radio" asp-for="FourteenthQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="FourteenthQuestionAnswer" value="Often" /> Често<br />
+                <input type="radio" asp-for="FourteenthQuestionAnswer" value="Very often or always" /> Много често или винаги<br />
+                <span asp-validation-for="FourteenthQuestionAnswer" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="FifteenthQuestionAnswer">
+                    15. Имам болки в стомаха или лошо храносмилане.
+                </label> <br />
+                <input type="radio" asp-for="FifteenthQuestionAnswer" value="NoAnswer" checked="checked" style="display: none;" />
+                <input type="radio" asp-for="FifteenthQuestionAnswer" value="Never or rarely" /> Никога или рядко<br />
+                <input type="radio" asp-for="FifteenthQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="FifteenthQuestionAnswer" value="Often" /> Често<br />
+                <input type="radio" asp-for="FifteenthQuestionAnswer" value="Very often or always" /> Много често или винаги<br />
+                <span asp-validation-for="FifteenthQuestionAnswer" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="SixteenthQuestionAnswer">
+                    16. Ходя по малка нужда по-често от обикновено.
+                </label> <br />
+                <input type="radio" asp-for="SixteenthQuestionAnswer" value="NoAnswer" checked="checked" style="display: none;" />
+                <input type="radio" asp-for="SixteenthQuestionAnswer" value="Never or rarely" /> Никога или рядко<br />
+                <input type="radio" asp-for="SixteenthQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="SixteenthQuestionAnswer" value="Often" /> Често<br />
+                <input type="radio" asp-for="SixteenthQuestionAnswer" value="Very often or always" /> Много често или винаги<br />
+                <span asp-validation-for="SixteenthQuestionAnswer" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="SeventeenthQuestionAnswer">
+                    17. Ръцете ми обикновено са сухи и топли.
+                </label> <br />
+                <input type="radio" asp-for="SeventeenthQuestionAnswer" value="NoAnswer" checked="checked" style="display: none;" />
+                <input type="radio" asp-for="SeventeenthQuestionAnswer" value="Never or rarely" /> Никога или рядко<br />
+                <input type="radio" asp-for="SeventeenthQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="SeventeenthQuestionAnswer" value="Often" /> Често<br />
+                <input type="radio" asp-for="SeventeenthQuestionAnswer" value="Very often or always" /> Много често или винаги<br />
+                <span asp-validation-for="SeventeenthQuestionAnswer" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="EighteenthQuestionAnswer">
+                    18. Лицето ми става горещо и се изчервява.
+                </label> <br />
+                <input type="radio" asp-for="EighteenthQuestionAnswer" value="NoAnswer" checked="checked" style="display: none;" />
+                <input type="radio" asp-for="EighteenthQuestionAnswer" value="Never or rarely" /> Никога или рядко<br />
+                <input type="radio" asp-for="EighteenthQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="EighteenthQuestionAnswer" value="Often" /> Често<br />
+                <input type="radio" asp-for="EighteenthQuestionAnswer" value="Very often or always" /> Много често или винаги<br />
+                <span asp-validation-for="EighteenthQuestionAnswer" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="NineteenthQuestionAnswer">
+                    19. Лесно заспивам и си почивам добре.
+                </label> <br />
+                <input type="radio" asp-for="NineteenthQuestionAnswer" value="NoAnswer" checked="checked" style="display: none;" />
+                <input type="radio" asp-for="NineteenthQuestionAnswer" value="Never or rarely" /> Никога или рядко<br />
+                <input type="radio" asp-for="NineteenthQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="NineteenthQuestionAnswer" value="Often" /> Често<br />
+                <input type="radio" asp-for="NineteenthQuestionAnswer" value="Very often or always" /> Много често или винаги<br />
+                <span asp-validation-for="NineteenthQuestionAnswer" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="TwentiethQuestionAnswer">
+                    20. Имам кошмари.
+                </label> <br />
+                <input type="radio" asp-for="TwentiethQuestionAnswer" value="NoAnswer" checked="checked" style="display: none;" />
+                <input type="radio" asp-for="TwentiethQuestionAnswer" value="Never or rarely" /> Никога или рядко<br />
+                <input type="radio" asp-for="TwentiethQuestionAnswer" value="Sometimes" /> Понякога<br />
+                <input type="radio" asp-for="TwentiethQuestionAnswer" value="Often" /> Често<br />
+                <input type="radio" asp-for="TwentiethQuestionAnswer" value="Very often or always" /> Много често или винаги<br />
+                <span asp-validation-for="TwentiethQuestionAnswer" class="text-danger"></span>
+            </div>
+            <input type="submit" class="btn btn-primary" value="Добави" />
+        </form>
+    </section>
+</main>

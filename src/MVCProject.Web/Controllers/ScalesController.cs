@@ -433,102 +433,102 @@ namespace MigraineDiary.Web.Controllers
             }
 
             // Custom model validation for changed radio button's value through page's HTML.
-            if (this.HIT6ScaleService.ValidateAnswer(addModel.FirstQuestionAnswer))
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(addModel.FirstQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.FirstQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
 
-            if (this.HIT6ScaleService.ValidateAnswer(addModel.SecondQuestionAnswer))
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(addModel.SecondQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.SecondQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
 
-            if (this.HIT6ScaleService.ValidateAnswer(addModel.ThirdQuestionAnswer))
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(addModel.ThirdQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.ThirdQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
 
-            if (this.HIT6ScaleService.ValidateAnswer(addModel.FourthQuestionAnswer))
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(addModel.FourthQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.FourthQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
 
-            if (this.HIT6ScaleService.ValidateAnswer(addModel.FifthQuestionAnswer))
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(addModel.FifthQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.FifthQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
 
-            if (this.HIT6ScaleService.ValidateAnswer(addModel.SixthQuestionAnswer))
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(addModel.SixthQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.SixthQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
 
-            if (this.HIT6ScaleService.ValidateAnswer(addModel.SeventhQuestionAnswer))
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(addModel.SeventhQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.SeventhQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
 
-            if (this.HIT6ScaleService.ValidateAnswer(addModel.EighthQuestionAnswer))
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(addModel.EighthQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.EighthQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
 
-            if (this.HIT6ScaleService.ValidateAnswer(addModel.NinthQuestionAnswer))
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(addModel.NinthQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.NinthQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
 
-            if (this.HIT6ScaleService.ValidateAnswer(addModel.TenthQuestionAnswer))
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(addModel.TenthQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.TenthQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
 
-            if (this.HIT6ScaleService.ValidateAnswer(addModel.EleventhQuestionAnswer))
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(addModel.EleventhQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.EleventhQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
 
-            if (this.HIT6ScaleService.ValidateAnswer(addModel.TwelfthQuestionAnswer))
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(addModel.TwelfthQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.TwelfthQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
 
-            if (this.HIT6ScaleService.ValidateAnswer(addModel.ThirteenthQuestionAnswer))
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(addModel.ThirteenthQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.ThirteenthQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
 
-            if (this.HIT6ScaleService.ValidateAnswer(addModel.FourteenthQuestionAnswer))
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(addModel.FourteenthQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.FourteenthQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
 
-            if (this.HIT6ScaleService.ValidateAnswer(addModel.FifteenthQuestionAnswer))
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(addModel.FifteenthQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.FifteenthQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
 
-            if (this.HIT6ScaleService.ValidateAnswer(addModel.SixteenthQuestionAnswer))
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(addModel.SixteenthQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.SixteenthQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
 
-            if (this.HIT6ScaleService.ValidateAnswer(addModel.SeventeenthQuestionAnswer))
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(addModel.SeventeenthQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.SeventeenthQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
 
-            if (this.HIT6ScaleService.ValidateAnswer(addModel.EighteenthQuestionAnswer))
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(addModel.EighteenthQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.EighteenthQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
 
-            if (this.HIT6ScaleService.ValidateAnswer(addModel.NineteenthQuestionAnswer))
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(addModel.NineteenthQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.NineteenthQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
 
-            if (this.HIT6ScaleService.ValidateAnswer(addModel.TwentiethQuestionAnswer))
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(addModel.TwentiethQuestionAnswer))
             {
                 ModelState.AddModelError(nameof(addModel.TwentiethQuestionAnswer), "Необходимо е да отбележите отговор.");
             }
