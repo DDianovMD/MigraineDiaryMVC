@@ -15,12 +15,15 @@ namespace MigraineDiary.Web.Controllers
     {
         private readonly ApplicationDbContext dbContext;
         private readonly IHIT6ScaleService HIT6ScaleService;
+        private readonly IZungScaleForAnxietyService ZungScaleForAnxietyService;
 
         public ScalesController(ApplicationDbContext dbContext,
-            IHIT6ScaleService HIT6scaleService)
+                                IHIT6ScaleService HIT6scaleService,
+                                IZungScaleForAnxietyService ZungScaleForAnxietyService)
         {
             this.dbContext = dbContext;
             this.HIT6ScaleService = HIT6scaleService;
+            this.ZungScaleForAnxietyService = ZungScaleForAnxietyService;
         }
 
         public IActionResult Index()
@@ -374,6 +377,227 @@ namespace MigraineDiary.Web.Controllers
             {
                 return NotFound();
             }
+        }
+
+        [HttpGet]
+        public IActionResult AddZungScale()
+        {
+            ViewData["currentUserId"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddZungScale(ZungScaleAddModel addModel, string currentUserId)
+        {
+            // Get current user's Id if ModelState is not valid and it's needed to be routed.
+            // If not routed on next submission currentUserId is null and ModelState is not valid again.
+            ViewData["currentUserId"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Check if hacker is trying to change userId through page's HTML with other user's Id.
+            // Return NotFound if sended user Id is different.
+            if (currentUserId != ViewData["currentUserId"]!.ToString())
+            {
+                return NotFound();
+            }
+
+            // Reset custom added model errors for next validation cycle.
+            // If reset is skipped even with correct data submission on next user input, ModelState continues to not be valid!
+            ModelState[nameof(addModel.FirstQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(addModel.SecondQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(addModel.ThirdQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(addModel.FourthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(addModel.FifthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(addModel.SixthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(addModel.SeventhQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(addModel.EighthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(addModel.NinthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(addModel.TenthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(addModel.EleventhQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(addModel.TwelfthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(addModel.ThirteenthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(addModel.FourteenthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(addModel.FifteenthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(addModel.SixteenthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(addModel.SeventeenthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(addModel.EighteenthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(addModel.NineteenthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(addModel.TwentiethQuestionAnswer)]?.Errors.Clear();
+
+            // Check if all Model properties have values.
+            // Here default values are evaluated as valid so it's needed custom validation if this one pass.
+            if (!ModelState.IsValid)
+            {
+                return View(addModel);
+            }
+
+            // Custom model validation for changed radio button's value through page's HTML.
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.FirstQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(addModel.FirstQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.SecondQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(addModel.SecondQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.ThirdQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(addModel.ThirdQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.FourthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(addModel.FourthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.FifthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(addModel.FifthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.SixthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(addModel.SixthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.SeventhQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(addModel.SeventhQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.EighthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(addModel.EighthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.NinthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(addModel.NinthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.TenthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(addModel.TenthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.EleventhQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(addModel.EleventhQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.TwelfthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(addModel.TwelfthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.ThirteenthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(addModel.ThirteenthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.FourteenthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(addModel.FourteenthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.FifteenthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(addModel.FifteenthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.SixteenthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(addModel.SixteenthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.SeventeenthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(addModel.SeventeenthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.EighteenthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(addModel.EighteenthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.NineteenthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(addModel.NineteenthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.HIT6ScaleService.ValidateAnswer(addModel.TwentiethQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(addModel.TwentiethQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            // Check again ModelState if custom Model Errors are added.
+            if (!ModelState.IsValid)
+            {
+                return View(addModel);
+            }
+
+            // Assign valid answers to DbModel
+            string[] answers = new string[]
+            {
+                addModel.FirstQuestionAnswer,
+                addModel.SecondQuestionAnswer,
+                addModel.ThirdQuestionAnswer,
+                addModel.FourthQuestionAnswer,
+                addModel.FifthQuestionAnswer,
+                addModel.SixthQuestionAnswer,
+                addModel.SeventhQuestionAnswer,
+                addModel.EighthQuestionAnswer,
+                addModel.NinthQuestionAnswer,
+                addModel.TenthQuestionAnswer,
+                addModel.EleventhQuestionAnswer,
+                addModel.TwelfthQuestionAnswer,
+                addModel.ThirteenthQuestionAnswer,
+                addModel.FourteenthQuestionAnswer,
+                addModel.FifteenthQuestionAnswer,
+                addModel.SixteenthQuestionAnswer,
+                addModel.SeventeenthQuestionAnswer,
+                addModel.EighteenthQuestionAnswer,
+                addModel.NineteenthQuestionAnswer,
+                addModel.TwentiethQuestionAnswer,
+            };
+
+            ZungScaleForAnxiety zungScale = new ZungScaleForAnxiety()
+            {
+                FirstQuestionAnswer = addModel.FirstQuestionAnswer,
+                SecondQuestionAnswer = addModel.SecondQuestionAnswer,
+                ThirdQuestionAnswer = addModel.ThirdQuestionAnswer,
+                FourthQuestionAnswer = addModel.FourthQuestionAnswer,
+                FifthQuestionAnswer = addModel.FifthQuestionAnswer,
+                SixthQuestionAnswer = addModel.SixthQuestionAnswer,
+                SeventhQuestionAnswer = addModel.SeventhQuestionAnswer,
+                EighthQuestionAnswer = addModel.EighthQuestionAnswer,
+                NinthQuestionAnswer = addModel.NinthQuestionAnswer,
+                TenthQuestionAnswer = addModel.TenthQuestionAnswer,
+                EleventhQuestionAnswer = addModel.EleventhQuestionAnswer,
+                TwelfthQuestionAnswer = addModel.TwelfthQuestionAnswer,
+                ThirteenthQuestionAnswer = addModel.ThirteenthQuestionAnswer,
+                FourteenthQuestionAnswer = addModel.FourteenthQuestionAnswer,
+                FifteenthQuestionAnswer = addModel.FifteenthQuestionAnswer,
+                SixteenthQuestionAnswer = addModel.SixteenthQuestionAnswer,
+                SeventeenthQuestionAnswer = addModel.SeventeenthQuestionAnswer,
+                EighteenthQuestionAnswer = addModel.EighteenthQuestionAnswer,
+                NineteenthQuestionAnswer = addModel.NineteenthQuestionAnswer,
+                TwentiethQuestionAnswer = addModel.TwentiethQuestionAnswer,
+                PatientId = currentUserId,
+                TotalScore = this.ZungScaleForAnxietyService.CalculateTotalScore(answers),
+            };
+
+            await this.dbContext.ZungScalesForAnxiety.AddAsync(zungScale);
+            await this.dbContext.SaveChangesAsync();
+
+            // Get controller's name and action's name without using magic strings.
+            string actionName = nameof(HomeController.Index);
+            string controllerName = nameof(HomeController).Substring(0, nameof(HomeController).Length - "Controller".Length);
+
+            return RedirectToAction(actionName, controllerName);
         }
     }
 }
