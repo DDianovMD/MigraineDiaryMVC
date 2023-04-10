@@ -24,6 +24,11 @@ namespace MigraineDiary.Web.Data
                 .WithMany(x => x.HIT6Scales)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<ZungScaleForAnxiety>()
+                .HasOne(x => x.Patient)
+                .WithMany(x => x.ZungScalesForAnxiety)
+                .OnDelete(DeleteBehavior.NoAction);
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -32,5 +37,7 @@ namespace MigraineDiary.Web.Data
         public DbSet<Medication> Medications { get; set; }
 
         public DbSet<HIT6Scale> HIT6Scales { get; set; }
+
+        public DbSet<ZungScaleForAnxiety> ZungScalesForAnxiety { get; set;}
     }
 }

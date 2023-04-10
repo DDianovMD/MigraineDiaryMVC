@@ -63,5 +63,16 @@ namespace MigraineDiary.Web.Data.DbModels
         [InverseProperty("SharedWith")]
         public ICollection<HIT6Scale> SharedHIT6ScalesWithMe { get; set; }
 
+        /// <summary>
+        /// Zung's scales for anxiety registered by user in role "Patient".
+        /// </summary>
+        [InverseProperty("Patient")]
+        public ICollection<ZungScaleForAnxiety> ZungScalesForAnxiety { get; set; }
+
+        /// <summary>
+        /// Patient's registered Zung's scales for anxiety shared with user in role "Doctor".
+        /// </summary>
+        [InverseProperty("SharedWith")]
+        public ICollection<ZungScaleForAnxiety> SharedZungScalesForAnxietyWithMe { get; set; }
     }
 }
