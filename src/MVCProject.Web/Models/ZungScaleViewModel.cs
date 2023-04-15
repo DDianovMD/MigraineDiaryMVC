@@ -2,8 +2,14 @@
 
 namespace MigraineDiary.Web.Models
 {
-    public class ZungScaleAddModel
+    public class ZungScaleViewModel
     {
+        /// <summary>
+        /// Primary key.
+        /// </summary>
+        [Key]
+        public string Id { get; set; } = null!;
+
         /// <summary>
         /// First question's answer from Zung's scale for anxiety.
         /// </summary>
@@ -143,5 +149,17 @@ namespace MigraineDiary.Web.Models
         [Required]
         [StringLength(20)]
         public string TwentiethQuestionAnswer { get; set; } = null!;
+
+        /// <summary>
+        /// Scored result according to patient's given answers.
+        /// </summary>
+        [Required]
+        public int TotalScore { get; set; }
+
+        /// <summary>
+        /// Date of registration.
+        /// </summary>
+        [Required]
+        public DateTime CreatedOn { get; set; }
     }
 }

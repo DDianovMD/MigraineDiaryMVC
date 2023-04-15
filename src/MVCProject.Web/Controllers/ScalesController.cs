@@ -599,5 +599,105 @@ namespace MigraineDiary.Web.Controllers
 
             return RedirectToAction(actionName, controllerName);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> MyZungScales()
+        {
+            // Get current user's Id
+            ViewData["currentUserId"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Get user's scales ordered by last added first
+            ZungScaleForAnxiety[] currentUserScales = await this.dbContext.ZungScalesForAnxiety
+                                                                .Where(x => x.IsDeleted == false && x.PatientId == (string)ViewData["currentUserId"]!)
+                                                                .AsNoTracking()
+                                                                .OrderByDescending(x => x.CreatedOn)
+                                                                .ToArrayAsync();
+
+            // Initialize collection of view models
+            List<ZungScaleViewModel> scalesViewModels = new List<ZungScaleViewModel>();
+
+            // Fill the collection of view models
+            foreach (ZungScaleForAnxiety scale in currentUserScales)
+            {
+                ZungScaleViewModel currentScale = new ZungScaleViewModel
+                {
+                    Id = scale.Id,
+                    FirstQuestionAnswer = scale.FirstQuestionAnswer,
+                    SecondQuestionAnswer = scale.SecondQuestionAnswer,
+                    ThirdQuestionAnswer = scale.ThirdQuestionAnswer,
+                    FourthQuestionAnswer = scale.FourthQuestionAnswer,
+                    FifthQuestionAnswer = scale.FifthQuestionAnswer,
+                    SixthQuestionAnswer = scale.SixthQuestionAnswer,
+                    SeventhQuestionAnswer = scale.SeventhQuestionAnswer,
+                    EighthQuestionAnswer = scale.EighthQuestionAnswer,
+                    NinthQuestionAnswer = scale.NinthQuestionAnswer,
+                    TenthQuestionAnswer = scale.TenthQuestionAnswer,
+                    EleventhQuestionAnswer = scale.EleventhQuestionAnswer,
+                    TwelfthQuestionAnswer = scale.TwelfthQuestionAnswer,
+                    ThirteenthQuestionAnswer = scale.ThirteenthQuestionAnswer,
+                    FourteenthQuestionAnswer = scale.FourteenthQuestionAnswer,
+                    FifteenthQuestionAnswer = scale.FifteenthQuestionAnswer,
+                    SixteenthQuestionAnswer = scale.SixteenthQuestionAnswer,
+                    SeventeenthQuestionAnswer = scale.SeventeenthQuestionAnswer,
+                    EighteenthQuestionAnswer = scale.EighteenthQuestionAnswer,
+                    NineteenthQuestionAnswer = scale.NineteenthQuestionAnswer,
+                    TwentiethQuestionAnswer = scale.TwentiethQuestionAnswer,
+                    TotalScore = scale.TotalScore,
+                    CreatedOn = scale.CreatedOn,
+                };
+
+                scalesViewModels.Add(currentScale);
+            }
+
+            return View(scalesViewModels);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditZungScale(string id)
+        {
+            // Get current user's Id
+            ViewData["currentUserId"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Get Zung scale
+            ZungScaleForAnxiety? zungScale = await this.dbContext.ZungScalesForAnxiety
+                                                       .FirstOrDefaultAsync(x => x.Id == id);
+
+            // Check if scale exists and it belongs to the current user.
+            // Protection against changing ID values through HTML and trying to get other user's scale.
+            if (zungScale == null || this.dbContext.Users
+                                              .Where(x => x.Id == (string)ViewData["currentUserId"]!)
+                                              .Include(x => x.ZungScalesForAnxiety)
+                                              .Any(x => x.ZungScalesForAnxiety.Any(x => x.Id == id) == false))
+            {
+                return NotFound();
+            }
+
+            ZungScaleViewModel viewModel = new ZungScaleViewModel()
+            {
+                Id = zungScale.Id,
+                FirstQuestionAnswer = zungScale.FirstQuestionAnswer,
+                SecondQuestionAnswer = zungScale.SecondQuestionAnswer,
+                ThirdQuestionAnswer = zungScale.ThirdQuestionAnswer,
+                FourthQuestionAnswer = zungScale.FourthQuestionAnswer,
+                FifthQuestionAnswer = zungScale.FifthQuestionAnswer,
+                SixthQuestionAnswer = zungScale.SixthQuestionAnswer,
+                SeventhQuestionAnswer = zungScale.SeventhQuestionAnswer,
+                EighthQuestionAnswer = zungScale.EighthQuestionAnswer,
+                NinthQuestionAnswer = zungScale.NinthQuestionAnswer,
+                TenthQuestionAnswer = zungScale.TenthQuestionAnswer,
+                EleventhQuestionAnswer = zungScale.EleventhQuestionAnswer,
+                TwelfthQuestionAnswer = zungScale.TwelfthQuestionAnswer,
+                ThirteenthQuestionAnswer = zungScale.ThirteenthQuestionAnswer,
+                FourteenthQuestionAnswer = zungScale.FourteenthQuestionAnswer,
+                FifteenthQuestionAnswer = zungScale.FifteenthQuestionAnswer,
+                SixteenthQuestionAnswer = zungScale.SixteenthQuestionAnswer,
+                SeventeenthQuestionAnswer = zungScale.SeventeenthQuestionAnswer,
+                EighteenthQuestionAnswer = zungScale.EighteenthQuestionAnswer,
+                NineteenthQuestionAnswer = zungScale.NineteenthQuestionAnswer,
+                TwentiethQuestionAnswer = zungScale.TwentiethQuestionAnswer,
+            };
+
+            return View(viewModel);
+        }
     }
 }
