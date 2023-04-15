@@ -419,7 +419,7 @@ else
                 <div class="mb-3">
                     <a asp-controller="Scales" asp-action="EditZungScale" asp-route-id="@scale.Id" class="btn btn-warning border-dark">Редактирай</a>
 
-                    <a asp-controller="Scales" asp-action="DeleteZungScale" asp-route-zungScaleId="@scale.Id" asp-route-currentUserId=@ViewData["currentUserId"] class="btn btn-danger border-dark" style="position:relative; right: -30px;" onclick="confirmDelete(@scaleCounter);">Изтрий</a>
+                    <a asp-controller="Scales" asp-action="DeleteZungScale" asp-route-zungScaleId="@scale.Id" asp-route-currentUserId=@ViewData["currentUserId"] class="btn btn-danger border-dark" style="position:relative; right: -30px;" onclick="confirmDelete(event, @scaleCounter);">Изтрий</a>
                 </div>
                 <hr />
                 scaleCounter++;

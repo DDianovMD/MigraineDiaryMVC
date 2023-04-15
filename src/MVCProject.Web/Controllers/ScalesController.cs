@@ -934,5 +934,46 @@ namespace MigraineDiary.Web.Controllers
 
             return RedirectToAction(actionName, controllerName);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteZungScale(string zungScaleId, string currentUserId)
+        {
+            // Get current user's Id.
+            ViewData["currentUserId"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Check if hacker is trying to change userId through page's HTML with other user's Id.
+            // Return NotFound if sent user Id is different.
+            if (currentUserId != ViewData["currentUserId"]!.ToString())
+            {
+                return NotFound();
+            }
+
+            // Get Zung scale that is going to be deleted.
+            ZungScaleForAnxiety? zungScale = await this.dbContext.ZungScalesForAnxiety.FirstOrDefaultAsync(x => x.Id == zungScaleId);
+
+            // Boolean flag evaluating if logged user has the scale that is going to be edited.
+            bool loggedUserHasScale = this.dbContext.Users
+                                                    .Where(x => x.Id == currentUserId)
+                                                    .Include(x => x.ZungScalesForAnxiety)
+                                                    .Any(x => x.ZungScalesForAnxiety.Any(x => x.Id == zungScaleId));
+
+            if (zungScale != null && loggedUserHasScale)
+            {
+                zungScale.IsDeleted = true;
+                zungScale.DeletedOn = DateTime.UtcNow;
+
+                await this.dbContext.SaveChangesAsync();
+
+                // Get controller's name and action's name without using magic strings.
+                string actionName = nameof(ScalesController.MyZungScales);
+                string controllerName = nameof(ScalesController).Substring(0, nameof(ScalesController).Length - "Controller".Length);
+
+                return RedirectToAction(actionName, controllerName);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
     }
 }
