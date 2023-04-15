@@ -5,7 +5,7 @@
 }
 
 <header>
-    <h1>Редактиране на HIT-6 скала.</h1>
+    <h1 class="text-center">Редактиране на HIT-6 скала.</h1>
 </header>
 <main>
     <section>
@@ -79,7 +79,7 @@
                 <span asp-validation-for="SixthQuestionAnswer" class="text-danger"></span>
             </div>
 
-            <input type="submit" class="btn btn-primary" value="Запази" onclick="confirmEdit();" />
+            <input type="submit" class="btn btn-primary" value="Запази" onclick="confirmEdit(event);" />
         </form>
     </section>
 </main>

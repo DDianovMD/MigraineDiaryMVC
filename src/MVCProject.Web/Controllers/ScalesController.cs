@@ -330,7 +330,7 @@ namespace MigraineDiary.Web.Controllers
             {
                 return NotFound();
             }
-            
+
 
             // Get controller's name and action's name without using magic strings.
             string actionName = nameof(ScalesController.MyHIT6Scales);
@@ -665,9 +665,9 @@ namespace MigraineDiary.Web.Controllers
             // Check if scale exists and it belongs to the current user.
             // Protection against changing ID values through HTML and trying to get other user's scale.
             if (zungScale == null || this.dbContext.Users
-                                              .Where(x => x.Id == (string)ViewData["currentUserId"]!)
-                                              .Include(x => x.ZungScalesForAnxiety)
-                                              .Any(x => x.ZungScalesForAnxiety.Any(x => x.Id == id) == false))
+                                                   .Where(x => x.Id == (string)ViewData["currentUserId"]!)
+                                                   .Include(x => x.ZungScalesForAnxiety)
+                                                   .Any(x => x.ZungScalesForAnxiety.Any(x => x.Id == id) == false))
             {
                 return NotFound();
             }
@@ -698,6 +698,241 @@ namespace MigraineDiary.Web.Controllers
             };
 
             return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditZungScale(ZungScaleViewModel viewModel, string currentUserId)
+        {
+            // Get current user's Id if ModelState is not valid and it's needed to be routed.
+            // If not routed on next submission currentUserId is null and ModelState is not valid again.
+            ViewData["currentUserId"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Check if hacker is trying to change userId through page's HTML with other user's Id.
+            // Return NotFound if sended user Id is different.
+            if (currentUserId != ViewData["currentUserId"]!.ToString())
+            {
+                return NotFound();
+            }
+
+            // Reset custom added model errors for next validation cycle.
+            // If reset is skipped even with correct data submission on next user input, ModelState continues to not be valid!
+            ModelState[nameof(viewModel.FirstQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(viewModel.SecondQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(viewModel.ThirdQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(viewModel.FourthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(viewModel.FifthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(viewModel.SixthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(viewModel.SeventhQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(viewModel.EighthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(viewModel.NinthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(viewModel.TenthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(viewModel.EleventhQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(viewModel.TwelfthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(viewModel.ThirteenthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(viewModel.FourteenthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(viewModel.FifteenthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(viewModel.SixteenthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(viewModel.SeventeenthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(viewModel.EighteenthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(viewModel.NineteenthQuestionAnswer)]?.Errors.Clear();
+            ModelState[nameof(viewModel.TwentiethQuestionAnswer)]?.Errors.Clear();
+
+            // Check if all Model properties have values.
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            // Custom model validation for changed radio button's value through page's HTML.
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(viewModel.FirstQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(viewModel.FirstQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(viewModel.SecondQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(viewModel.SecondQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(viewModel.ThirdQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(viewModel.ThirdQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(viewModel.FourthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(viewModel.FourthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(viewModel.FifthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(viewModel.FifthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(viewModel.SixthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(viewModel.SixthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(viewModel.SeventhQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(viewModel.SeventhQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(viewModel.EighthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(viewModel.EighthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(viewModel.NinthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(viewModel.NinthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(viewModel.TenthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(viewModel.TenthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(viewModel.EleventhQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(viewModel.EleventhQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(viewModel.TwelfthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(viewModel.TwelfthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(viewModel.ThirteenthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(viewModel.ThirteenthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(viewModel.FourteenthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(viewModel.FourteenthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(viewModel.FifteenthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(viewModel.FifteenthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(viewModel.SixteenthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(viewModel.SixteenthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(viewModel.SeventeenthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(viewModel.SeventeenthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(viewModel.EighteenthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(viewModel.EighteenthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(viewModel.NineteenthQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(viewModel.NineteenthQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            if (this.ZungScaleForAnxietyService.ValidateAnswer(viewModel.TwentiethQuestionAnswer))
+            {
+                ModelState.AddModelError(nameof(viewModel.TwentiethQuestionAnswer), "Необходимо е да отбележите отговор.");
+            }
+
+            // Check again ModelState if custom Model Errors are added.
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            // Add validated edited answers to string array (given as param to CalculateTotalScore method)
+            string[] editedAnswers = new string[]
+            {
+                viewModel.FirstQuestionAnswer,
+                viewModel.SecondQuestionAnswer,
+                viewModel.ThirdQuestionAnswer,
+                viewModel.FourthQuestionAnswer,
+                viewModel.FifthQuestionAnswer,
+                viewModel.SixthQuestionAnswer,
+                viewModel.SeventhQuestionAnswer,
+                viewModel.EighthQuestionAnswer,
+                viewModel.NinthQuestionAnswer,
+                viewModel.TenthQuestionAnswer,
+                viewModel.EleventhQuestionAnswer,
+                viewModel.TwelfthQuestionAnswer,
+                viewModel.ThirteenthQuestionAnswer,
+                viewModel.FourteenthQuestionAnswer,
+                viewModel.FifteenthQuestionAnswer,
+                viewModel.SixteenthQuestionAnswer,
+                viewModel.SeventeenthQuestionAnswer,
+                viewModel.EighteenthQuestionAnswer,
+                viewModel.NineteenthQuestionAnswer,
+                viewModel.TwentiethQuestionAnswer,
+            };
+
+            // Get Zung's scale that is going to be edited.
+            ZungScaleForAnxiety? zungScale = await this.dbContext.ZungScalesForAnxiety
+                                                                 .FirstOrDefaultAsync(x => x.Id == viewModel.Id);
+
+            // Boolean flag evaluating if logged user has the scale that is going to be edited.
+            bool loggedUserHasScale = this.dbContext.Users
+                                                    .Where(x => x.Id == currentUserId)
+                                                    .Include(x => x.ZungScalesForAnxiety)
+                                                    .Any(x => x.ZungScalesForAnxiety.Any(x => x.Id == viewModel.Id));
+
+            // Check if hacker has tried to change Zung scale's Id through page's HTML.
+            // If it has been changed, Zung scale eventually is going to be null (returned by FirstOrDefaultAsync method, line 880).
+
+            // If it has been changed and somehow there is Zung scale in database with given GUID primary key (it's not null)
+            // we check aswell if logged user is owner of the existing scale to reduce even more the chance
+            // hacker could edit other user's registered Zung scale. If these two validations fail - HTTP 404 is returned.
+            if (zungScale != null && loggedUserHasScale)
+            {
+                // Assign new values to edit the Zung's scale record in the database.
+                zungScale.FirstQuestionAnswer = viewModel.FirstQuestionAnswer;
+                zungScale.SecondQuestionAnswer = viewModel.SecondQuestionAnswer;
+                zungScale.ThirdQuestionAnswer = viewModel.ThirdQuestionAnswer;
+                zungScale.FourthQuestionAnswer = viewModel.FourthQuestionAnswer;
+                zungScale.FifthQuestionAnswer = viewModel.FifthQuestionAnswer;
+                zungScale.SixthQuestionAnswer = viewModel.SixthQuestionAnswer;
+                zungScale.SeventhQuestionAnswer = viewModel.SeventhQuestionAnswer;
+                zungScale.EighthQuestionAnswer = viewModel.EighthQuestionAnswer;
+                zungScale.NinthQuestionAnswer = viewModel.NinthQuestionAnswer;
+                zungScale.TenthQuestionAnswer = viewModel.TenthQuestionAnswer;
+                zungScale.EleventhQuestionAnswer = viewModel.EleventhQuestionAnswer;
+                zungScale.TwelfthQuestionAnswer = viewModel.TwelfthQuestionAnswer;
+                zungScale.ThirteenthQuestionAnswer = viewModel.ThirteenthQuestionAnswer;
+                zungScale.FourteenthQuestionAnswer = viewModel.FourteenthQuestionAnswer;
+                zungScale.FifteenthQuestionAnswer = viewModel.FifteenthQuestionAnswer;
+                zungScale.SixteenthQuestionAnswer = viewModel.SixteenthQuestionAnswer;
+                zungScale.SeventeenthQuestionAnswer = viewModel.SeventeenthQuestionAnswer;
+                zungScale.EighteenthQuestionAnswer = viewModel.EighteenthQuestionAnswer;
+                zungScale.NineteenthQuestionAnswer = viewModel.NineteenthQuestionAnswer;
+                zungScale.TwentiethQuestionAnswer = viewModel.TwentiethQuestionAnswer;
+                zungScale.PatientId = currentUserId;
+                zungScale.TotalScore = this.ZungScaleForAnxietyService.CalculateTotalScore(editedAnswers);
+                zungScale.CreatedOn = DateTime.UtcNow;
+
+                // Save changes in database.
+                await this.dbContext.SaveChangesAsync();
+            }
+            else
+            {
+                return NotFound();
+            }
+
+
+            // Get controller's name and action's name without using magic strings.
+            string actionName = nameof(ScalesController.MyZungScales);
+            string controllerName = nameof(ScalesController).Substring(0, nameof(ScalesController).Length - "Controller".Length);
+
+            return RedirectToAction(actionName, controllerName);
         }
     }
 }
