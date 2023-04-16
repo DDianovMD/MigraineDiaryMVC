@@ -25,7 +25,9 @@ namespace MigraineDiary.Web
                 options.SignIn.RequireConfirmedEmail = false;
                 options.Lockout.MaxFailedAccessAttempts = 10;
 
-            }).AddEntityFrameworkStores<ApplicationDbContext>();
+            })
+            .AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>();
 
             builder.Services.AddControllersWithViews();
 

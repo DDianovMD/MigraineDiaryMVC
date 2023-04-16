@@ -74,5 +74,10 @@ namespace MigraineDiary.Web.Data.DbModels
         /// </summary>
         [InverseProperty("SharedWith")]
         public ICollection<ZungScaleForAnxiety> SharedZungScalesForAnxietyWithMe { get; set; }
+
+        /// <summary>
+        /// Articles published by user.
+        /// </summary>
+        public ICollection<Article> Articles { get; set; }
     }
 }
