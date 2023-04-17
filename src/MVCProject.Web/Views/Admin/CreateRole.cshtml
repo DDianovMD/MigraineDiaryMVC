@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Create role";
+}
+
+<header>
+    <h3 class="text-center">Създай роля</h3>
+</header>
+<main>
+    <form asp-controller="Admin" asp-action="CreateRole" method="post" class="create-role-container">
+        <div class="create-role-flex-item">
+            <input type="text" name="roleName" id="roleName" placeholder="Име на ролята" class="mb-3" /> <br />
+        </div>
+        <div class="create-role-flex-item">
+            <input type="submit" value="Създай" class="btn btn-success" />
+        </div>
+    </form>
+</main>

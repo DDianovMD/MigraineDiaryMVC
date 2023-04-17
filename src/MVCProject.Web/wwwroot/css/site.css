@@ -17,3 +17,41 @@ body {
     margin-bottom: 60px;
     background-color: lightskyblue;
 }
+
+.audit-roles-heading {
+    margin-bottom: 50px;
+}
+
+.admin-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.admin-flex-item {
+    margin-top: 35px;
+}
+
+.admin-dropdown {
+    width: 100%;
+}
+
+.set-role-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.set-role-flex-item {
+    margin-top: 35px;
+}
+
+.create-role-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 35px;
+}
