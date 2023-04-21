@@ -55,3 +55,12 @@ body {
     flex-direction: column;
     margin-top: 35px;
 }
+
+.add-article-container {
+    display: flex;
+    justify-content: center;
+}
+
+.add-article-flex-item {
+    flex-basis: 50%;
+}

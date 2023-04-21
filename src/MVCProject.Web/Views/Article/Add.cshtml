@@ -1,0 +1,40 @@
+﻿@model ArticleAddFormModel
+
+@{
+    ViewData["Title"] = "Add article";
+}
+
+<header>
+    <h3 class="text-center mb-3">Добави статия</h3>
+</header>
+<main>
+    <div class="add-article-container">
+        <form asp-controller="Article" asp-action="Add" method="post" class="add-article-flex-item text-center">
+            <div>
+                <label asp-for="@Model.Title" class="mt-3">Заглавие</label>
+                <input type="text" asp-for="@Model.Title" class="form-control" />
+                <span asp-validation-for="@Model.Title" class="text-danger"></span>
+            </div>
+           
+            <div>
+                <label asp-for="@Model.Content" class="mt-3">Съдържание</label>
+                <textarea asp-for="@Model.Content" class="form-control"></textarea>
+                <span asp-validation-for="@Model.Content" class="text-danger"></span>
+            </div>
+            
+            <div>
+                <label asp-for="@Model.Author" class="mt-3">Автор(и)</label>
+                <input type="text" asp-for="@Model.Author" class="form-control" />
+                <span asp-validation-for="@Model.Author" class="text-danger"></span>
+            </div>
+
+            <div>
+                <label asp-for="@Model.SourceUrl" class="mt-3">URL на източник</label>
+                <input type="text" asp-for="@Model.SourceUrl" class="form-control" />
+                <span asp-validation-for="@Model.SourceUrl" class="text-danger"></span>
+            </div>
+
+            <input type="submit" value="Създай" class="btn btn-primary mt-3" />
+        </form>
+    </div>
+</main>
