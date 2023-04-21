@@ -1,8 +1,26 @@
-﻿@{
+﻿@model Article[]
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4" style="margin-top: 200px; margin-bottom: 200px">Добре дошли!</h1>
-    <p>Migraine diary - ASP.NET project by Daniel Dianov, M.D.</p>
-</div>
+<link href="~/css/froala/froala_style.min.css" rel="stylesheet" type="text/css" />
+
+<main>
+    <h3 class="text-center">Публикации</h3>
+    <section>
+        @foreach (var article in Model)
+        {
+            <article class="article-container">
+                <h5 class="article-title">@article.Title</h5>
+                <div class="article-info">
+                    <div>Автори: @article.Author</div>
+                    <div>Публикувано: @article.CreatedOn.ToShortDateString()</div>
+                </div>
+                <div class="fr-view article-content">
+                    @Html.Raw(article.Content)
+                </div>
+            </article>
+        }
+    </section>
+</main>

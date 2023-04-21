@@ -1,16 +1,16 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
@@ -63,4 +63,44 @@ body {
 
 .add-article-flex-item {
     flex-basis: 50%;
+}
+
+.article-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-bottom: 60px;
+    border-bottom: 2px outset darkgray;
+}
+
+.article-title {
+    color: white;
+    text-shadow: 2px 2px 4px #000000;
+    margin-top: 60px;
+    margin-bottom: 20px;
+    align-self: center;
+}
+
+.article-info {
+    display: flex;
+    justify-content: space-between;
+    width: 70%;
+    margin-bottom: 15px;
+    align-self: center;
+}
+
+.article-content {
+    border-radius: 15px;
+    box-shadow: 0 0 15px #2C3E50;
+    background-color: white;
+    padding: 10px;
+    width: 70%;
+    align-self: center;
+}
+
+.nav-bar-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-flow: wrap;
 }

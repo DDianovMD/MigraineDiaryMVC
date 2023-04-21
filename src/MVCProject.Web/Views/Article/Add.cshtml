@@ -4,6 +4,8 @@
     ViewData["Title"] = "Add article";
 }
 
+<link href="~/css/froala/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
+
 <header>
     <h3 class="text-center mb-3">Добави статия</h3>
 </header>
@@ -18,7 +20,7 @@
            
             <div>
                 <label asp-for="@Model.Content" class="mt-3">Съдържание</label>
-                <textarea asp-for="@Model.Content" class="form-control"></textarea>
+                <textarea id="content" name="content"></textarea>
                 <span asp-validation-for="@Model.Content" class="text-danger"></span>
             </div>
             
@@ -38,3 +40,6 @@
         </form>
     </div>
 </main>
+
+<script type="text/javascript" src="~/js/froala/froala_editor.pkgd.min.js"></script>
+<script type="text/javascript" src="~/js/InitializeFroala.js"></script>

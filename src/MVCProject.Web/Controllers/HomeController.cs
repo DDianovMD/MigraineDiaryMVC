@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MigraineDiary.Web.Data.DbModels;
 using MigraineDiary.Web.Models;
+using MigraineDiary.Web.Services.Contracts;
 using System.Diagnostics;
 
 namespace MigraineDiary.Web.Controllers
@@ -7,15 +9,20 @@ namespace MigraineDiary.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IArticleService articleService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger,
+                              IArticleService articleService)
         {
             _logger = logger;
+            this.articleService = articleService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            Article[] articles = await this.articleService.GetArticles();
+
+            return View(articles);
         }
 
         public IActionResult Privacy()

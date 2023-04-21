@@ -1,4 +1,5 @@
-﻿using MigraineDiary.Web.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MigraineDiary.Web.Data;
 using MigraineDiary.Web.Data.DbModels;
 using MigraineDiary.Web.Models;
 using MigraineDiary.Web.Services.Contracts;
@@ -26,6 +27,15 @@ namespace MigraineDiary.Web.Services
 
             await this.dbContext.Articles.AddAsync(article);
             await this.dbContext.SaveChangesAsync();
+        }
+
+        public async Task<Article[]> GetArticles()
+        {
+            Article[] articles = await this.dbContext.Articles
+                                                     .OrderByDescending(x => x.CreatedOn)
+                                                     .AsNoTracking()
+                                                     .ToArrayAsync();
+            return articles;
         }
     }
 }
