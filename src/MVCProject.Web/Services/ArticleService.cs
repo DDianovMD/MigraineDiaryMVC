@@ -29,12 +29,20 @@ namespace MigraineDiary.Web.Services
             await this.dbContext.SaveChangesAsync();
         }
 
-        public async Task<Article[]> GetArticles()
+        public async Task<ArticleViewModel[]> GetArticles()
         {
-            Article[] articles = await this.dbContext.Articles
-                                                     .OrderByDescending(x => x.CreatedOn)
-                                                     .AsNoTracking()
-                                                     .ToArrayAsync();
+            ArticleViewModel[] articles = await this.dbContext.Articles
+                                                    .OrderByDescending(x => x.CreatedOn)
+                                                    .Select(x => new ArticleViewModel
+                                                    {
+                                                        Title = x.Title,
+                                                        Content = x.Content,
+                                                        Author = x.Author,
+                                                        SourceUrl = x.SourceUrl,
+                                                        CreatedOn = x.CreatedOn
+                                                    })
+                                                    .AsNoTracking()
+                                                    .ToArrayAsync();
             return articles;
         }
     }

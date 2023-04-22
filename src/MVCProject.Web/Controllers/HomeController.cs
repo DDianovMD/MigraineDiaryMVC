@@ -20,7 +20,7 @@ namespace MigraineDiary.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            Article[] articles = await this.articleService.GetArticles();
+            ArticleViewModel[] articles = await this.articleService.GetArticles();
 
             return View(articles);
         }

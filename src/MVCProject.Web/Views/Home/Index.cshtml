@@ -1,4 +1,4 @@
-﻿@model Article[]
+﻿@model ArticleViewModel[]
 
 @{
     ViewData["Title"] = "Home Page";
@@ -20,6 +20,12 @@
                 <div class="fr-view article-content">
                     @Html.Raw(article.Content)
                 </div>
+                @if (article.SourceUrl != null)
+                {
+                    <div>
+                        Източник: @article.SourceUrl
+                    </div>
+                }
             </article>
         }
     </section>
