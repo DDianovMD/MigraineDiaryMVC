@@ -1,0 +1,54 @@
+﻿<nav aria-label="Pages navigation">
+    <ul class="pagination mt-3">
+        @if (Model.CurrentPageIndex == 1)
+        {
+            <li class="page-item disabled"><a asp-controller="Home" asp-action="Index" asp-route-pageIndex="@Model.CurrentPageIndex" asp-route-pageSize="@ViewData["pageSize"]" asp-route-orderByDate="" class="page-link">Първа</a></li>
+        }
+        else
+        {
+            <li class="page-item"><a asp-controller="Home" asp-action="Index" asp-route-pageIndex="@Model.CurrentPageIndex" asp-route-pageSize="@ViewData["pageSize"]" asp-route-orderByDate="@ViewData["orderByDate"]" class="page-link">Първа</a></li>
+        }
+
+        @if (Model.HasPreviousPage && Model.HasNextPage)
+        {
+            <li class="page-item"><a asp-controller="Home" asp-action="Index" asp-route-pageIndex="@(Model.CurrentPageIndex - 1)" asp-route-pageSize="@ViewData["pageSize"]" asp-route-orderByDate="@ViewData["orderByDate"]" class="page-link">@(Model.CurrentPageIndex - 1)</a></li>
+            <li class="page-item active"><a asp-controller="Home" asp-action="Index" asp-route-pageIndex="@Model.CurrentPageIndex" asp-route-pageSize="@ViewData["pageSize"]" asp-route-orderByDate="@ViewData["orderByDate"]" class="page-link">@Model.CurrentPageIndex</a></li>
+            <li class="page-item"><a asp-controller="Home" asp-action="Index" asp-route-pageIndex="@(Model.CurrentPageIndex + 1)" asp-route-pageSize="@ViewData["pageSize"]" asp-route-orderByDate="@ViewData["orderByDate"]" class="page-link">@(Model.CurrentPageIndex + 1)</a></li>
+        }
+        else if (Model.HasPreviousPage && Model.HasNextPage == false && (@Model.CurrentPageIndex - 2 >= 1))
+        {
+            <li class="page-item"><a asp-controller="Home" asp-action="Index" asp-route-pageIndex="@(Model.CurrentPageIndex - 2)" asp-route-pageSize="@ViewData["pageSize"]" asp-route-orderByDate="@ViewData["orderByDate"]" class="page-link">@(Model.CurrentPageIndex - 2)</a></li>
+            <li class="page-item"><a asp-controller="Home" asp-action="Index" asp-route-pageIndex="@(Model.CurrentPageIndex - 1)" asp-route-pageSize="@ViewData["pageSize"]" asp-route-orderByDate="@ViewData["orderByDate"]" class="page-link">@(Model.CurrentPageIndex - 1)</a></li>
+            <li class="page-item active"><a asp-controller="Home" asp-action="Index" asp-route-pageIndex="@Model.CurrentPageIndex" asp-route-pageSize="@ViewData["pageSize"]" asp-route-orderByDate="@ViewData["orderByDate"]" class="page-link">@Model.CurrentPageIndex</a></li>
+        }
+        else if (Model.HasPreviousPage && Model.HasNextPage == false && (@Model.CurrentPageIndex - 2 < 1))
+        {
+            <li class="page-item"><a asp-controller="Home" asp-action="Index" asp-route-pageIndex="@(Model.CurrentPageIndex - 1)" asp-route-pageSize="@ViewData["pageSize"]" asp-route-orderByDate="@ViewData["orderByDate"]" class="page-link">@(Model.CurrentPageIndex - 1)</a></li>
+            <li class="page-item active"><a asp-controller="Home" asp-action="Index" asp-route-pageIndex="@Model.CurrentPageIndex" asp-route-pageSize="@ViewData["pageSize"]" asp-route-orderByDate="@ViewData["orderByDate"]" class="page-link">@Model.CurrentPageIndex</a></li>
+        }
+        else if (Model.HasPreviousPage == false && Model.HasNextPage && (Model.CurrentPageIndex + 2 <= Model.TotalPagesCount))
+        {
+            <li class="page-item active"><a asp-controller="Home" asp-action="Index" asp-route-pageIndex="@Model.CurrentPageIndex" asp-route-pageSize="@ViewData["pageSize"]" asp-route-orderByDate="@ViewData["orderByDate"]" class="page-link">@Model.CurrentPageIndex</a></li>
+            <li class="page-item"><a asp-controller="Home" asp-action="Index" asp-route-pageIndex="@(Model.CurrentPageIndex + 1)" asp-route-pageSize="@ViewData["pageSize"]" asp-route-orderByDate="@ViewData["orderByDate"]" class="page-link">@(Model.CurrentPageIndex + 1)</a></li>
+            <li class="page-item"><a asp-controller="Home" asp-action="Index" asp-route-pageIndex="@(Model.CurrentPageIndex + 2)" asp-route-pageSize="@ViewData["pageSize"]" asp-route-orderByDate="@ViewData["orderByDate"]" class="page-link">@(Model.CurrentPageIndex + 2)</a></li>
+        }
+        else if (Model.HasPreviousPage == false && Model.HasNextPage && (Model.CurrentPageIndex + 2 > Model.TotalPagesCount))
+        {
+            <li class="page-item active"><a asp-controller="Home" asp-action="Index" asp-route-pageIndex="@Model.CurrentPageIndex" asp-route-pageSize="@ViewData["pageSize"]" asp-route-orderByDate="@ViewData["orderByDate"]" class="page-link">@Model.CurrentPageIndex</a></li>
+            <li class="page-item"><a asp-controller="Home" asp-action="Index" asp-route-pageIndex="@(Model.CurrentPageIndex + 1)" asp-route-pageSize="@ViewData["pageSize"]" asp-route-orderByDate="@ViewData["orderByDate"]" class="page-link">@(Model.CurrentPageIndex + 1)</a></li>
+        }
+        else
+        {
+            <li class="page-item active"><a asp-controller="Home" asp-action="Index" asp-route-pageIndex="@Model.CurrentPageIndex" asp-route-pageSize="@ViewData["pageSize"]" asp-route-orderByDate="@ViewData["orderByDate"]" class="page-link">@Model.CurrentPageIndex</a></li>
+        }
+
+        @if (Model.CurrentPageIndex == Model.TotalPagesCount)
+        {
+            <li class="page-item disabled"><a asp-controller="Home" asp-action="Index" asp-route-pageIndex="@Model.CurrentPageIndex" asp-route-pageSize="@ViewData["pageSize"]" asp-route-orderByDate="@ViewData["orderByDate"]" class="page-link">Последна</a></li>
+        }
+        else
+        {
+            <li class="page-item"><a asp-controller="Home" asp-action="Index" asp-route-pageIndex="@Model.CurrentPageIndex" asp-route-pageSize="@ViewData["pageSize"]" asp-route-orderByDate="@ViewData["orderByDate"]" class="page-link">Последна</a></li>
+        }
+    </ul>
+</nav>

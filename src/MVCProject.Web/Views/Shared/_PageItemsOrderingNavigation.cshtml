@@ -1,0 +1,56 @@
+﻿<nav id="ordering-navigation">
+    <div>
+        <form asp-controller="Home" asp-action="Index" method="get">
+            <label name="pageSize">Публикации на страница:</label>
+            <select name="pageSize" onchange="submit();">
+                @if ((int)ViewData["pageSize"]! == 1)
+                {
+                    <option value="1" selected>1</option>
+                }
+                else
+                {
+                    <option value="1">1</option>
+                }
+                
+                @if ((int)ViewData["pageSize"]! == 5)
+                {
+                    <option value="5" selected>5</option>
+                }
+                else
+                {
+                    <option value="5">5</option>
+                }
+
+                @if ((int)ViewData["pageSize"]! == 10)
+                {
+                    <option value="10" selected>10</option>
+                }
+                else
+                {
+                    <option value="10">10</option>
+                }
+            </select>
+
+            <label name="orderByDate">Подреди по:</label>
+            <select name="orderByDate" onchange="submit();">
+                @if ((string)ViewData["orderByDate"]! == "NewestFirst")
+                {
+                    <option value="NewestFirst" selected>Най-нови</option>
+                }
+                else
+                {
+                    <option value="NewestFirst">Най-нови</option>
+                }
+                
+                @if ((string)ViewData["orderByDate"]! == "OldestFirst")
+                {
+                    <option value="OldestFirst" selected>Най-стари</option>
+                }
+                else
+                {
+                    <option value="OldestFirst">Най-стари</option>
+                }
+            </select>
+        </form>
+    </div>
+</nav>

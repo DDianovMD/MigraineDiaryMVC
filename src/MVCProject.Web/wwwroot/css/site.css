@@ -104,3 +104,10 @@ body {
     justify-content: space-around;
     flex-flow: wrap;
 }
+
+#ordering-navigation {
+    background-color: white;
+    border-radius: 12px;
+    margin-top: 20px;
+    padding: 10px;
+}

@@ -18,9 +18,23 @@ namespace MigraineDiary.Web.Controllers
             this.articleService = articleService;
         }
 
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 1, string orderByDate = "NewestFirst")
         {
-            ArticleViewModel[] articles = await this.articleService.GetArticles();
+            // Custom validation against web parameter tampering
+            if ((pageSize != 1 &&
+                 pageSize != 5 &&
+                 pageSize != 10) ||
+                (orderByDate != "NewestFirst" &&
+                 orderByDate != "OldestFirst"))
+            {
+                return BadRequest();
+            }
+
+            PaginatedList<ArticleViewModel> articles = await this.articleService.GetArticles(pageIndex, pageSize, orderByDate);
+
+            ViewData["pageSize"] = pageSize;
+            ViewData["orderByDate"] = orderByDate;
 
             return View(articles);
         }

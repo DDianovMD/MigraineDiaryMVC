@@ -29,21 +29,40 @@ namespace MigraineDiary.Web.Services
             await this.dbContext.SaveChangesAsync();
         }
 
-        public async Task<ArticleViewModel[]> GetArticles()
+        public async Task<PaginatedList<ArticleViewModel>> GetArticles(int pageIndex, int pageSize, string orderByDate)
         {
-            ArticleViewModel[] articles = await this.dbContext.Articles
-                                                    .OrderByDescending(x => x.CreatedOn)
-                                                    .Select(x => new ArticleViewModel
-                                                    {
-                                                        Title = x.Title,
-                                                        Content = x.Content,
-                                                        Author = x.Author,
-                                                        SourceUrl = x.SourceUrl,
-                                                        CreatedOn = x.CreatedOn
-                                                    })
-                                                    .AsNoTracking()
-                                                    .ToArrayAsync();
-            return articles;
+            IQueryable<ArticleViewModel> articles = null!;
+
+            if (orderByDate == "NewestFirst")
+            {
+                articles = this.dbContext.Articles
+                                         .OrderByDescending(x => x.CreatedOn)
+                                         .Select(x => new ArticleViewModel
+                                         {
+                                             Title = x.Title,
+                                             Content = x.Content,
+                                             Author = x.Author,
+                                             SourceUrl = x.SourceUrl,
+                                             CreatedOn = x.CreatedOn
+                                         })
+                                         .AsNoTracking();
+            }
+            else
+            {
+                articles = this.dbContext.Articles
+                                         .OrderBy(x => x.CreatedOn)
+                                         .Select(x => new ArticleViewModel
+                                         {
+                                             Title = x.Title,
+                                             Content = x.Content,
+                                             Author = x.Author,
+                                             SourceUrl = x.SourceUrl,
+                                             CreatedOn = x.CreatedOn
+                                         })
+                                         .AsNoTracking();
+            }
+
+            return await PaginatedList<ArticleViewModel>.CreateAsync(articles, pageIndex, pageSize);
         }
     }
 }
