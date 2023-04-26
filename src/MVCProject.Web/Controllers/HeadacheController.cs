@@ -126,14 +126,30 @@ namespace MigraineDiary.Web.Controllers
             return RedirectToAction(actionName, controllerName);
         }
 
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(int pageIndex = 1, int pageSize = 1, string orderByDate = "NewestFirst")
         {
+            // Custom validation against web parameter tampering.
+            if ((pageSize != 1 &&
+                 pageSize != 5 &&
+                 pageSize != 10) ||
+                (orderByDate != "NewestFirst" &&
+                 orderByDate != "OldestFirst"))
+            {
+                return BadRequest();
+            }
+
+            // Get current user's Id
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             ViewData["currentUserId"] = userId;
 
-            ICollection<RegisteredHeadacheViewModel> registeredHeadaches = await headacheService.GetRegisteredHeadachesAsync(userId); 
+            // Get paginated collection of view model according to given criteria.
+            PaginatedList<RegisteredHeadacheViewModel> registeredHeadachesViewModel = await headacheService.GetRegisteredHeadachesAsync(userId, pageIndex, pageSize, orderByDate);
 
-            return View(registeredHeadaches);
+            // Send pagination size and ordering criteria to the view.
+            ViewData["pageSize"] = pageSize;
+            ViewData["orderByDate"] = orderByDate;
+
+            return View(registeredHeadachesViewModel);
         }
     }
 }

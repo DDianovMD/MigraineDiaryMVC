@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MigraineDiary.Web.Data;
+using MigraineDiary.Web.Data.DbModels;
 using MigraineDiary.Web.Models;
 using MigraineDiary.Web.Services.Contracts;
 
@@ -24,45 +25,84 @@ namespace MigraineDiary.Web.Services
             daysHoursMinutes.Add("Days", headacheDuration.Days);
             daysHoursMinutes.Add("Hours", headacheDuration.Hours);
             daysHoursMinutes.Add("Minutes", headacheDuration.Minutes);
-            
+
             return daysHoursMinutes;
         }
 
-        public async Task<ICollection<RegisteredHeadacheViewModel>> GetRegisteredHeadachesAsync(string userId)
+        public async Task<PaginatedList<RegisteredHeadacheViewModel>> GetRegisteredHeadachesAsync(string userId, int pageIndex, int pageSize, string orderByDate)
         {
-            RegisteredHeadacheViewModel[] headaches =  await this.dbContext.Headaches
-                .Where(p => p.PatientId == userId)
-                .Include(h => h.MedicationsTaken)
-                .Select(h => new RegisteredHeadacheViewModel
-                {
-                    Id = h.Id,
-                    Onset = h.Onset,
-                    EndTime = h.EndTime,
-                    DurationDays = h.DurationDays,
-                    DurationHours = h.DurationHours,
-                    DurationMinutes = h.DurationMinutes,
-                    Severity = h.Severity,
-                    LocalizationSide = h.LocalizationSide,
-                    PainCharacteristics = h.PainCharacteristics,
-                    Photophoby = h.Photophoby,
-                    Phonophoby = h.Phonophoby,
-                    Nausea = h.Nausea,
-                    Vomiting = h.Vomiting,
-                    Aura = h.Aura,
-                    AuraDescriptionNotes = h.AuraDescriptionNotes,
-                    Triggers = h.Triggers,
-                    UsedMedications = h.MedicationsTaken.Select(m => new UsedMedicationViewModel
-                    {
-                        Name = m.Name,
-                        Units = m.Units,
-                        DosageTaken = this.medicationService.CalculateWholeTakenDosage(m.SinglePillDosage, m.NumberOfTakenPills),
-                        NumberOfTakenPills = m.NumberOfTakenPills,
-                        SinglePillDosage = m.SinglePillDosage,
-                    })
-                })
-                .ToArrayAsync();
+            IQueryable<RegisteredHeadacheViewModel> headaches = null!;
 
-            return headaches;
+            if (orderByDate == "NewestFirst")
+            {
+                headaches = this.dbContext.Headaches
+                                          .Where(p => p.PatientId == userId)
+                                          .Include(h => h.MedicationsTaken)
+                                          .OrderByDescending(h => h.Onset)
+                                          .Select(h => new RegisteredHeadacheViewModel
+                                          {
+                                              Id = h.Id,
+                                              Onset = h.Onset,
+                                              EndTime = h.EndTime,
+                                              DurationDays = h.DurationDays,
+                                              DurationHours = h.DurationHours,
+                                              DurationMinutes = h.DurationMinutes,
+                                              Severity = h.Severity,
+                                              LocalizationSide = h.LocalizationSide,
+                                              PainCharacteristics = h.PainCharacteristics,
+                                              Photophoby = h.Photophoby,
+                                              Phonophoby = h.Phonophoby,
+                                              Nausea = h.Nausea,
+                                              Vomiting = h.Vomiting,
+                                              Aura = h.Aura,
+                                              AuraDescriptionNotes = h.AuraDescriptionNotes,
+                                              Triggers = h.Triggers,
+                                              UsedMedications = h.MedicationsTaken.Select(m => new UsedMedicationViewModel
+                                              {
+                                                  Name = m.Name,
+                                                  Units = m.Units,
+                                                  DosageTaken = this.medicationService.CalculateWholeTakenDosage(m.SinglePillDosage, m.NumberOfTakenPills),
+                                                  NumberOfTakenPills = m.NumberOfTakenPills,
+                                                  SinglePillDosage = m.SinglePillDosage,
+                                              })
+                                          });
+            }
+            else
+            {
+                headaches = this.dbContext.Headaches
+                                          .Where(p => p.PatientId == userId)
+                                          .Include(h => h.MedicationsTaken)
+                                          .OrderBy(h => h.Onset)
+                                          .Select(h => new RegisteredHeadacheViewModel
+                                          {
+                                              Id = h.Id,
+                                              Onset = h.Onset,
+                                              EndTime = h.EndTime,
+                                              DurationDays = h.DurationDays,
+                                              DurationHours = h.DurationHours,
+                                              DurationMinutes = h.DurationMinutes,
+                                              Severity = h.Severity,
+                                              LocalizationSide = h.LocalizationSide,
+                                              PainCharacteristics = h.PainCharacteristics,
+                                              Photophoby = h.Photophoby,
+                                              Phonophoby = h.Phonophoby,
+                                              Nausea = h.Nausea,
+                                              Vomiting = h.Vomiting,
+                                              Aura = h.Aura,
+                                              AuraDescriptionNotes = h.AuraDescriptionNotes,
+                                              Triggers = h.Triggers,
+                                              UsedMedications = h.MedicationsTaken.Select(m => new UsedMedicationViewModel
+                                              {
+                                                  Name = m.Name,
+                                                  Units = m.Units,
+                                                  DosageTaken = this.medicationService.CalculateWholeTakenDosage(m.SinglePillDosage, m.NumberOfTakenPills),
+                                                  NumberOfTakenPills = m.NumberOfTakenPills,
+                                                  SinglePillDosage = m.SinglePillDosage,
+                                              })
+                                          });
+            }
+
+            return await PaginatedList<RegisteredHeadacheViewModel>.CreateAsync(headaches, pageIndex, pageSize);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿<nav id="ordering-navigation">
     <div>
-        <form asp-controller="Home" asp-action="Index" method="get">
+        <form asp-controller=@ViewData["PartialViewController"] asp-action=@ViewData["PartialViewAction"] method="get">
             <label name="pageSize">Публикации на страница:</label>
             <select name="pageSize" onchange="submit();">
                 @if ((int)ViewData["pageSize"]! == 1)
