@@ -6,7 +6,7 @@
         }
         else
         {
-            <li class="page-item"><a asp-controller="Home" asp-action="Index" asp-route-pageIndex="@Model.CurrentPageIndex" asp-route-pageSize="@ViewData["pageSize"]" asp-route-orderByDate="@ViewData["orderByDate"]" class="page-link">Първа</a></li>
+            <li class="page-item"><a asp-controller="Home" asp-action="Index" asp-route-pageIndex="1" asp-route-pageSize="@ViewData["pageSize"]" asp-route-orderByDate="@ViewData["orderByDate"]" class="page-link">Първа</a></li>
         }
 
         @if (Model.HasPreviousPage && Model.HasNextPage)
@@ -48,7 +48,7 @@
         }
         else
         {
-            <li class="page-item"><a asp-controller="Home" asp-action="Index" asp-route-pageIndex="@Model.CurrentPageIndex" asp-route-pageSize="@ViewData["pageSize"]" asp-route-orderByDate="@ViewData["orderByDate"]" class="page-link">Последна</a></li>
+            <li class="page-item"><a asp-controller="Home" asp-action="Index" asp-route-pageIndex="@Model.TotalPagesCount" asp-route-pageSize="@ViewData["pageSize"]" asp-route-orderByDate="@ViewData["orderByDate"]" class="page-link">Последна</a></li>
         }
     </ul>
 </nav>
