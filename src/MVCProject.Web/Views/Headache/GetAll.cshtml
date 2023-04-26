@@ -1,5 +1,4 @@
-﻿@using System.Globalization;
-@model PaginatedList<RegisteredHeadacheViewModel>
+﻿@model PaginatedList<RegisteredHeadacheViewModel>
 
 @{
     ViewData["Title"] = "Headaches";
@@ -20,7 +19,7 @@
                 <div class="row">
                     @foreach (var headache in Model)
                     {
-                        <h4 class="text-center">Главоболие № @(headacheCounter * Model.CurrentPageIndex)</h4>
+                        <h4 class="text-center article-title">Главоболие № @(headacheCounter * Model.CurrentPageIndex)</h4>
                         <hr />
                         <p>
                             Начало на главоболието: @headache.Onset.TimeOfDay.ToString().Substring(0, 5) ч. на

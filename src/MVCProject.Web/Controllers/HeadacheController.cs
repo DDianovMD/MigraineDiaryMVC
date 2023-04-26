@@ -120,12 +120,13 @@ namespace MigraineDiary.Web.Controllers
             await this.dbContext.SaveChangesAsync();
 
             // Get controller name and action name without using magic strings
-            string actionName = nameof(HomeController.Index);
-            string controllerName = nameof(HomeController).Substring(0, nameof(HomeController).Length - "Controller".Length);
+            string actionName = nameof(HeadacheController.GetAll);
+            string controllerName = nameof(HeadacheController).Substring(0, nameof(HeadacheController).Length - "Controller".Length);
 
             return RedirectToAction(actionName, controllerName);
         }
 
+        [HttpGet]
         public async Task<IActionResult> GetAll(int pageIndex = 1, int pageSize = 1, string orderByDate = "NewestFirst")
         {
             // Custom validation against web parameter tampering.
