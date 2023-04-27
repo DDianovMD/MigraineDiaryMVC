@@ -9,7 +9,7 @@
 </header>
 <main>
     <section>
-        <form asp-controller="Scales" asp-action="EditZungScale" asp-route-currentUserId=@ViewData["currentUserId"] method="post">
+        <form asp-controller="Scales" asp-action="EditZungScale" asp-route-userId=@ViewData["currentUserId"] method="post">
             <div class="mb-3">
                 <label asp-for="FirstQuestionAnswer">
                     1. Чувствам се по-нервен и тревожен от обикновено.

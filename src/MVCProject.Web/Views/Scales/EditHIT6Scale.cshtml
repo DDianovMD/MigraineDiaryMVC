@@ -1,7 +1,7 @@
 ﻿@model HIT6ScaleViewModel
 
 @{
-    ViewData["Title"] = "Редактирай HIT6 скала";
+    ViewData["Title"] = "Редактирай HIT-6 скала";
 }
 
 <header>
@@ -9,7 +9,7 @@
 </header>
 <main>
     <section>
-        <form asp-controller="Scales" asp-action="EditHIT6Scale" asp-route-currentUserId=@ViewData["currentUserId"] method="post">
+        <form asp-controller="Scales" asp-action="EditHIT6Scale" asp-route-userId=@ViewData["currentUserId"] method="post">
             <div class="mb-3">
                 <label asp-for="FirstQuestionAnswer">
                     1. Когато имате главоболие, колко често болката е много силна?

@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MigraineDiary.Web.Data;
-using MigraineDiary.Web.Data.DbModels;
 using MigraineDiary.Web.Models;
-using MigraineDiary.Web.Services;
 using MigraineDiary.Web.Services.Contracts;
 using System.Security.Claims;
 
@@ -13,19 +9,17 @@ namespace MigraineDiary.Web.Controllers
     [Authorize]
     public class ScalesController : Controller
     {
-        private readonly ApplicationDbContext dbContext;
         private readonly IHIT6ScaleService HIT6ScaleService;
         private readonly IZungScaleForAnxietyService ZungScaleForAnxietyService;
 
-        public ScalesController(ApplicationDbContext dbContext,
-                                IHIT6ScaleService HIT6scaleService,
-                                IZungScaleForAnxietyService ZungScaleForAnxietyService)
+        public ScalesController(IHIT6ScaleService HIT6scaleService,
+                      IZungScaleForAnxietyService ZungScaleForAnxietyService)
         {
-            this.dbContext = dbContext;
             this.HIT6ScaleService = HIT6scaleService;
             this.ZungScaleForAnxietyService = ZungScaleForAnxietyService;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             // Get controller's name and action's name without using magic strings.
@@ -112,122 +106,70 @@ namespace MigraineDiary.Web.Controllers
                 return View(addModel);
             }
 
-            // Assign valid answers to DbModel
-            string[] answers = new string[]
+            try
             {
-                addModel.FirstQuestionAnswer,
-                addModel.SecondQuestionAnswer,
-                addModel.ThirdQuestionAnswer,
-                addModel.FourthQuestionAnswer,
-                addModel.FifthQuestionAnswer,
-                addModel.SixthQuestionAnswer,
-            };
+                await this.HIT6ScaleService.AddAsync(addModel, currentUserId);
 
-            HIT6Scale HIT6Scale = new HIT6Scale()
+                // Get controller's name and action's name without using magic strings.
+                string actionName = nameof(ScalesController.MyHIT6Scales);
+                string controllerName = nameof(ScalesController).Substring(0, nameof(ScalesController).Length - "Controller".Length);
+
+                return RedirectToAction(actionName, controllerName);
+            }
+            catch (Exception ex)
             {
-                FirstQuestionAnswer = addModel.FirstQuestionAnswer,
-                SecondQuestionAnswer = addModel.SecondQuestionAnswer,
-                ThirdQuestionAnswer = addModel.ThirdQuestionAnswer,
-                FourthQuestionAnswer = addModel.FourthQuestionAnswer,
-                FifthQuestionAnswer = addModel.FifthQuestionAnswer,
-                SixthQuestionAnswer = addModel.SixthQuestionAnswer,
-                PatientId = currentUserId,
-                TotalScore = this.HIT6ScaleService.CalculateTotalScore(answers),
-            };
-
-            await this.dbContext.HIT6Scales.AddAsync(HIT6Scale);
-            await this.dbContext.SaveChangesAsync();
-
-            // Get controller's name and action's name without using magic strings.
-            string actionName = nameof(HomeController.Index);
-            string controllerName = nameof(HomeController).Substring(0, nameof(HomeController).Length - "Controller".Length);
-
-            return RedirectToAction(actionName, controllerName);
+                return StatusCode(500);
+            }
         }
 
         [HttpGet]
-        public async Task<IActionResult> MyHIT6Scales()
+        public async Task<IActionResult> MyHIT6Scales(int pageIndex = 1, int pageSize = 1, string orderByDate = "NewestFirst")
         {
-            // Get current user's Id
-            ViewData["currentUserId"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            // Get current user's Id.
+            string currentUserId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ViewData["currentUserId"] = currentUserId;
 
-            // Get user's scales ordered by last added first
-            HIT6Scale[] currentUserScales = await this.dbContext.HIT6Scales
-                                                                .Where(x => x.IsDeleted == false && x.PatientId == (string)ViewData["currentUserId"]!)
-                                                                .AsNoTracking()
-                                                                .OrderByDescending(x => x.CreatedOn)
-                                                                .ToArrayAsync();
+            // Get user's scales.
+            PaginatedList<HIT6ScaleViewModel> currentUserScales = await HIT6ScaleService.GetAllAsync(currentUserId, pageIndex, pageSize, orderByDate);
 
-            // Initialize collection of view models
-            List<HIT6ScaleViewModel> scalesViewModels = new List<HIT6ScaleViewModel>();
+            // Send pagination size and ordering criteria to the view.
+            ViewData["pageSize"] = pageSize;
+            ViewData["orderByDate"] = orderByDate;
 
-            // Fill the collection of view models
-            foreach (HIT6Scale scale in currentUserScales)
-            {
-                HIT6ScaleViewModel currentScale = new HIT6ScaleViewModel
-                {
-                    Id = scale.Id,
-                    FirstQuestionAnswer = scale.FirstQuestionAnswer,
-                    SecondQuestionAnswer = scale.SecondQuestionAnswer,
-                    ThirdQuestionAnswer = scale.ThirdQuestionAnswer,
-                    FourthQuestionAnswer = scale.FourthQuestionAnswer,
-                    FifthQuestionAnswer = scale.FifthQuestionAnswer,
-                    SixthQuestionAnswer = scale.SixthQuestionAnswer,
-                    TotalScore = scale.TotalScore,
-                    CreatedOn = scale.CreatedOn,
-                };
-
-                scalesViewModels.Add(currentScale);
-            }
-
-            return View(scalesViewModels);
+            return View(currentUserScales);
         }
 
         [HttpGet]
         public async Task<IActionResult> EditHIT6Scale(string id)
         {
-            // Get current user's Id
-            ViewData["currentUserId"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            // Get current user's Id.
+            string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ViewData["currentUserId"] = currentUserId;
 
             // Get HIT6 scale
-            HIT6Scale? hit6scale = await this.dbContext.HIT6Scales
-                                           .FirstOrDefaultAsync(x => x.Id == id);
+            HIT6ScaleViewModel hit6scaleViewModel = await HIT6ScaleService.GetByIdAsync(id, currentUserId);
 
             // Check if scale exists and it belongs to the current user.
-            // Protection against changing ID values through HTML and trying to get other user's scale.
-            if (hit6scale == null || this.dbContext.Users
-                                              .Where(x => x.Id == (string)ViewData["currentUserId"]!)
-                                              .Include(x => x.HIT6Scales)
-                                              .Any(x => x.HIT6Scales.Any(x => x.Id == id) == false))
+            if (hit6scaleViewModel == null)
             {
                 return NotFound();
             }
 
-            HIT6ScaleViewModel viewModel = new HIT6ScaleViewModel()
-            {
-                Id = hit6scale.Id,
-                FirstQuestionAnswer = hit6scale.FirstQuestionAnswer,
-                SecondQuestionAnswer = hit6scale.SecondQuestionAnswer,
-                ThirdQuestionAnswer = hit6scale.ThirdQuestionAnswer,
-                FourthQuestionAnswer = hit6scale.FourthQuestionAnswer,
-                FifthQuestionAnswer = hit6scale.FifthQuestionAnswer,
-                SixthQuestionAnswer = hit6scale.SixthQuestionAnswer,
-            };
-
-            return View(viewModel);
+            return View(hit6scaleViewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditHIT6Scale(HIT6ScaleViewModel viewModel, string currentUserId)
+        public async Task<IActionResult> EditHIT6Scale(HIT6ScaleViewModel viewModel, string userId)
         {
             // Get current user's Id if ModelState is not valid and it's needed to be routed.
             // If not routed on next submission currentUserId is null and ModelState is not valid again.
-            ViewData["currentUserId"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ViewData["currentUserId"] = currentUserId;
 
             // Check if hacker is trying to change userId through page's HTML with other user's Id.
             // Return NotFound if sended user Id is different.
-            if (currentUserId != ViewData["currentUserId"]!.ToString())
+            if (userId != currentUserId)
             {
                 return NotFound();
             }
@@ -284,7 +226,7 @@ namespace MigraineDiary.Web.Controllers
                 return View(viewModel);
             }
 
-            // Add validated edited answers to string array (given as param to CalculateTotalScore method)
+            // Add validated edited answers to string array (given as param to EditAsync method).
             string[] editedAnswers = new string[]
             {
                 viewModel.FirstQuestionAnswer,
@@ -295,54 +237,28 @@ namespace MigraineDiary.Web.Controllers
                 viewModel.SixthQuestionAnswer,
             };
 
-            // Get HIT-6 scale that is going to be edited.
-            HIT6Scale? HIT6Scale = await this.dbContext.HIT6Scales.FirstOrDefaultAsync(x => x.Id == viewModel.Id);
-
-            // Boolean flag evaluating if logged user has the scale that is going to be edited.
-            bool loggedUserHasScale = this.dbContext.Users
-                                                    .Where(x => x.Id == currentUserId)
-                                                    .Include(x => x.HIT6Scales)
-                                                    .Any(x => x.HIT6Scales.Any(x => x.Id == viewModel.Id));
-
-            // Check if hacker has tried to change HIT6Scale's Id through page's HTML.
-            // If it has been changed, HIT6Scale eventually is going to be null (returned by FirstOrDefaultAsync method, line 295).
-
-            // If it has been changed and somehow there is HIT6Scale in database with given GUID primary key (it's not null)
-            // we check aswell if logged user is owner of the existing scale to reduce even more the chance
-            // hacker could edit other user's registered HIT-6 scale. If these two validations fail - HTTP 404 is returned.
-            if (HIT6Scale != null && loggedUserHasScale)
+            try
             {
-                // Assign new values to edit the HIT-6 scale record in the database.
-                HIT6Scale.FirstQuestionAnswer = viewModel.FirstQuestionAnswer;
-                HIT6Scale.SecondQuestionAnswer = viewModel.SecondQuestionAnswer;
-                HIT6Scale.ThirdQuestionAnswer = viewModel.ThirdQuestionAnswer;
-                HIT6Scale.FourthQuestionAnswer = viewModel.FourthQuestionAnswer;
-                HIT6Scale.FifthQuestionAnswer = viewModel.FifthQuestionAnswer;
-                HIT6Scale.SixthQuestionAnswer = viewModel.SixthQuestionAnswer;
-                HIT6Scale.PatientId = currentUserId;
-                HIT6Scale.TotalScore = this.HIT6ScaleService.CalculateTotalScore(editedAnswers);
-                HIT6Scale.CreatedOn = DateTime.UtcNow;
+                await this.HIT6ScaleService.EditAsync(viewModel.Id, currentUserId, editedAnswers);
 
-                // Save changes in database.
-                await this.dbContext.SaveChangesAsync();
+                // Get controller's name and action's name without using magic strings.
+                string actionName = nameof(ScalesController.MyHIT6Scales);
+                string controllerName = nameof(ScalesController).Substring(0, nameof(ScalesController).Length - "Controller".Length);
+
+                return RedirectToAction(actionName, controllerName);
             }
-            else
+            catch (ArgumentException ae)
             {
                 return NotFound();
             }
-
-
-            // Get controller's name and action's name without using magic strings.
-            string actionName = nameof(ScalesController.MyHIT6Scales);
-            string controllerName = nameof(ScalesController).Substring(0, nameof(ScalesController).Length - "Controller".Length);
-
-            return RedirectToAction(actionName, controllerName);
         }
 
+        [HttpGet]
         public async Task<IActionResult> DeleteHIT6Scale(string hit6scaleId, string currentUserId)
         {
             // Get current user's Id.
-            ViewData["currentUserId"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ViewData["currentUserId"] = currentUserId;
 
             // Check if hacker is trying to change userId through page's HTML with other user's Id.
             // Return NotFound if sent user Id is different.
@@ -351,21 +267,9 @@ namespace MigraineDiary.Web.Controllers
                 return NotFound();
             }
 
-            // Get HIT-6 scale that is going to be deleted.
-            HIT6Scale? HIT6Scale = await this.dbContext.HIT6Scales.FirstOrDefaultAsync(x => x.Id == hit6scaleId);
-
-            // Boolean flag evaluating if logged user has the scale that is going to be edited.
-            bool loggedUserHasScale = this.dbContext.Users
-                                                    .Where(x => x.Id == currentUserId)
-                                                    .Include(x => x.HIT6Scales)
-                                                    .Any(x => x.HIT6Scales.Any(x => x.Id == hit6scaleId));
-
-            if (HIT6Scale != null && loggedUserHasScale)
+            try
             {
-                HIT6Scale.IsDeleted = true;
-                HIT6Scale.DeletedOn = DateTime.UtcNow;
-
-                await this.dbContext.SaveChangesAsync();
+                await this.HIT6ScaleService.SoftDeleteAsync(hit6scaleId, currentUserId);
 
                 // Get controller's name and action's name without using magic strings.
                 string actionName = nameof(ScalesController.MyHIT6Scales);
@@ -373,7 +277,7 @@ namespace MigraineDiary.Web.Controllers
 
                 return RedirectToAction(actionName, controllerName);
             }
-            else
+            catch (ArgumentException ex)
             {
                 return NotFound();
             }
@@ -539,178 +443,70 @@ namespace MigraineDiary.Web.Controllers
                 return View(addModel);
             }
 
-            // Assign valid answers to DbModel
-            string[] answers = new string[]
+            try
             {
-                addModel.FirstQuestionAnswer,
-                addModel.SecondQuestionAnswer,
-                addModel.ThirdQuestionAnswer,
-                addModel.FourthQuestionAnswer,
-                addModel.FifthQuestionAnswer,
-                addModel.SixthQuestionAnswer,
-                addModel.SeventhQuestionAnswer,
-                addModel.EighthQuestionAnswer,
-                addModel.NinthQuestionAnswer,
-                addModel.TenthQuestionAnswer,
-                addModel.EleventhQuestionAnswer,
-                addModel.TwelfthQuestionAnswer,
-                addModel.ThirteenthQuestionAnswer,
-                addModel.FourteenthQuestionAnswer,
-                addModel.FifteenthQuestionAnswer,
-                addModel.SixteenthQuestionAnswer,
-                addModel.SeventeenthQuestionAnswer,
-                addModel.EighteenthQuestionAnswer,
-                addModel.NineteenthQuestionAnswer,
-                addModel.TwentiethQuestionAnswer,
-            };
+                await this.ZungScaleForAnxietyService.AddAsync(addModel, currentUserId);
 
-            ZungScaleForAnxiety zungScale = new ZungScaleForAnxiety()
+                // Get controller's name and action's name without using magic strings.
+                string actionName = nameof(ScalesController.MyZungScales);
+                string controllerName = nameof(ScalesController).Substring(0, nameof(ScalesController).Length - "Controller".Length);
+
+                return RedirectToAction(actionName, controllerName);
+            }
+            catch (Exception ex)
             {
-                FirstQuestionAnswer = addModel.FirstQuestionAnswer,
-                SecondQuestionAnswer = addModel.SecondQuestionAnswer,
-                ThirdQuestionAnswer = addModel.ThirdQuestionAnswer,
-                FourthQuestionAnswer = addModel.FourthQuestionAnswer,
-                FifthQuestionAnswer = addModel.FifthQuestionAnswer,
-                SixthQuestionAnswer = addModel.SixthQuestionAnswer,
-                SeventhQuestionAnswer = addModel.SeventhQuestionAnswer,
-                EighthQuestionAnswer = addModel.EighthQuestionAnswer,
-                NinthQuestionAnswer = addModel.NinthQuestionAnswer,
-                TenthQuestionAnswer = addModel.TenthQuestionAnswer,
-                EleventhQuestionAnswer = addModel.EleventhQuestionAnswer,
-                TwelfthQuestionAnswer = addModel.TwelfthQuestionAnswer,
-                ThirteenthQuestionAnswer = addModel.ThirteenthQuestionAnswer,
-                FourteenthQuestionAnswer = addModel.FourteenthQuestionAnswer,
-                FifteenthQuestionAnswer = addModel.FifteenthQuestionAnswer,
-                SixteenthQuestionAnswer = addModel.SixteenthQuestionAnswer,
-                SeventeenthQuestionAnswer = addModel.SeventeenthQuestionAnswer,
-                EighteenthQuestionAnswer = addModel.EighteenthQuestionAnswer,
-                NineteenthQuestionAnswer = addModel.NineteenthQuestionAnswer,
-                TwentiethQuestionAnswer = addModel.TwentiethQuestionAnswer,
-                PatientId = currentUserId,
-                TotalScore = this.ZungScaleForAnxietyService.CalculateTotalScore(answers),
-            };
-
-            await this.dbContext.ZungScalesForAnxiety.AddAsync(zungScale);
-            await this.dbContext.SaveChangesAsync();
-
-            // Get controller's name and action's name without using magic strings.
-            string actionName = nameof(HomeController.Index);
-            string controllerName = nameof(HomeController).Substring(0, nameof(HomeController).Length - "Controller".Length);
-
-            return RedirectToAction(actionName, controllerName);
+                return StatusCode(500);
+            }
         }
 
         [HttpGet]
-        public async Task<IActionResult> MyZungScales()
+        public async Task<IActionResult> MyZungScales(int pageIndex = 1, int pageSize = 1, string orderByDate = "NewestFirst")
         {
-            // Get current user's Id
-            ViewData["currentUserId"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            // Get current user's Id.
+            string currentUserId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ViewData["currentUserId"] = currentUserId;
 
-            // Get user's scales ordered by last added first
-            ZungScaleForAnxiety[] currentUserScales = await this.dbContext.ZungScalesForAnxiety
-                                                                .Where(x => x.IsDeleted == false && x.PatientId == (string)ViewData["currentUserId"]!)
-                                                                .AsNoTracking()
-                                                                .OrderByDescending(x => x.CreatedOn)
-                                                                .ToArrayAsync();
+            // Get user's scales.
+            PaginatedList<ZungScaleViewModel> currentUserScales = await ZungScaleForAnxietyService.GetAllAsync(currentUserId, pageIndex, pageSize, orderByDate);
 
-            // Initialize collection of view models
-            List<ZungScaleViewModel> scalesViewModels = new List<ZungScaleViewModel>();
+            // Send pagination size and ordering criteria to the view.
+            ViewData["pageSize"] = pageSize;
+            ViewData["orderByDate"] = orderByDate;
 
-            // Fill the collection of view models
-            foreach (ZungScaleForAnxiety scale in currentUserScales)
-            {
-                ZungScaleViewModel currentScale = new ZungScaleViewModel
-                {
-                    Id = scale.Id,
-                    FirstQuestionAnswer = scale.FirstQuestionAnswer,
-                    SecondQuestionAnswer = scale.SecondQuestionAnswer,
-                    ThirdQuestionAnswer = scale.ThirdQuestionAnswer,
-                    FourthQuestionAnswer = scale.FourthQuestionAnswer,
-                    FifthQuestionAnswer = scale.FifthQuestionAnswer,
-                    SixthQuestionAnswer = scale.SixthQuestionAnswer,
-                    SeventhQuestionAnswer = scale.SeventhQuestionAnswer,
-                    EighthQuestionAnswer = scale.EighthQuestionAnswer,
-                    NinthQuestionAnswer = scale.NinthQuestionAnswer,
-                    TenthQuestionAnswer = scale.TenthQuestionAnswer,
-                    EleventhQuestionAnswer = scale.EleventhQuestionAnswer,
-                    TwelfthQuestionAnswer = scale.TwelfthQuestionAnswer,
-                    ThirteenthQuestionAnswer = scale.ThirteenthQuestionAnswer,
-                    FourteenthQuestionAnswer = scale.FourteenthQuestionAnswer,
-                    FifteenthQuestionAnswer = scale.FifteenthQuestionAnswer,
-                    SixteenthQuestionAnswer = scale.SixteenthQuestionAnswer,
-                    SeventeenthQuestionAnswer = scale.SeventeenthQuestionAnswer,
-                    EighteenthQuestionAnswer = scale.EighteenthQuestionAnswer,
-                    NineteenthQuestionAnswer = scale.NineteenthQuestionAnswer,
-                    TwentiethQuestionAnswer = scale.TwentiethQuestionAnswer,
-                    TotalScore = scale.TotalScore,
-                    CreatedOn = scale.CreatedOn,
-                };
-
-                scalesViewModels.Add(currentScale);
-            }
-
-            return View(scalesViewModels);
+            return View(currentUserScales);
         }
 
         [HttpGet]
         public async Task<IActionResult> EditZungScale(string id)
         {
-            // Get current user's Id
-            ViewData["currentUserId"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            // Get current user's Id.
+            string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ViewData["currentUserId"] = currentUserId;
 
-            // Get Zung scale
-            ZungScaleForAnxiety? zungScale = await this.dbContext.ZungScalesForAnxiety
-                                                       .FirstOrDefaultAsync(x => x.Id == id);
+            // Get Zung scale.
+            ZungScaleViewModel zungScaleViewModel = await ZungScaleForAnxietyService.GetByIdAsync(id, currentUserId);
 
             // Check if scale exists and it belongs to the current user.
-            // Protection against changing ID values through HTML and trying to get other user's scale.
-            if (zungScale == null || this.dbContext.Users
-                                                   .Where(x => x.Id == (string)ViewData["currentUserId"]!)
-                                                   .Include(x => x.ZungScalesForAnxiety)
-                                                   .Any(x => x.ZungScalesForAnxiety.Any(x => x.Id == id) == false))
+            if (zungScaleViewModel == null)
             {
                 return NotFound();
             }
 
-            ZungScaleViewModel viewModel = new ZungScaleViewModel()
-            {
-                Id = zungScale.Id,
-                FirstQuestionAnswer = zungScale.FirstQuestionAnswer,
-                SecondQuestionAnswer = zungScale.SecondQuestionAnswer,
-                ThirdQuestionAnswer = zungScale.ThirdQuestionAnswer,
-                FourthQuestionAnswer = zungScale.FourthQuestionAnswer,
-                FifthQuestionAnswer = zungScale.FifthQuestionAnswer,
-                SixthQuestionAnswer = zungScale.SixthQuestionAnswer,
-                SeventhQuestionAnswer = zungScale.SeventhQuestionAnswer,
-                EighthQuestionAnswer = zungScale.EighthQuestionAnswer,
-                NinthQuestionAnswer = zungScale.NinthQuestionAnswer,
-                TenthQuestionAnswer = zungScale.TenthQuestionAnswer,
-                EleventhQuestionAnswer = zungScale.EleventhQuestionAnswer,
-                TwelfthQuestionAnswer = zungScale.TwelfthQuestionAnswer,
-                ThirteenthQuestionAnswer = zungScale.ThirteenthQuestionAnswer,
-                FourteenthQuestionAnswer = zungScale.FourteenthQuestionAnswer,
-                FifteenthQuestionAnswer = zungScale.FifteenthQuestionAnswer,
-                SixteenthQuestionAnswer = zungScale.SixteenthQuestionAnswer,
-                SeventeenthQuestionAnswer = zungScale.SeventeenthQuestionAnswer,
-                EighteenthQuestionAnswer = zungScale.EighteenthQuestionAnswer,
-                NineteenthQuestionAnswer = zungScale.NineteenthQuestionAnswer,
-                TwentiethQuestionAnswer = zungScale.TwentiethQuestionAnswer,
-            };
-
-            return View(viewModel);
+            return View(zungScaleViewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditZungScale(ZungScaleViewModel viewModel, string currentUserId)
+        public async Task<IActionResult> EditZungScale(ZungScaleViewModel viewModel, string userId)
         {
             // Get current user's Id if ModelState is not valid and it's needed to be routed.
             // If not routed on next submission currentUserId is null and ModelState is not valid again.
-            ViewData["currentUserId"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ViewData["currentUserId"] = currentUserId;
 
             // Check if hacker is trying to change userId through page's HTML with other user's Id.
             // Return NotFound if sended user Id is different.
-            if (currentUserId != ViewData["currentUserId"]!.ToString())
+            if (userId != currentUserId)
             {
                 return NotFound();
             }
@@ -851,7 +647,7 @@ namespace MigraineDiary.Web.Controllers
                 return View(viewModel);
             }
 
-            // Add validated edited answers to string array (given as param to CalculateTotalScore method)
+            // Add validated edited answers to string array (given as param to EditAsync method).
             string[] editedAnswers = new string[]
             {
                 viewModel.FirstQuestionAnswer,
@@ -876,70 +672,28 @@ namespace MigraineDiary.Web.Controllers
                 viewModel.TwentiethQuestionAnswer,
             };
 
-            // Get Zung's scale that is going to be edited.
-            ZungScaleForAnxiety? zungScale = await this.dbContext.ZungScalesForAnxiety
-                                                                 .FirstOrDefaultAsync(x => x.Id == viewModel.Id);
-
-            // Boolean flag evaluating if logged user has the scale that is going to be edited.
-            bool loggedUserHasScale = this.dbContext.Users
-                                                    .Where(x => x.Id == currentUserId)
-                                                    .Include(x => x.ZungScalesForAnxiety)
-                                                    .Any(x => x.ZungScalesForAnxiety.Any(x => x.Id == viewModel.Id));
-
-            // Check if hacker has tried to change Zung scale's Id through page's HTML.
-            // If it has been changed, Zung scale eventually is going to be null (returned by FirstOrDefaultAsync method, line 880).
-
-            // If it has been changed and somehow there is Zung scale in database with given GUID primary key (it's not null)
-            // we check aswell if logged user is owner of the existing scale to reduce even more the chance
-            // hacker could edit other user's registered Zung scale. If these two validations fail - HTTP 404 is returned.
-            if (zungScale != null && loggedUserHasScale)
+            try
             {
-                // Assign new values to edit the Zung's scale record in the database.
-                zungScale.FirstQuestionAnswer = viewModel.FirstQuestionAnswer;
-                zungScale.SecondQuestionAnswer = viewModel.SecondQuestionAnswer;
-                zungScale.ThirdQuestionAnswer = viewModel.ThirdQuestionAnswer;
-                zungScale.FourthQuestionAnswer = viewModel.FourthQuestionAnswer;
-                zungScale.FifthQuestionAnswer = viewModel.FifthQuestionAnswer;
-                zungScale.SixthQuestionAnswer = viewModel.SixthQuestionAnswer;
-                zungScale.SeventhQuestionAnswer = viewModel.SeventhQuestionAnswer;
-                zungScale.EighthQuestionAnswer = viewModel.EighthQuestionAnswer;
-                zungScale.NinthQuestionAnswer = viewModel.NinthQuestionAnswer;
-                zungScale.TenthQuestionAnswer = viewModel.TenthQuestionAnswer;
-                zungScale.EleventhQuestionAnswer = viewModel.EleventhQuestionAnswer;
-                zungScale.TwelfthQuestionAnswer = viewModel.TwelfthQuestionAnswer;
-                zungScale.ThirteenthQuestionAnswer = viewModel.ThirteenthQuestionAnswer;
-                zungScale.FourteenthQuestionAnswer = viewModel.FourteenthQuestionAnswer;
-                zungScale.FifteenthQuestionAnswer = viewModel.FifteenthQuestionAnswer;
-                zungScale.SixteenthQuestionAnswer = viewModel.SixteenthQuestionAnswer;
-                zungScale.SeventeenthQuestionAnswer = viewModel.SeventeenthQuestionAnswer;
-                zungScale.EighteenthQuestionAnswer = viewModel.EighteenthQuestionAnswer;
-                zungScale.NineteenthQuestionAnswer = viewModel.NineteenthQuestionAnswer;
-                zungScale.TwentiethQuestionAnswer = viewModel.TwentiethQuestionAnswer;
-                zungScale.PatientId = currentUserId;
-                zungScale.TotalScore = this.ZungScaleForAnxietyService.CalculateTotalScore(editedAnswers);
-                zungScale.CreatedOn = DateTime.UtcNow;
+                await this.ZungScaleForAnxietyService.EditAsync(viewModel.Id, currentUserId, editedAnswers);
 
-                // Save changes in database.
-                await this.dbContext.SaveChangesAsync();
+                // Get controller's name and action's name without using magic strings.
+                string actionName = nameof(ScalesController.MyZungScales);
+                string controllerName = nameof(ScalesController).Substring(0, nameof(ScalesController).Length - "Controller".Length);
+
+                return RedirectToAction(actionName, controllerName);
             }
-            else
+            catch (ArgumentException ae)
             {
                 return NotFound();
             }
-
-
-            // Get controller's name and action's name without using magic strings.
-            string actionName = nameof(ScalesController.MyZungScales);
-            string controllerName = nameof(ScalesController).Substring(0, nameof(ScalesController).Length - "Controller".Length);
-
-            return RedirectToAction(actionName, controllerName);
         }
 
         [HttpGet]
         public async Task<IActionResult> DeleteZungScale(string zungScaleId, string currentUserId)
         {
             // Get current user's Id.
-            ViewData["currentUserId"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ViewData["currentUserId"] = currentUserId;
 
             // Check if hacker is trying to change userId through page's HTML with other user's Id.
             // Return NotFound if sent user Id is different.
@@ -948,21 +702,9 @@ namespace MigraineDiary.Web.Controllers
                 return NotFound();
             }
 
-            // Get Zung scale that is going to be deleted.
-            ZungScaleForAnxiety? zungScale = await this.dbContext.ZungScalesForAnxiety.FirstOrDefaultAsync(x => x.Id == zungScaleId);
-
-            // Boolean flag evaluating if logged user has the scale that is going to be edited.
-            bool loggedUserHasScale = this.dbContext.Users
-                                                    .Where(x => x.Id == currentUserId)
-                                                    .Include(x => x.ZungScalesForAnxiety)
-                                                    .Any(x => x.ZungScalesForAnxiety.Any(x => x.Id == zungScaleId));
-
-            if (zungScale != null && loggedUserHasScale)
+            try
             {
-                zungScale.IsDeleted = true;
-                zungScale.DeletedOn = DateTime.UtcNow;
-
-                await this.dbContext.SaveChangesAsync();
+                await this.ZungScaleForAnxietyService.SoftDeleteAsync(zungScaleId, currentUserId);
 
                 // Get controller's name and action's name without using magic strings.
                 string actionName = nameof(ScalesController.MyZungScales);
@@ -970,7 +712,7 @@ namespace MigraineDiary.Web.Controllers
 
                 return RedirectToAction(actionName, controllerName);
             }
-            else
+            catch (ArgumentException ex)
             {
                 return NotFound();
             }
