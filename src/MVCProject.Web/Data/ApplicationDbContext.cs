@@ -86,5 +86,7 @@ namespace MigraineDiary.Web.Data
         public DbSet<ZungScaleForAnxiety> ZungScalesForAnxiety { get; set; }
 
         public DbSet<Article> Articles { get; set; }
+
+        public DbSet<Message> Messages { get; set; }
     }
 }
