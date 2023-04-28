@@ -1,0 +1,35 @@
+﻿@model MessageAddModel
+
+<main>
+    <h4 class="article-title text-center">Изпратете ни съобщение</h4>
+    <section>
+        <form asp-controller="Contacts" asp-action="Index" method="post" id="contacts-container">
+
+            <div class="contacts-flex-item mt-5">
+                <label asp-for="@Model.SenderName">Вашето име</label> <br />
+                <input type="text" asp-for="@Model.SenderName"/>
+                <span asp-validation-for="@Model.SenderName"></span>
+            </div>
+
+            <div class="contacts-flex-item">
+                <label asp-for="@Model.SenderEmail">Имейл за контакт</label> <br />
+                <input type="text" asp-for="@Model.SenderEmail" placeholder="example@email.com" />
+                <span asp-validation-for="@Model.SenderEmail"></span>
+            </div>
+
+            <div class="contacts-flex-item">
+                <label asp-for="@Model.Title">Тема</label> <br />
+                <input type="text" asp-for="@Model.Title" style="width: 571px;"/>
+                <span asp-validation-for="@Model.Title"></span>
+            </div>
+
+            <div class="contacts-flex-item">
+                <label asp-for="@Model.MessageContent">Съобщение</label> <br />
+                <textarea asp-for="@Model.MessageContent" rows="7" cols="75" wrap="hard" style="resize: none"></textarea>
+                <span asp-validation-for="@Model.MessageContent"></span>
+            </div>
+
+            <input type="submit" value="Изпрати" class="btn btn-success mt-3" />
+        </form>
+    </section>
+</main>

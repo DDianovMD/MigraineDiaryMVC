@@ -48,7 +48,7 @@ body {
     margin-top: 35px;
 }
 
-.create-role-container {
+.create-role-container, #contacts-container {
     display: flex;
     justify-content: center;
     align-items: center;

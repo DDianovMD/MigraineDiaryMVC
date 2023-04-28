@@ -6,7 +6,7 @@ namespace MigraineDiary.Web.Data.DbModels
     {
         public Message()
         {
-            this.Id = new Guid().ToString();
+            this.Id = Guid.NewGuid().ToString();
         }
 
         [Key]
