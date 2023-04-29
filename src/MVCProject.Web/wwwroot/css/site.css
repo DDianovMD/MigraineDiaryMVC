@@ -111,3 +111,26 @@ body {
     margin-top: 20px;
     padding: 10px;
 }
+
+.message-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.message-title {
+    align-self: center;
+    background-color: white;
+    border-radius: 13px;
+    box-shadow: 0 0 15px #2C3E50;
+    padding: 0px 20px;
+}
+
+.message-content {
+    align-self: center;
+    background-color: white;
+    border-radius: 13px;
+    box-shadow: 0 0 15px #2C3E50;
+    padding: 0px 20px;
+    width: 50%;
+}

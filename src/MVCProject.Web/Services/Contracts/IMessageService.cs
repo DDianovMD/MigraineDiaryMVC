@@ -6,7 +6,7 @@ namespace MigraineDiary.Web.Services.Contracts
     {
         public Task AddAsync(MessageAddModel addModel);
 
-        public Task GetAllAsync();
+        public Task<PaginatedList<MessageViewModel>> GetAllAsync(int pageIndex, int pageSize, string orderByDate);
 
         public Task SoftDeleteAsync();
     }

@@ -22,6 +22,7 @@ namespace MigraineDiary.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(MessageAddModel addModel)
         {
             if (!ModelState.IsValid)

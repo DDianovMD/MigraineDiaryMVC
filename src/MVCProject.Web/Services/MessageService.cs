@@ -1,7 +1,9 @@
-﻿using MigraineDiary.Web.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MigraineDiary.Web.Data;
 using MigraineDiary.Web.Data.DbModels;
 using MigraineDiary.Web.Models;
 using MigraineDiary.Web.Services.Contracts;
+using System.Drawing.Printing;
 
 namespace MigraineDiary.Web.Services
 {
@@ -28,9 +30,40 @@ namespace MigraineDiary.Web.Services
             await this.dbContext.SaveChangesAsync();
         }
 
-        public Task GetAllAsync()
+        public async Task<PaginatedList<MessageViewModel>> GetAllAsync(int pageIndex = 1, int pageSize = 1, string orderByDate = "NewestFirst")
         {
-            throw new NotImplementedException();
+            IQueryable<MessageViewModel> messages = null!;
+
+            if (orderByDate == "NewestFirst")
+            {
+                messages = this.dbContext.Messages
+                                         .OrderByDescending(m => m.CreatedOn)
+                                         .Select(m => new MessageViewModel
+                                         {
+                                             SenderName = m.SenderName,
+                                             SenderEmail = m.SenderEmail,
+                                             Title = m.Title,
+                                             MessageContent = m.MessageContent,
+                                             Timestamp = m.CreatedOn
+                                         })
+                                         .AsNoTracking();
+            }
+            else
+            {
+                messages = this.dbContext.Messages
+                                         .OrderBy(m => m.CreatedOn)
+                                         .Select(m => new MessageViewModel
+                                         {
+                                             SenderName = m.SenderName,
+                                             SenderEmail = m.SenderEmail,
+                                             Title = m.Title,
+                                             MessageContent = m.MessageContent,
+                                             Timestamp = m.CreatedOn
+                                         })
+                                         .AsNoTracking();
+            }
+
+            return await PaginatedList<MessageViewModel>.CreateAsync(messages, pageIndex, pageSize);
         }
 
         public Task SoftDeleteAsync()

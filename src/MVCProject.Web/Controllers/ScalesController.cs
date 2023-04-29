@@ -125,6 +125,16 @@ namespace MigraineDiary.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> MyHIT6Scales(int pageIndex = 1, int pageSize = 1, string orderByDate = "NewestFirst")
         {
+            // Custom validation against web parameter tampering
+            if ((pageSize != 1 &&
+                 pageSize != 5 &&
+                 pageSize != 10) ||
+                (orderByDate != "NewestFirst" &&
+                 orderByDate != "OldestFirst"))
+            {
+                return BadRequest();
+            }
+
             // Get current user's Id.
             string currentUserId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             ViewData["currentUserId"] = currentUserId;
@@ -462,6 +472,16 @@ namespace MigraineDiary.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> MyZungScales(int pageIndex = 1, int pageSize = 1, string orderByDate = "NewestFirst")
         {
+            // Custom validation against web parameter tampering
+            if ((pageSize != 1 &&
+                 pageSize != 5 &&
+                 pageSize != 10) ||
+                (orderByDate != "NewestFirst" &&
+                 orderByDate != "OldestFirst"))
+            {
+                return BadRequest();
+            }
+
             // Get current user's Id.
             string currentUserId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             ViewData["currentUserId"] = currentUserId;

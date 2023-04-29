@@ -11,12 +11,15 @@ namespace MigraineDiary.Web.Controllers
     {
         private readonly ApplicationDbContext dbContext;
         private readonly IAdminService adminService;
+        private readonly IMessageService messageService;
 
         public AdminController(ApplicationDbContext dbContext,
-                                      IAdminService adminService)
+                                      IAdminService adminService,
+                                    IMessageService messageService)
         {
             this.dbContext = dbContext;
             this.adminService = adminService;
+            this.messageService = messageService;
         }
 
         public IActionResult Index()
@@ -71,6 +74,28 @@ namespace MigraineDiary.Web.Controllers
             Dictionary<string, List<string>> auditViewModel = await this.adminService.GetUsersAndRolesAsync();
 
             return View(auditViewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Inbox(int pageIndex = 1, int pageSize = 1, string orderByDate = "NewestFirst")
+        {
+            // Custom validation against web parameter tampering
+            if ((pageSize != 1 &&
+                 pageSize != 5 &&
+                 pageSize != 10) ||
+                (orderByDate != "NewestFirst" &&
+                 orderByDate != "OldestFirst"))
+            {
+                return BadRequest();
+            }
+
+            PaginatedList<MessageViewModel> messages = await this.messageService.GetAllAsync(pageIndex, pageSize, orderByDate);
+
+            // Send pagination size and ordering criteria to the view.
+            ViewData["pageSize"] = pageSize;
+            ViewData["orderByDate"] = orderByDate;
+
+            return View(messages);
         }
     }
 }

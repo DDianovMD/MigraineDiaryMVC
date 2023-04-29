@@ -1,0 +1,30 @@
+﻿@model PaginatedList<MessageViewModel>
+
+@{
+    ViewData["Title"] = "Съобщения";
+    ViewData["PartialViewController"] = "Admin";
+    ViewData["PartialViewAction"] = "Inbox";
+}
+
+<main>
+    <h3 class="text-center article-title mb-5">Получени съобщения</h3>
+    <partial name="_PageItemsOrderingNavigation" view-data="ViewData" />
+    @foreach (var message in Model)
+    {
+        <section class="mt-5">
+            <article>
+                <p>
+                    Подател: @message.SenderName <br />
+                    Имейл: @message.SenderEmail <br />
+                    Получено: @message.Timestamp.ToLongDateString() @message.Timestamp.ToShortTimeString()ч.
+                </p>
+                <div class="message-container">
+                    <p class="text-center message-title">@message.Title</p>
+                    <p class="message-content">@message.MessageContent</p>
+                </div>
+            </article>
+        </section>
+        <hr />
+    }
+    <partial name="_PagesNavigation" view-data="ViewData" />
+</main>
