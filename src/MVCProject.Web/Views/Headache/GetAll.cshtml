@@ -4,6 +4,7 @@
     ViewData["Title"] = "Headaches";
     ViewData["PartialViewController"] = "Headache";
     ViewData["PartialViewAction"] = "GetAll";
+    ViewData["itemsType"] = "Главоболия";
 
     int headacheCounter = 1;
     string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
