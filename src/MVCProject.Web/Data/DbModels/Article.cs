@@ -67,5 +67,6 @@ namespace MigraineDiary.Web.Data.DbModels
         /// <summary>
         /// Record showing when article is deleted by user.
         /// </summary>
-        public DateTime? DeletedOn { get; set; }    }
+        public DateTime? DeletedOn { get; set; }    
+    }
 }

@@ -49,13 +49,13 @@ namespace MigraineDiary.Web.Data.DbModels
         /// Patient's registered headaches shared with user in role "Doctor".
         /// </summary>
         [InverseProperty("SharedWith")]
-        public ICollection<Headache> SharedWithMe { get; set;}
+        public ICollection<Headache> SharedWithMe { get; set; }
 
         /// <summary>
         /// HIT6 scales registered by user in role "Patient".
         /// </summary>
         [InverseProperty("Patient")]
-        public ICollection<HIT6Scale> HIT6Scales { get; set;}
+        public ICollection<HIT6Scale> HIT6Scales { get; set; }
 
         /// <summary>
         /// Patient's registered HIT6 scales shared with user in role "Doctor".
@@ -79,5 +79,10 @@ namespace MigraineDiary.Web.Data.DbModels
         /// Articles published by user.
         /// </summary>
         public ICollection<Article> Articles { get; set; }
+
+        /// <summary>
+        /// Clinical trials published by user in role "Doctor".
+        /// </summary>
+        public ICollection<ClinicalTrial> ClinicalTrials { get; set; }
     }
 }

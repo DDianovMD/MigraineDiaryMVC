@@ -34,6 +34,16 @@ namespace MigraineDiary.Web.Data
                 .WithMany(x => x.Articles)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<ClinicalTrial>()
+                .HasMany(x => x.Practicioners)
+                .WithOne(x => x.ClinicalTrial)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ClinicalTrial>()
+                .HasOne(x => x.Creator)
+                .WithMany(x => x.ClinicalTrials)
+                .OnDelete(DeleteBehavior.NoAction);
+
             base.OnModelCreating(modelBuilder);
 
             const string ADMIN_ID = "ff3d52a7-7288-42aa-9955-6c4c4ad4caed";
@@ -88,5 +98,9 @@ namespace MigraineDiary.Web.Data
         public DbSet<Article> Articles { get; set; }
 
         public DbSet<Message> Messages { get; set; }
+
+        public DbSet<Practicioner> Practicioners { get; set; }
+
+        public DbSet<ClinicalTrial> ClinicalTrials { get; set; }
     }
 }
