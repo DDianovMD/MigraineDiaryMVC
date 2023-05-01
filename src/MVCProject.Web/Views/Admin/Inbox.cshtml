@@ -7,25 +7,38 @@
     ViewData["itemsType"] = "Съобщения";
 }
 
-<main>
-    <h3 class="text-center article-title mb-5">Получени съобщения</h3>
-    <partial name="_PageItemsOrderingNavigation" view-data="ViewData" />
-    @foreach (var message in Model)
-    {
-        <section class="mt-5">
-            <article>
-                <p>
-                    Подател: @message.SenderName <br />
-                    Имейл: @message.SenderEmail <br />
-                    Получено: @message.Timestamp.ToLongDateString() @message.Timestamp.ToShortTimeString()ч.
-                </p>
-                <div class="message-container">
-                    <p class="text-center message-title">@message.Title</p>
-                    <p class="message-content">@message.MessageContent</p>
-                </div>
-            </article>
-        </section>
-        <hr />
-    }
-    <partial name="_PagesNavigation" view-data="ViewData" />
-</main>
+@if (Model.Count == 0)
+{
+    <div>
+        <h4 class="text-center article-title mt-5">Нямате нови съобщения.</h4>
+    </div>
+}
+else
+{
+    <main>
+        <h3 class="text-center article-title mb-5">Получени съобщения</h3>
+        <partial name="_PageItemsOrderingNavigation" view-data="ViewData" />
+        @foreach (var message in Model)
+        {
+            <section class="mt-5">
+                <article>
+                    <p>
+                        Подател: @message.SenderName <br />
+                        Имейл: @message.SenderEmail <br />
+                        Получено: @message.Timestamp.ToLongDateString() @message.Timestamp.ToShortTimeString()ч.
+                    </p>
+                    <div class="message-container">
+                        <p class="text-center message-title">@message.Title</p>
+                        <p class="message-content">@message.MessageContent</p>
+                    </div>
+                    <div style="display:flex; justify-content: space-between; width: 50%; margin: 0px 25%;">
+                        <a asp-controller="Admin" asp-action="SoftDeleteMessage" asp-route-messageId="@message.Id" class="btn btn-warning">Маркирай като изтрито</a>
+                        <a asp-controller="Admin" asp-action="DeleteMessage" asp-route-messageId="@message.Id" class="btn btn-danger">Изтрий</a>
+                    </div>
+                </article>
+            </section>
+            <hr />
+        }
+        <partial name="_PagesNavigation" view-data="ViewData" />
+    </main>
+}

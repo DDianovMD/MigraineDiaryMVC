@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MigraineDiary.Web.Data;
 using MigraineDiary.Web.Models;
 using MigraineDiary.Web.Services.Contracts;
@@ -96,6 +97,54 @@ namespace MigraineDiary.Web.Controllers
             ViewData["orderByDate"] = orderByDate;
 
             return View(messages);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteMessage(string messageId)
+        {
+            try
+            {
+                await this.messageService.DeleteAsync(messageId);
+
+                // Get controller name and action name without using magic strings
+                string actionName = nameof(AdminController.Inbox);
+                string controllerName = nameof(AdminController).Substring(0, nameof(AdminController).Length - "Controller".Length);
+
+                return RedirectToAction(actionName, controllerName);
+            }
+            catch (Exception ex)
+            {
+                // Log exception to logger.
+                // Get controller name and action name without using magic strings
+                string actionName = nameof(AdminController.Inbox);
+                string controllerName = nameof(AdminController).Substring(0, nameof(AdminController).Length - "Controller".Length);
+
+                return RedirectToAction(actionName, controllerName);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SoftDeleteMessage(string messageId)
+        {
+            try
+            {
+                await this.messageService.SoftDeleteAsync(messageId);
+
+                // Get controller name and action name without using magic strings
+                string actionName = nameof(AdminController.Inbox);
+                string controllerName = nameof(AdminController).Substring(0, nameof(AdminController).Length - "Controller".Length);
+
+                return RedirectToAction(actionName, controllerName);
+            }
+            catch (Exception ex)
+            {
+                // Log exception to logger.
+                // Get controller name and action name without using magic strings
+                string actionName = nameof(AdminController.Inbox);
+                string controllerName = nameof(AdminController).Substring(0, nameof(AdminController).Length - "Controller".Length);
+
+                return RedirectToAction(actionName, controllerName);
+            }
         }
     }
 }

@@ -3,7 +3,6 @@ using MigraineDiary.Web.Data;
 using MigraineDiary.Web.Data.DbModels;
 using MigraineDiary.Web.Models;
 using MigraineDiary.Web.Services.Contracts;
-using System.Drawing.Printing;
 
 namespace MigraineDiary.Web.Services
 {
@@ -37,9 +36,11 @@ namespace MigraineDiary.Web.Services
             if (orderByDate == "NewestFirst")
             {
                 messages = this.dbContext.Messages
+                                         .Where(m => m.IsDeleted == false)
                                          .OrderByDescending(m => m.CreatedOn)
                                          .Select(m => new MessageViewModel
                                          {
+                                             Id = m.Id,
                                              SenderName = m.SenderName,
                                              SenderEmail = m.SenderEmail,
                                              Title = m.Title,
@@ -51,9 +52,11 @@ namespace MigraineDiary.Web.Services
             else
             {
                 messages = this.dbContext.Messages
+                                         .Where(m => m.IsDeleted == false)
                                          .OrderBy(m => m.CreatedOn)
                                          .Select(m => new MessageViewModel
                                          {
+                                             Id = m.Id,
                                              SenderName = m.SenderName,
                                              SenderEmail = m.SenderEmail,
                                              Title = m.Title,
@@ -66,9 +69,40 @@ namespace MigraineDiary.Web.Services
             return await PaginatedList<MessageViewModel>.CreateAsync(messages, pageIndex, pageSize);
         }
 
-        public Task SoftDeleteAsync()
+        public async Task SoftDeleteAsync(string messageId)
         {
-            throw new NotImplementedException();
+            Message? message = await this.dbContext.Messages
+                                                   .FirstOrDefaultAsync(m => m.Id == messageId);
+
+            try
+            {
+                message!.IsDeleted = true;
+                message.DeletedOn = DateTime.UtcNow;
+
+                await this.dbContext.SaveChangesAsync();
+            }
+            catch (NullReferenceException nre)
+            {
+                throw new NullReferenceException($"Подаденото Id ({messageId}) на съобщението не съществува.", nre);
+            }
+        }
+
+        public async Task DeleteAsync(string messageId)
+        {
+            Message? message = await this.dbContext.Messages
+                                                   .FirstOrDefaultAsync(m => m.Id == messageId);
+
+            try
+            {
+                this.dbContext.Messages
+                              .Remove(message!);
+
+                await this.dbContext.SaveChangesAsync();
+            }
+            catch (NullReferenceException nre)
+            {
+                throw new NullReferenceException($"Подаденото Id ({messageId}) на съобщението не съществува.", nre);
+            }
         }
     }
 }

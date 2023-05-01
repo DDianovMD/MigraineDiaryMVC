@@ -4,6 +4,8 @@ namespace MigraineDiary.Web.Models
 {
     public class MessageViewModel
     {
+        public string Id { get; set; } = null!;
+
         [Display(Name = "Подател")]
         public string SenderName { get; set; } = null!;
 

@@ -8,6 +8,8 @@ namespace MigraineDiary.Web.Services.Contracts
 
         public Task<PaginatedList<MessageViewModel>> GetAllAsync(int pageIndex, int pageSize, string orderByDate);
 
-        public Task SoftDeleteAsync();
+        public Task SoftDeleteAsync(string messageId);
+
+        public Task DeleteAsync(string messageId);
     }
 }

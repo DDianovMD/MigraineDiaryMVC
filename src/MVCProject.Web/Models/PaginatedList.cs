@@ -7,7 +7,14 @@ namespace MigraineDiary.Web.Models
         public PaginatedList(List<T> items, int count, int pageIndex, int pageSize)
         {
             this.CurrentPageIndex = pageIndex;
-            this.TotalPagesCount = (int)Math.Ceiling(count / (double)pageSize);
+            if (count != 0)
+            {
+                this.TotalPagesCount = (int)Math.Ceiling(count / (double)pageSize);
+            }
+            else
+            {
+                TotalPagesCount = 1;
+            }
             this.HasPreviousPage = this.CurrentPageIndex > 1;
             this.HasNextPage = CurrentPageIndex < TotalPagesCount;
 
