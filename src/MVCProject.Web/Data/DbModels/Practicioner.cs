@@ -37,7 +37,7 @@ namespace MigraineDiary.Web.Data.DbModels
         /// <summary>
         /// Practicioner's science degree.
         /// </summary>
-        [MaxLength(15)]
+        [MaxLength(30)]
         public string? ScienceDegree { get; set; }
 
         /// <summary>
