@@ -31,6 +31,12 @@ namespace MigraineDiary.Web.Data.DbModels
         public string Hospital { get; set; } = null!;
 
         /// <summary>
+        /// Name of the document with information about the clinical trial.
+        /// </summary>
+        [Required]
+        public string AgreementDocumentName { get; set; } = null!;
+
+        /// <summary>
         /// One to many relationship with Practicioner entity.
         /// </summary>
         public ICollection<Practicioner> Practicioners { get; set; }
