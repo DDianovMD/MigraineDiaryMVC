@@ -28,9 +28,6 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Публикации</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Поверителност</a>
-                        </li>
                         @if (SignInManager.IsSignedIn(User))
                         {
                             <li class="nav-item">
@@ -58,6 +55,12 @@
                                 </div>
                             </li>
                         }
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="" asp-controller="Trial" asp-action="Add">Добави проучване</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Поверителност</a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-area="" asp-controller="Contacts" asp-action="Index">Контакти</a>
                         </li>

@@ -142,3 +142,42 @@ body {
     flex-direction: row;
     justify-content: space-between;
 }
+
+#practicioners {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.practicioners-inner-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin-top: 13px;
+}
+
+.select-rank {
+    display: flex;
+    margin-right: 10px;
+}
+
+.select-rank > select {
+    align-self: center;
+}
+
+.practicioner-names {
+    display: flex; 
+    flex-wrap:nowrap;
+}
+
+.practicioner-names > input {
+    margin-right: 10px;
+}
+
+.doctoral-degree-dropdown {
+    display: flex;
+}
+
+.doctoral-degree-dropdown > select {
+    align-self: center;
+}

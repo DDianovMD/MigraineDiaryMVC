@@ -1,0 +1,61 @@
+﻿@model ClinicalTrialAddModel
+
+@{
+    ViewData["Title"] = "Добави клинично проучване";
+}
+
+<main>
+    <section>
+        <form asp-controller="Trial" asp-action="Add" method="post" enctype="multipart/form-data">
+            <label asp-for="@Model.City" class="mt-2"></label> <br />
+            <input type="text" asp-for="@Model.City" /> <br />
+            <span asp-validation-for="@Model.City" class="text-danger"></span> <br />
+
+            <label asp-for="@Model.Hospital" class="mt-2"></label> <br />
+            <input type="text" asp-for="@Model.Hospital" /> <br />
+            <span asp-validation-for="@Model.Hospital" class="text-danger"></span> <br /> 
+            <br />
+
+            <div id="practicioners">
+                <label>Изследовател(и):</label>
+                <div class="practicioners-inner-container">
+                    <div class="select-rank">
+                        <select name="Practicioners[0].Rank">
+                            <option value="doctor">Д-р</option>
+                            <option value="assistant">Ас.</option>
+                            <option value="chiefAssistant">Гл. ас.</option>
+                            <option value="docent">Доц.</option>
+                            <option value="professor">Проф.</option>
+                            <option value="academician">Акад.</option>
+                        </select>
+                    </div>
+                    <div class="practicioner-names">
+                        <input type="text" name="Practicioners[0].FirstName" placeholder="Име">
+                        <input type="text" name="Practicioners[0].LastName" placeholder="Фамилия">
+                    </div>
+                    <div class="doctoral-degree-dropdown">
+                        <select name="Practicioners[0].ScienceDegree">
+                            <option value="default" selected hidden disabled>научна степен</option>
+                            <option value="none">липсва</option>
+                            <option value="medicalDoctor">д.м.</option>
+                            <option value="medicalScienceDoctor">д.м.н.</option>
+                        </select>
+                    </div>
+                </div>
+                <span asp-validation-for="Practicioners" class="text-danger"></span>
+            </div> 
+            <br />
+
+            <button type="button" onclick="addPracticioner();" class="btn btn-warning mb-3">Добави изследовател</button> <br />
+
+            <label class="mb-1">Описание и информирано съгласие (pdf)</label> <br/>
+            <label asp-for="TrialAgreementDocument" class="btn btn-primary">Качи файл</label> <br/>
+            <input type="file" asp-for="TrialAgreementDocument" accept=".pdf" style="display: none;"/>
+            <span asp-validation-for="TrialAgreementDocument" class="text-danger"></span> <br />
+
+            <input type="submit" value="Добави" class="btn btn-success mt-3" /> <br />
+        </form>
+    </section>
+</main>
+
+<script src="~/js/addTrial.js"></script>
