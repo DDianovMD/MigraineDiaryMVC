@@ -18,6 +18,7 @@ namespace MigraineDiary.Web.Services
         {
             ClinicalTrial trial = new ClinicalTrial()
             {
+                Heading = addModel.Heading,
                 City = addModel.City,
                 Hospital = addModel.Hospital,
                 CreatorId = uploaderID,
@@ -47,6 +48,11 @@ namespace MigraineDiary.Web.Services
             string uploadDate = DateTime.UtcNow.ToShortDateString();
 
             return $"{guid}_{uploadDate}.{fileExtension}";
+        }
+
+        public ClinicalTrialViewModel GetAllTrials()
+        {
+            throw new NotImplementedException();
         }
     }
 }

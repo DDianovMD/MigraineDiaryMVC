@@ -19,6 +19,12 @@ namespace MigraineDiary.Web.Data.DbModels
         public string Id { get; set; } = null!;
 
         /// <summary>
+        /// Trial's heading.
+        /// </summary>
+        [Required]
+        public string Heading { get; set; } = null!;
+
+        /// <summary>
         /// City where clinical trial is performed.
         /// </summary>
         [Required]

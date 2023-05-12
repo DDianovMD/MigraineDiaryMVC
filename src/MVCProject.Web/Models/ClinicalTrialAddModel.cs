@@ -9,6 +9,10 @@ namespace MigraineDiary.Web.Models
             this.Practicioners = new List<PracticionerAddModel>();
         }
 
+        [Required(ErrorMessage = "Необходимо е да въведете предмет на изследването.")]
+        [Display(Name = "Предмет на изследването")]
+        public string Heading { get; set; } = null!;
+
         /// <summary>
         /// City where clinical trial is performed.
         /// </summary>

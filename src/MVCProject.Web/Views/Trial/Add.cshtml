@@ -7,6 +7,11 @@
 <main>
     <section>
         <form asp-controller="Trial" asp-action="Add" method="post" enctype="multipart/form-data">
+
+            <label asp-for="@Model.Heading" class="mt-2"></label> <br />
+            <input type="text" asp-for="@Model.Heading" /> <br />
+            <span asp-validation-for="@Model.Heading" class="text-danger"></span> <br />
+
             <label asp-for="@Model.City" class="mt-2"></label> <br />
             <input type="text" asp-for="@Model.City" /> <br />
             <span asp-validation-for="@Model.City" class="text-danger"></span> <br />
