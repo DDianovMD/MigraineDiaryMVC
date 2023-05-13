@@ -1,24 +1,19 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MigraineDiary.Web.Data;
-using MigraineDiary.Web.Models;
-using MigraineDiary.Web.Services.Contracts;
+using MigraineDiary.Services.Contracts;
+using MigraineDiary.ViewModels;
 
 namespace MigraineDiary.Web.Controllers
 {
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        private readonly ApplicationDbContext dbContext;
         private readonly IAdminService adminService;
         private readonly IMessageService messageService;
 
-        public AdminController(ApplicationDbContext dbContext,
-                                      IAdminService adminService,
+        public AdminController(IAdminService adminService,
                                     IMessageService messageService)
         {
-            this.dbContext = dbContext;
             this.adminService = adminService;
             this.messageService = messageService;
         }

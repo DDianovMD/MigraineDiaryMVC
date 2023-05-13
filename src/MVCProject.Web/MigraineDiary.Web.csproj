@@ -35,4 +35,9 @@
     <Folder Include="Areas\NewFolder\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MigraineDiary.Services\MigraineDiary.Services.csproj" />
+    <ProjectReference Include="..\MigraineDiary.ViewModels\MigraineDiary.ViewModels.csproj" />
+  </ItemGroup>
+
 </Project>

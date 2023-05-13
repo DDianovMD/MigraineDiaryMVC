@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MigraineDiary.Web.Models;
-using MigraineDiary.Web.Services.Contracts;
+using MigraineDiary.Services.Contracts;
+using MigraineDiary.ViewModels;
 using System.Security.Claims;
 
 namespace MigraineDiary.Web.Controllers

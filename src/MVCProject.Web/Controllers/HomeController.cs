@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MigraineDiary.Web.Data.DbModels;
-using MigraineDiary.Web.Models;
-using MigraineDiary.Web.Services.Contracts;
+using MigraineDiary.ViewModels;
+using MigraineDiary.Services.Contracts;
 using System.Diagnostics;
 
 namespace MigraineDiary.Web.Controllers

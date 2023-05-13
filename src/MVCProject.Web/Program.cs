@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using MigraineDiary.Web.Data;
-using MigraineDiary.Web.Data.DbModels;
-using MigraineDiary.Web.Services;
-using MigraineDiary.Web.Services.Contracts;
+using MigraineDiary.Services;
+using MigraineDiary.Services.Contracts;
+using MigraineDiary.Data;
+using MigraineDiary.Data.DbModels;
 
 namespace MigraineDiary.Web
 {

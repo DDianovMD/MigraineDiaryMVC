@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using MigraineDiary.Web.Data.DbModels;
+using MigraineDiary.Data.DbModels;
 
 namespace MigraineDiary.Web.Areas.Identity.Pages.Account
 {

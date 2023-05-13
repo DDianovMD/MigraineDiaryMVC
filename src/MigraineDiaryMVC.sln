@@ -5,6 +5,12 @@ VisualStudioVersion = 17.5.33414.496
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MigraineDiary.Web", "MVCProject.Web\MigraineDiary.Web.csproj", "{F1ACE209-8C46-4549-A241-051E022143C7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MigraineDiary.Data", "MigraineDiary.Data\MigraineDiary.Data.csproj", "{4B2ADF57-387A-4E07-BF78-9D352B19D611}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MigraineDiary.Services", "MigraineDiary.Services\MigraineDiary.Services.csproj", "{3D45937B-9A21-460E-B623-C6FEC8982B9D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MigraineDiary.ViewModels", "MigraineDiary.ViewModels\MigraineDiary.ViewModels.csproj", "{22B2FAE3-9127-4FBB-BF2C-6C4C26564F0C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +21,18 @@ Global
 		{F1ACE209-8C46-4549-A241-051E022143C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1ACE209-8C46-4549-A241-051E022143C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1ACE209-8C46-4549-A241-051E022143C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B2ADF57-387A-4E07-BF78-9D352B19D611}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B2ADF57-387A-4E07-BF78-9D352B19D611}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B2ADF57-387A-4E07-BF78-9D352B19D611}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B2ADF57-387A-4E07-BF78-9D352B19D611}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D45937B-9A21-460E-B623-C6FEC8982B9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D45937B-9A21-460E-B623-C6FEC8982B9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D45937B-9A21-460E-B623-C6FEC8982B9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D45937B-9A21-460E-B623-C6FEC8982B9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22B2FAE3-9127-4FBB-BF2C-6C4C26564F0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22B2FAE3-9127-4FBB-BF2C-6C4C26564F0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22B2FAE3-9127-4FBB-BF2C-6C4C26564F0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22B2FAE3-9127-4FBB-BF2C-6C4C26564F0C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

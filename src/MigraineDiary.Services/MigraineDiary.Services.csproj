@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MigraineDiary.Data\MigraineDiary.Data.csproj" />
+    <ProjectReference Include="..\MigraineDiary.ViewModels\MigraineDiary.ViewModels.csproj" />
+  </ItemGroup>
+
+</Project>
