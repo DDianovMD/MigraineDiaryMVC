@@ -1,4 +1,5 @@
-﻿using MigraineDiary.Web.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MigraineDiary.Web.Data;
 using MigraineDiary.Web.Data.DbModels;
 using MigraineDiary.Web.Models;
 using MigraineDiary.Web.Services.Contracts;
@@ -50,9 +51,57 @@ namespace MigraineDiary.Web.Services
             return $"{guid}_{uploadDate}.{fileExtension}";
         }
 
-        public ClinicalTrialViewModel GetAllTrials()
+        public async Task<PaginatedList<ClinicalTrialViewModel>> GetAllTrials(int pageIndex, int pageSize, string orderByDate)
         {
-            throw new NotImplementedException();
+            IQueryable<ClinicalTrialViewModel> registeredTrials = null!;
+
+            if (orderByDate == "NewestFirst")
+            {
+                registeredTrials = this.dbContext.ClinicalTrials
+                                                 .Where(t => t.IsDeleted == false)
+                                                 .OrderByDescending(t => t.CreatedOn)
+                                                 .Select(t => new ClinicalTrialViewModel
+                                                 {
+                                                     Id = t.Id,
+                                                     Heading = t.Heading,
+                                                     City = t.City,
+                                                     Hospital = t.Hospital,
+                                                     AgreementDocumentName = t.AgreementDocumentName,
+                                                     Practicioners = t.Practicioners.Select(p => new PracticionerViewModel
+                                                     {
+                                                         Rank = p.Rank,
+                                                         FirstName = p.FirstName,
+                                                         Lastname = p.Lastname,
+                                                         ScienceDegree = p.ScienceDegree,
+                                                     }).ToList(),
+                                                     CreatedOn = t.CreatedOn,
+                                                 })
+                                                 .AsNoTracking();
+            }
+            else
+            {
+                registeredTrials = this.dbContext.ClinicalTrials
+                                                 .Where(t => t.IsDeleted == false)
+                                                 .OrderBy(t => t.CreatedOn)
+                                                 .Select(t => new ClinicalTrialViewModel
+                                                 {
+                                                     Id = t.Id,
+                                                     Heading = t.Heading,
+                                                     City = t.City,
+                                                     Hospital = t.Hospital,
+                                                     Practicioners = t.Practicioners.Select(p => new PracticionerViewModel
+                                                     {
+                                                         Rank = p.Rank,
+                                                         FirstName = p.FirstName,
+                                                         Lastname = p.Lastname,
+                                                         ScienceDegree = p.ScienceDegree,
+                                                     }).ToList(),
+                                                     CreatedOn = t.CreatedOn,
+                                                 })
+                                                 .AsNoTracking();
+            }
+
+            return await PaginatedList<ClinicalTrialViewModel>.CreateAsync(registeredTrials, pageIndex, pageSize);
         }
     }
 }

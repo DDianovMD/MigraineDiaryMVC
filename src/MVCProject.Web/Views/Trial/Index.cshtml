@@ -1,1 +1,97 @@
-﻿
+﻿@model PaginatedList<ClinicalTrialViewModel>
+
+@{
+    ViewData["Title"] = "Клинични проучвания";
+    ViewData["PartialViewController"] = "Trial";
+    ViewData["PartialViewAction"] = "Index";
+    ViewData["itemsType"] = "Проучвания";
+}
+
+@if (Model.Count > 0)
+{
+    <h3 class="text-center">Регистрирани проучвания</h3>
+    <partial name="_PageItemsOrderingNavigation" view-data="ViewData" />
+    <section>
+        <div class="trials-container mt-4">
+            @foreach (var trial in Model)
+            {
+                <div>
+                    <h4 class="text-center article-title">@trial.Heading Предмет</h4>
+                </div>
+                <div>
+                    <p class="text-center">Публикувано @trial.CreatedOn.ToShortDateString()</p>
+                </div>
+                <div>
+                    <p>Град: @trial.City</p>
+                </div>
+                <div>
+                    <p>Лечебно заведение: @trial.Hospital</p>
+                </div>
+                <div>
+                    <p>
+                        Изследователи:
+                        @foreach (PracticionerViewModel practicioner in trial.Practicioners)
+                        {
+                            string rank = string.Empty;
+                            string doctoralDegree = string.Empty;
+
+                            switch (practicioner.Rank)
+                            {
+                                case "doctor":
+                                    rank = "Д-р";
+                                    break;
+                                case "assistant":
+                                    rank = "Ас.";
+                                    break;
+                                case "chiefAssistant":
+                                    rank = "Гл. ас.";
+                                    break;
+                                case "docent":
+                                    rank = "Доц.";
+                                    break;
+                                case "professor":
+                                    rank = "Проф.";
+                                    break;
+                                case "academician":
+                                    rank = "Акад.";
+                                    break;
+                            };
+
+                            switch (practicioner.ScienceDegree)
+                            {
+                                case "medicalDoctor":
+                                    doctoralDegree = "д.м.";
+                                    break;
+                                case "medicalScienceDoctor":
+                                    doctoralDegree = "д.м.н.";
+                                    break;
+                                default:
+                                    doctoralDegree = string.Empty;
+                                    break;
+                            };
+
+                            <div>
+                                <ol>
+                                    <li>
+                                        @rank @practicioner.FirstName @practicioner.Lastname@(doctoralDegree != string.Empty ? $", {doctoralDegree}" : $"{doctoralDegree}")
+                                    </li>
+                                </ol>
+                            </div>
+                        }
+                    </p>
+                </div>
+                <div>
+                    <p>Описание и информирано съгласие: <a download href="/Trial/Download?documentName=@trial.AgreementDocumentName" class="btn btn-primary">Изтегли pdf</a></p>
+                </div>
+                <hr />
+            }
+        </div>
+    </section>
+    <partial name="_PagesNavigation" view-data="ViewData" />
+}
+else
+{
+    <div>
+        <p class="text-center">Към момента няма регистрирани клинични проучвания.</p>
+    </div>
+}

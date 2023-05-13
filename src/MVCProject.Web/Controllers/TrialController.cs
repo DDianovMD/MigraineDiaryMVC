@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MigraineDiary.Web.Models;
 using MigraineDiary.Web.Services.Contracts;
 using System.Security.Claims;
+using System.Net.Mime;
 
 namespace MigraineDiary.Web.Controllers
 {
@@ -20,9 +21,26 @@ namespace MigraineDiary.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 1, string orderByDate = "NewestFirst")
         {
-            return View();
+            // Custom validation against web parameter tampering
+            if ((pageSize != 1 &&
+                 pageSize != 5 &&
+                 pageSize != 10) ||
+                (orderByDate != "NewestFirst" &&
+                 orderByDate != "OldestFirst"))
+            {
+                return BadRequest();
+            }
+
+            // Get all trials
+            PaginatedList<ClinicalTrialViewModel> trials = await this.trialService.GetAllTrials(pageIndex, pageSize, orderByDate);
+
+            // Send pagination size and ordering criteria to the view.
+            ViewData["pageSize"] = pageSize;
+            ViewData["orderByDate"] = orderByDate;
+
+            return View(trials);
         }
 
         [HttpGet]
@@ -54,7 +72,7 @@ namespace MigraineDiary.Web.Controllers
                 {
                     ModelState.AddModelError(nameof(addModel.Practicioners), "Необходимо е да въведете име и фамилия на изследователите.");
                 }
-                
+
                 return View();
             }
 
@@ -104,10 +122,28 @@ namespace MigraineDiary.Web.Controllers
             await this.trialService.AddAsync(addModel, fileName, userId);
 
             // Get controller's name and action's name without using magic strings.
-            string actionName = nameof(ScalesController.MyZungScales);
-            string controllerName = nameof(ScalesController).Substring(0, nameof(ScalesController).Length - "Controller".Length);
+            string actionName = nameof(TrialController.Index);
+            string controllerName = nameof(TrialController).Substring(0, nameof(TrialController).Length - "Controller".Length);
 
             return RedirectToAction(actionName, controllerName);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Download(string documentName)
+        {
+            string filePath = Path.Combine(environment.WebRootPath, documentName);
+
+            if (System.IO.File.Exists(filePath))
+            {
+                byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
+
+                return File(fileBytes, MediaTypeNames.Application.Pdf, "Информирано съгласие.pdf");
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }
