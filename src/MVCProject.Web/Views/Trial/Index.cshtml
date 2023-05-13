@@ -16,7 +16,7 @@
             @foreach (var trial in Model)
             {
                 <div>
-                    <h4 class="text-center article-title">@trial.Heading Предмет</h4>
+                    <h4 class="text-center article-title">@trial.Heading</h4>
                 </div>
                 <div>
                     <p class="text-center">Публикувано @trial.CreatedOn.ToShortDateString()</p>
@@ -30,54 +30,53 @@
                 <div>
                     <p>
                         Изследователи:
-                        @foreach (PracticionerViewModel practicioner in trial.Practicioners)
-                        {
-                            string rank = string.Empty;
-                            string doctoralDegree = string.Empty;
+                        <div>
+                            <ol>
+                                @foreach (PracticionerViewModel practicioner in trial.Practicioners)
+                                {
+                                    string rank = string.Empty;
+                                    string doctoralDegree = string.Empty;
 
-                            switch (practicioner.Rank)
-                            {
-                                case "doctor":
-                                    rank = "Д-р";
-                                    break;
-                                case "assistant":
-                                    rank = "Ас.";
-                                    break;
-                                case "chiefAssistant":
-                                    rank = "Гл. ас.";
-                                    break;
-                                case "docent":
-                                    rank = "Доц.";
-                                    break;
-                                case "professor":
-                                    rank = "Проф.";
-                                    break;
-                                case "academician":
-                                    rank = "Акад.";
-                                    break;
-                            };
+                                    switch (practicioner.Rank)
+                                    {
+                                        case "doctor":
+                                            rank = "Д-р";
+                                            break;
+                                        case "assistant":
+                                            rank = "Ас.";
+                                            break;
+                                        case "chiefAssistant":
+                                            rank = "Гл. ас.";
+                                            break;
+                                        case "docent":
+                                            rank = "Доц.";
+                                            break;
+                                        case "professor":
+                                            rank = "Проф.";
+                                            break;
+                                        case "academician":
+                                            rank = "Акад.";
+                                            break;
+                                    };
 
-                            switch (practicioner.ScienceDegree)
-                            {
-                                case "medicalDoctor":
-                                    doctoralDegree = "д.м.";
-                                    break;
-                                case "medicalScienceDoctor":
-                                    doctoralDegree = "д.м.н.";
-                                    break;
-                                default:
-                                    doctoralDegree = string.Empty;
-                                    break;
-                            };
-
-                            <div>
-                                <ol>
+                                    switch (practicioner.ScienceDegree)
+                                    {
+                                        case "medicalDoctor":
+                                            doctoralDegree = "д.м.";
+                                            break;
+                                        case "medicalScienceDoctor":
+                                            doctoralDegree = "д.м.н.";
+                                            break;
+                                        default:
+                                            doctoralDegree = string.Empty;
+                                            break;
+                                    };
                                     <li>
                                         @rank @practicioner.FirstName @practicioner.Lastname@(doctoralDegree != string.Empty ? $", {doctoralDegree}" : $"{doctoralDegree}")
                                     </li>
-                                </ol>
-                            </div>
-                        }
+                                }
+                            </ol>
+                        </div>
                     </p>
                 </div>
                 <div>

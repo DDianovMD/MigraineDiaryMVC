@@ -145,5 +145,31 @@ namespace MigraineDiary.Web.Controllers
                 return NotFound();
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> MyTrials(int pageIndex = 1, int pageSize = 1, string orderByDate = "NewestFirst")
+        {
+            // Custom validation against web parameter tampering
+            if ((pageSize != 1 &&
+                 pageSize != 5 &&
+                 pageSize != 10) ||
+                (orderByDate != "NewestFirst" &&
+                 orderByDate != "OldestFirst"))
+            {
+                return BadRequest();
+            }
+
+            // Get logged user's ID
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Get all trials registered by this specific user.
+            PaginatedList<ClinicalTrialViewModel> trials = await this.trialService.GetAllTrials(pageIndex, pageSize, orderByDate, userId);
+
+            // Send pagination size and ordering criteria to the view.
+            ViewData["pageSize"] = pageSize;
+            ViewData["orderByDate"] = orderByDate;
+
+            return View(nameof(TrialController.Index), trials);
+        }
     }
 }
