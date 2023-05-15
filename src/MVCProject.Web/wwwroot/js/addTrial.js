@@ -1,6 +1,13 @@
-﻿let indexCounter = 1;
+﻿let indexCounter;
+
+function setIndexCounter() {
+    indexCounter = document.querySelectorAll('.practicioners-inner-container').length;
+}
 
 function addPracticioner() {
+
+    // Set indexCounter.
+    setIndexCounter();
 
     // Get practicioners div element where content is gonna be dynamically generated.
     let practicionersDiv = document.getElementById('practicioners');
@@ -29,8 +36,6 @@ function addPracticioner() {
     divContainer.appendChild(button);
 
     practicionersDiv.appendChild(divContainer);
-
-    indexCounter++;
 }
 
 function createRanksDropdown() {
@@ -210,6 +215,4 @@ function resetIndexes() {
 
         currentNode.setAttribute('onclick', `removePracticioner(${i + 1});`);
     }
-
-    indexCounter--;
 }
