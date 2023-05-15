@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MigraineDiary.Data.Common.Contracts;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MigraineDiary.Data.DbModels
 {
-    public class Practicioner
+    public class Practicioner : IAuditable, ISoftDeletable
     {
         public Practicioner()
         {
@@ -51,5 +52,20 @@ namespace MigraineDiary.Data.DbModels
         /// </summary>
         [ForeignKey(nameof(ClinicalTrialId))]
         public ClinicalTrial ClinicalTrial { get; set; } = null!;
+
+        /// <summary>
+        /// Date when entity is created.
+        /// </summary>
+        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
+
+        /// <summary>
+        /// Boolean flag showing if entity is soft deleted.
+        /// </summary>
+        public bool IsDeleted { get; set; } = false;
+
+        /// <summary>
+        /// Date when entity is marked as deleted (soft delete).
+        /// </summary>
+        public DateTime? DeletedOn { get; set; }
     }
 }
