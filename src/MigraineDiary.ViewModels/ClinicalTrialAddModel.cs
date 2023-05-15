@@ -10,6 +10,9 @@ namespace MigraineDiary.ViewModels
             this.Practicioners = new List<PracticionerAddModel>();
         }
 
+        /// <summary>
+        /// Clinical trial heading.
+        /// </summary>
         [Required(ErrorMessage = "Необходимо е да въведете предмет на изследването.")]
         [Display(Name = "Предмет на изследването")]
         public string Heading { get; set; } = null!;
@@ -29,7 +32,7 @@ namespace MigraineDiary.ViewModels
         [Required(ErrorMessage = "Необходимо е да посочите болница.")]
         [MinLength(5, ErrorMessage = "Полето не може да съдържа по-малко от 5 символа.")]
         [MaxLength(50, ErrorMessage = "Полето не може да съдържа повече от 50 символа.")]
-        [Display(Name = "Болница")]
+        [Display(Name = "Лечебно заведение")]
         public string Hospital { get; set; } = null!;
 
         /// <summary>
@@ -39,7 +42,7 @@ namespace MigraineDiary.ViewModels
         public IFormFile TrialAgreementDocument { get; set; } = null!;
 
         /// <summary>
-        /// One to many relationship with Practicioner entity.
+        /// Practicioners involved in research process.
         /// </summary>
         [Required]
         public ICollection<PracticionerAddModel> Practicioners { get; set; }
