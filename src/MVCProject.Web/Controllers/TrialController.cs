@@ -269,5 +269,31 @@ namespace MigraineDiary.Web.Controllers
 
             return RedirectToAction(actionName, controllerName);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(string trialId, string creatorId)
+        {
+            // Get logged user Id.
+            string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Check for parameter tampering.
+            if (!ModelState.IsValid || creatorId != userId)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                await this.trialService.SoftDeleteAsync(trialId, userId);
+
+                return RedirectToAction(nameof(TrialController.MyTrials));
+            }
+            catch (ArgumentException ex)
+            {
+                // TODO: log exception.
+
+                return BadRequest();
+            }
+        }
     }
 }

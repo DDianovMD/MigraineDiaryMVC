@@ -15,5 +15,7 @@ namespace MigraineDiary.Services.Contracts
         public Task<ClinicalTrialEditModel> GetByIdAsync(string trialId, string creatorId);
 
         public Task EditTrialAsync(ClinicalTrialEditModel editmodel);
+
+        public Task SoftDeleteAsync(string trialId, string creatorId);
     }
 }

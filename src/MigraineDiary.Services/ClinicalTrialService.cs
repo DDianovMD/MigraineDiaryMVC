@@ -176,7 +176,7 @@ namespace MigraineDiary.Services
         public async Task<ClinicalTrialEditModel> GetByIdAsync(string trialId, string creatorId)
         {
             ClinicalTrial? trial = await this.dbContext.ClinicalTrials
-                                                       .Where(t => t.Id == trialId && t.CreatorId == creatorId)
+                                                       .Where(t => t.IsDeleted == false && t.Id == trialId && t.CreatorId == creatorId)
                                                        .Include(t => t.Practicioners.Where(p => p.IsDeleted == false))
                                                        .AsNoTracking()
                                                        .FirstOrDefaultAsync();
@@ -275,6 +275,26 @@ namespace MigraineDiary.Services
                 }
             }
 
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        public async Task SoftDeleteAsync(string trialId, string creatorId)
+        {
+            // Get clinical trial which is going to be deleted.
+            ClinicalTrial? trial = await this.dbContext.ClinicalTrials.FirstOrDefaultAsync(t => t.Id == trialId);
+
+            // Check for trialId parameter tampering
+            // (if trial doesn't exist or trial exists but it doesn't belong to the user with this Id).
+            if (trial == null ||
+               (trial != null && trial.CreatorId != creatorId))
+            {
+                throw new ArgumentException("trialId parameter tampering detected.");
+            }
+
+            trial!.IsDeleted = true;
+            trial.DeletedOn = DateTime.UtcNow;
+
+            // Save changes to database.
             await this.dbContext.SaveChangesAsync();
         }
     }
