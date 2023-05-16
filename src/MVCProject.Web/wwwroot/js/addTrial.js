@@ -216,3 +216,26 @@ function resetIndexes() {
         currentNode.setAttribute('onclick', `removePracticioner(${i + 1});`);
     }
 }
+
+function deletePracticioner(childNumber) {
+
+    // Set indexCounter.
+    setIndexCounter();
+
+    // Get practicioners-inner-container div element.
+    let divElement = document.querySelectorAll('.practicioners-inner-container')[childNumber];
+
+    // Make div element invisible.
+    divElement.style = 'display: none;';
+
+    // Set entity IsDeletet property to true.
+    // 1. Create input element.
+    let inputElement = document.createElement('input');
+    inputElement.setAttribute('type', 'radio');
+    inputElement.setAttribute('name', `Practicioners[${childNumber}].IsDeleted`);
+    inputElement.setAttribute('value', 'true');
+    inputElement.setAttribute('checked', 'checked');
+
+    // 2. Append inputElement to invisible div element.
+    divElement.appendChild(inputElement);
+}

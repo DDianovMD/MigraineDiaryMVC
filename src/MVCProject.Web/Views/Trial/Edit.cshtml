@@ -1,0 +1,154 @@
+﻿@model ClinicalTrialEditModel
+
+@{
+    ViewData["Title"] = "Редактирай клинично проучване";
+}
+
+<main>
+    <section>
+        <form asp-controller="Trial" asp-action="Edit" method="post" enctype="multipart/form-data">
+
+            <input type="text" asp-for="@Model.Id" style="display: none;" />
+            <input type="text" asp-for="@Model.AgreementDocumentName" style="display: none;" />
+
+            <label asp-for="@Model.Heading" class="mt-2"></label> <br />
+            <input type="text" asp-for="@Model.Heading" /> <br />
+            <span asp-validation-for="@Model.Heading" class="text-danger"></span> <br />
+
+            <label asp-for="@Model.City" class="mt-2"></label> <br />
+            <input type="text" asp-for="@Model.City" /> <br />
+            <span asp-validation-for="@Model.City" class="text-danger"></span> <br />
+
+            <label asp-for="@Model.Hospital" class="mt-2"></label> <br />
+            <input type="text" asp-for="@Model.Hospital" /> <br />
+            <span asp-validation-for="@Model.Hospital" class="text-danger"></span> <br />
+            <br />
+
+            <div id="practicioners">
+                <label>Изследовател(и):</label>
+
+                @for (int i = 0; i < Model.Practicioners.Count; i++)
+                {
+                    // Get dropdown values for "selected" attribute in <option> element view logic.
+                    string currentPracticionerRank = Model.Practicioners.ElementAt(i).Rank;
+                    string currentPracticionerScienceDegree = Model.Practicioners.ElementAt(i).ScienceDegree!;
+                    <div class="practicioners-inner-container">
+                        <div>
+                            <input type="text" id="@($"Practicioners[{i}].Id")" name="@($"Practicioners[{i}].Id")" value="@Model.Practicioners.ElementAt(i).Id" style="display: none;" />
+                        </div>
+                        <div class="select-rank">
+                            <select id="@($"Practicioners[{i}].Rank")" name="@($"Practicioners[{i}].Rank")">
+                                @if (currentPracticionerRank == "doctor")
+                                {
+                                    <option value="doctor" selected>Д-р</option>
+                                }
+                                else
+                                {
+                                    <option value="doctor">Д-р</option>
+                                }
+
+                                @if (currentPracticionerRank == "assistant")
+                                {
+                                    <option value="assistant" selected>Ас.</option>
+                                }
+                                else
+                                {
+                                    <option value="assistant">Ас.</option>
+                                }
+
+                                @if (currentPracticionerRank == "chiefAssistant")
+                                {
+                                    <option value="chiefAssistant" selected>Гл. ас.</option>
+                                }
+                                else
+                                {
+                                    <option value="chiefAssistant">Гл. ас.</option>
+                                }
+
+                                @if (currentPracticionerRank == "docent")
+                                {
+                                    <option value="docent" selected>Доц.</option>
+                                }
+                                else
+                                {
+                                    <option value="docent">Доц.</option>
+                                }
+
+                                @if (currentPracticionerRank == "professor")
+                                {
+                                    <option value="professor" selected>Проф.</option>
+                                }
+                                else
+                                {
+                                    <option value="professor">Проф.</option>
+                                }
+
+                                @if (currentPracticionerRank == "academician")
+                                {
+                                    <option value="academician" selected>Акад.</option>
+                                }
+                                else
+                                {
+                                    <option value="academician">Акад.</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="practicioner-names">
+                            <input type="text" id="@($"Practicioners[{i}].FirstName")" name="@($"Practicioners[{i}].FirstName")" value="@Model.Practicioners.ElementAt(i).FirstName" placeholder="Име">
+                            <input type="text" id="@($"Practicioners[{i}].LastName")" name="@($"Practicioners[{i}].LastName")" value="@Model.Practicioners.ElementAt(i).Lastname" placeholder="Фамилия">
+                        </div>
+                        <div class="doctoral-degree-dropdown">
+                            <select id="@($"Practicioners[{i}].ScienceDegree")" name="@($"Practicioners[{i}].ScienceDegree")">
+                                @if (currentPracticionerScienceDegree == "none")
+                                {
+                                    <option value="none" selected>липсва</option>
+                                }
+                                else
+                                {
+                                    <option value="none">липсва</option>
+                                }
+
+                                @if (currentPracticionerScienceDegree == "medicalDoctor")
+                                {
+                                    <option value="medicalDoctor" selected>д.м.</option>
+                                }
+                                else
+                                {
+                                    <option value="medicalDoctor">д.м.</option>
+                                }
+
+                                @if (currentPracticionerScienceDegree == "medicalScienceDoctor")
+                                {
+                                    <option value="medicalScienceDoctor" selected>д.м.н.</option>
+                                }
+                                else
+                                {
+                                    <option value="medicalScienceDoctor">д.м.н.</option>
+                                }
+                            </select>
+                        </div>
+                        @if (i != 0)
+                        {
+                            <div>
+                                <button type="button" class="remove-button btn btn-danger" onclick="deletePracticioner(@i);" style="margin-left: 10px;">Премахни</button>
+                            </div>
+                        }
+                    </div>
+                }
+                <span asp-validation-for="Practicioners" class="text-danger"></span>
+            </div>
+            <br />
+
+            <button type="button" onclick="addPracticioner();" class="btn btn-warning mb-3">Добави изследовател</button> <br />
+
+            <label class="mb-1">Описание и информирано съгласие (pdf)</label> <br />
+            <label asp-for="TrialAgreementDocument" class="btn btn-primary">Качи файл</label> <br />
+            <input type="file" asp-for="TrialAgreementDocument" accept=".pdf" style="display: none;" />
+            <span asp-validation-for="TrialAgreementDocument" class="text-danger"></span> <br />
+
+            <input type="submit" value="Запази" class="btn btn-success mt-3" /> <br />
+        </form>
+    </section>
+</main>
+
+<script src="~/js/addTrial.js"></script>
