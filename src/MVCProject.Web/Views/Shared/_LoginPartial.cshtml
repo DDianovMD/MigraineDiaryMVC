@@ -5,12 +5,18 @@
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">
-            <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Здравей @User.Identity?.Name!</a>
+            @if (User.IsInRole("Doctor"))
+            {
+                <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Profile"><i class="fa-solid fa-user-doctor fa-xl"></i></a>
+            }
+            else
+            {
+                <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Profile"><i class="fa-solid fa-user-tie fa-xl"></i></a>
+            }
         </li>
-        <partial name="_NotificationsPartial"/>
         <li class="nav-item">
-            <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button type="submit" class="nav-link btn btn-link text-white">Изход</button>
+            <form class="form-inline" title="Logout" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="nav-link btn btn-link text-white"><i class="fa-solid fa-right-from-bracket fa-xl"></i></button>
             </form>
         </li>
     }

@@ -11,7 +11,7 @@ function getNotification() {
             if (jsonResult.count != 0) {
                 let span = document.getElementById('notification-icon');
                 span.innerText = jsonResult.count.toString();
-                span.style.left = '-75px';
+                span.style.left = '-101px';
                 span.style.top = '-12px';
                 span.style.display = 'inline'
             }
