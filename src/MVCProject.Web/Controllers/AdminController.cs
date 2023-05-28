@@ -141,5 +141,16 @@ namespace MigraineDiary.Web.Controllers
                 return RedirectToAction(actionName, controllerName);
             }
         }
+
+        [HttpGet]
+        [Route("/messageNotifications")]
+        public async Task<JsonResult> GetMessagesCount()
+        {
+            // Get messages count.
+            int msgCount = await this.messageService.GetMessagesCountAsync();
+
+            // Return count as JSON.
+            return Json(new {Count = msgCount});
+        }
     }
 }

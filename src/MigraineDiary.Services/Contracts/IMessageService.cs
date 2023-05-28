@@ -11,5 +11,7 @@ namespace MigraineDiary.Services.Contracts
         public Task SoftDeleteAsync(string messageId);
 
         public Task DeleteAsync(string messageId);
+
+        public Task<int> GetMessagesCountAsync();
     }
 }

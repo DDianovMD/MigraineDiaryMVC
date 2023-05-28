@@ -181,3 +181,16 @@ body {
 .doctoral-degree-dropdown > select {
     align-self: center;
 }
+
+.notification-icon {
+    position: relative;
+    display: none;
+    background-color: yellow;
+    border-radius: 50%;
+    border: 1px solid black;
+    padding: 1px 7px;
+    text-align: center;
+    color: black;
+    font-size: 10px;
+    font-weight: bold;
+}

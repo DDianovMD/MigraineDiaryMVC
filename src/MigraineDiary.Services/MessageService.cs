@@ -104,5 +104,10 @@ namespace MigraineDiary.Services
                 throw new NullReferenceException($"Подаденото Id ({messageId}) на съобщението не съществува.", nre);
             }
         }
+
+        public async Task<int> GetMessagesCountAsync()
+        {
+            return await this.dbContext.Messages.Where(m => m.IsDeleted == false).CountAsync();
+        }
     }
 }
