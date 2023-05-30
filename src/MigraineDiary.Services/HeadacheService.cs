@@ -37,6 +37,7 @@ namespace MigraineDiary.Services
                 headaches = this.dbContext.Headaches
                                           .Where(p => p.PatientId == userId)
                                           .Include(h => h.MedicationsTaken)
+                                          .Include(h => h.SharedWith)
                                           .OrderByDescending(h => h.Onset)
                                           .Select(h => new RegisteredHeadacheViewModel
                                           {
@@ -63,6 +64,12 @@ namespace MigraineDiary.Services
                                                   DosageTaken = this.medicationService.CalculateWholeTakenDosage(m.SinglePillDosage, m.NumberOfTakenPills),
                                                   NumberOfTakenPills = m.NumberOfTakenPills,
                                                   SinglePillDosage = m.SinglePillDosage,
+                                              }),
+                                              Doctors = h.SharedWith.Select(d => new DoctorViewModel
+                                              {
+                                                  Id = d.Id,
+                                                  FirstName = d.FirstName!,
+                                                  LastName = d.LastName!,
                                               })
                                           });
             }
@@ -71,6 +78,7 @@ namespace MigraineDiary.Services
                 headaches = this.dbContext.Headaches
                                           .Where(p => p.PatientId == userId)
                                           .Include(h => h.MedicationsTaken)
+                                          .Include(h => h.SharedWith)
                                           .OrderBy(h => h.Onset)
                                           .Select(h => new RegisteredHeadacheViewModel
                                           {
@@ -97,11 +105,43 @@ namespace MigraineDiary.Services
                                                   DosageTaken = this.medicationService.CalculateWholeTakenDosage(m.SinglePillDosage, m.NumberOfTakenPills),
                                                   NumberOfTakenPills = m.NumberOfTakenPills,
                                                   SinglePillDosage = m.SinglePillDosage,
+                                              }),
+                                              Doctors = h.SharedWith.Select(d => new DoctorViewModel
+                                              {
+                                                  Id = d.Id,
+                                                  FirstName = d.FirstName!,
+                                                  LastName = d.LastName!,
                                               })
                                           });
             }
 
             return await PaginatedList<RegisteredHeadacheViewModel>.CreateAsync(headaches, pageIndex, pageSize);
+        }
+
+        public async Task<DoctorViewModel[]> GetDoctorUsersByNameAsync(string name)
+        {
+            DoctorViewModel[] doctorUsers = await dbContext.Roles
+                                                           .Where(r => r.Name == "Doctor")
+                                                           .Join(this.dbContext.UserRoles,
+                                                                 r => r.Id,
+                                                                 ur => ur.RoleId,
+                                                                 (r, ur) => new
+                                                                 {
+                                                                     userId = ur.UserId,
+                                                                 })
+                                                           .Join(this.dbContext.Users.Where(u => EF.Functions.Like(u.FirstName!, $"%{name}%") ||
+                                                                                                 EF.Functions.Like(u.LastName!, $"%{name}%")),
+                                                                 ur => ur.userId,
+                                                                 u => u.Id,
+                                                                 (ur, u) => new DoctorViewModel
+                                                                 {
+                                                                     FirstName = u.FirstName!,
+                                                                     LastName = u.LastName!,
+                                                                 })
+                                                           .AsNoTracking()
+                                                           .ToArrayAsync();
+
+            return doctorUsers;
         }
     }
 }

@@ -7,6 +7,7 @@ namespace MigraineDiary.ViewModels
         public RegisteredHeadacheViewModel()
         {
             this.UsedMedications = new HashSet<UsedMedicationViewModel>();
+            this.Doctors = new HashSet<DoctorViewModel>();
         }
 
         public string Id { get; set; }
@@ -57,5 +58,7 @@ namespace MigraineDiary.ViewModels
         public string? Triggers { get; set; }
 
         public IEnumerable<UsedMedicationViewModel> UsedMedications { get; set; }
+
+        public IEnumerable<DoctorViewModel> Doctors { get; set; }
     }
 }

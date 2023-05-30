@@ -151,5 +151,18 @@ namespace MigraineDiary.Web.Controllers
 
             return View(registeredHeadachesViewModel);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> SearchDoctor(string name)
+        {
+            if (name == null || name == string.Empty)
+            {
+                return BadRequest();
+            }
+
+            DoctorViewModel[] doctors = await this.headacheService.GetDoctorUsersByNameAsync(name);
+
+            return Json(doctors);
+        }
     }
 }

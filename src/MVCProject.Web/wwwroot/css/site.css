@@ -194,3 +194,32 @@ body {
     font-size: 10px;
     font-weight: bold;
 }
+
+.searchBar {
+    width: 180px;
+}
+
+.searchBar:focus-visible {
+    outline: none;
+}
+
+.searchResult {
+    background-color: white;
+    width: 180px;
+    margin-bottom: 0;
+    margin-left: 83px;
+    border-left: 1px solid grey;
+    border-right: 1px solid grey;
+    border-bottom: 1px solid grey;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.searchResult:hover {
+    background-color: lightblue;
+}
+
+.not-found-result {
+    color: red;
+    margin-bottom: 0;
+}
