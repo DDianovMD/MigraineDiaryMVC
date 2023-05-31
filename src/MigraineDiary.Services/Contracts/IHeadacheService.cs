@@ -9,5 +9,7 @@ namespace MigraineDiary.Services.Contracts
         public Task<PaginatedList<RegisteredHeadacheViewModel>> GetRegisteredHeadachesAsync(string userId, int pageIndex, int pageSize, string orderByDate);
 
         public Task<DoctorViewModel[]> GetDoctorUsersByNameAsync(string name);
+
+        public Task Share(string headacheId, string doctorID);
     }
 }

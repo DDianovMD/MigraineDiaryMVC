@@ -2,6 +2,9 @@
 using MigraineDiary.Data;
 using MigraineDiary.ViewModels;
 using MigraineDiary.Services.Contracts;
+using MigraineDiary.Data.DbModels;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace MigraineDiary.Services
 {
@@ -135,6 +138,7 @@ namespace MigraineDiary.Services
                                                                  u => u.Id,
                                                                  (ur, u) => new DoctorViewModel
                                                                  {
+                                                                     Id = u.Id,
                                                                      FirstName = u.FirstName!,
                                                                      LastName = u.LastName!,
                                                                  })
@@ -142,6 +146,50 @@ namespace MigraineDiary.Services
                                                            .ToArrayAsync();
 
             return doctorUsers;
+        }
+
+        public async Task Share(string headacheId, string doctorID)
+        {
+            // Get Doctor user.
+            ApplicationUser? doctor = await this.dbContext.Users.FirstOrDefaultAsync(u => u.Id == doctorID);
+
+            // Get all role's names which are assigned to the user.
+            var userRoles = await this.dbContext.UserRoles.Where(ur => ur.UserId == doctorID)
+                                                          .Join(this.dbContext.Roles,
+                                                                ur => ur.RoleId,
+                                                                r => r.Id,
+                                                                (ur, r) => new
+                                                                {
+                                                                    UserId = ur.UserId,
+                                                                    Name = r.Name,
+                                                                })
+                                                          .AsNoTracking()
+                                                          .ToArrayAsync();
+
+            // Check if user exists and is in role "Doctor".
+            if (doctor != null && userRoles.Any(x => x.Name == "Doctor"))
+            {
+                // Get headache which is going to be shared with the chosen doctor.
+                var headache = this.dbContext.Headaches.FirstOrDefault(h => h.Id == headacheId);
+
+                // Check if headache exists.
+                if (headache != null)
+                {
+                    // Add existing headache to doctor user's collection of shared headaches.
+                    doctor.SharedWithMe.Add(headache);
+
+                    // Save changes.
+                    await this.dbContext.SaveChangesAsync();
+                }
+                else
+                {
+                    throw new ArgumentException("Headache doesn't exist.");
+                }
+            }
+            else
+            {
+                throw new ArgumentException("Doctor doesn't exists or isn't in role \"Doctor\"");
+            }
         }
     }
 }

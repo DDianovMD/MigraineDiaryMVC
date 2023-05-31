@@ -164,5 +164,26 @@ namespace MigraineDiary.Web.Controllers
 
             return Json(doctors);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ShareHeadache([FromBody] SharedHeadache headache)
+        {
+            if (String.IsNullOrEmpty(headache.DoctorID) == false)
+            {
+                try
+                {
+                    await this.headacheService.Share(headache.HeadacheID, headache.DoctorID);
+
+                    return Ok("Successfuly shared!");
+                }
+                catch (Exception)
+                {
+                    // TODO: Log exception message.
+                    return BadRequest();
+                }
+            }
+
+            return BadRequest();
+        }
     }
 }
