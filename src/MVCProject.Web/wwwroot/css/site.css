@@ -215,6 +215,10 @@ body {
     cursor: pointer;
 }
 
+.searchResult:nth-child(1) {
+    margin-top: -10px;
+}
+
 .searchResult:hover {
     background-color: lightblue;
 }
@@ -222,4 +226,9 @@ body {
 .not-found-result {
     color: red;
     margin-bottom: 0;
+}
+
+.share-headache-btn {
+    visibility: hidden;
+    margin-left: 5px;
 }
