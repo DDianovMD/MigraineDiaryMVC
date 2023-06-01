@@ -151,7 +151,9 @@ namespace MigraineDiary.Services
         public async Task Share(string headacheId, string doctorID)
         {
             // Get Doctor user.
-            ApplicationUser? doctor = await this.dbContext.Users.FirstOrDefaultAsync(u => u.Id == doctorID);
+            ApplicationUser? doctor = await this.dbContext.Users
+                                                          .Include(u => u.SharedWithMe)
+                                                          .FirstOrDefaultAsync(u => u.Id == doctorID);
 
             // Get all role's names which are assigned to the user.
             var userRoles = await this.dbContext.UserRoles.Where(ur => ur.UserId == doctorID)
@@ -175,11 +177,19 @@ namespace MigraineDiary.Services
                 // Check if headache exists.
                 if (headache != null)
                 {
-                    // Add existing headache to doctor user's collection of shared headaches.
-                    doctor.SharedWithMe.Add(headache);
+                    if (doctor.SharedWithMe.Contains(headache) == false)
+                    {
+                        // Add existing headache to doctor user's collection of shared headaches.
+                        doctor.SharedWithMe.Add(headache);
 
-                    // Save changes.
-                    await this.dbContext.SaveChangesAsync();
+                        // Save changes.
+                        await this.dbContext.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Headache is already shared.");
+                    }
+                    
                 }
                 else
                 {
@@ -188,7 +198,7 @@ namespace MigraineDiary.Services
             }
             else
             {
-                throw new ArgumentException("Doctor doesn't exists or isn't in role \"Doctor\"");
+                throw new ArgumentException("User doesn't exists or isn't in role \"Doctor\"");
             }
         }
     }

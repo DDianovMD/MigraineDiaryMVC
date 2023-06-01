@@ -89,7 +89,7 @@ function removeSearchResults(entityCounterValue, resultCounter) {
         let headacheID = document.getElementById(`headacheID-${entityCounterValue}`).value;
 
         // Add onclick event listener to "Share" button for sharing with chosen doctor.
-        shareButton.setAttribute('onclick', `shareHeadache(${entityCounterValue}, '${headacheID}', '${doctorID}')`);
+        shareButton.setAttribute('onclick', `shareHeadache(${entityCounterValue}, '${headacheID}', '${doctorID}', '${resultValue}')`);
 
         // Make "Share" button visible.
         shareButton.style.visibility = 'visible';

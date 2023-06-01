@@ -176,10 +176,10 @@ namespace MigraineDiary.Web.Controllers
 
                     return Ok("Successfuly shared!");
                 }
-                catch (Exception)
+                catch (ArgumentException ex)
                 {
-                    // TODO: Log exception message.
-                    return BadRequest();
+                    // TODO: Log exception.
+                    return BadRequest(ex.Message);
                 }
             }
 
