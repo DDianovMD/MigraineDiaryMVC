@@ -68,7 +68,7 @@ function removeSearchResults(entityCounterValue, resultCounter) {
     let searchResultsDiv = document.getElementById(`searchResults-${entityCounterValue}`);
 
     // Get "Share" button element.
-    let shareButton = document.getElementById(`share-headache-btn-${entityCounterValue}`);
+    let shareButton = document.getElementById(`share-entity-btn-${entityCounterValue}`);
 
     // Check if resultCounter has value.
     // Function is called with not null parameter only if clicked over presented on screen search result.
@@ -82,11 +82,14 @@ function removeSearchResults(entityCounterValue, resultCounter) {
         // Get clicked result doctorid attribute's value.
         let doctorID = document.getElementById(`searchResult-${resultCounter}`).getAttribute('doctorid');
 
-        // Get headache's ID.
-        let headacheID = document.getElementById(`headacheID-${entityCounterValue}`).value;
+        // Get entity's ID.
+        let entityID = document.getElementById(`entityID-${entityCounterValue}`).value;
+
+        // Get entity's type.
+        let entityType = document.getElementById(`entityID-${entityCounterValue}`).getAttribute('entitytype');
 
         // Add onclick event listener to "Share" button for sharing with chosen doctor.
-        shareButton.setAttribute('onclick', `shareHeadache(${entityCounterValue}, '${headacheID}', '${doctorID}', '${resultValue}')`);
+        shareButton.setAttribute('onclick', `share${entityType}(${entityCounterValue}, '${entityID}', '${doctorID}', '${resultValue}')`);
 
         // Make "Share" button visible.
         shareButton.style.visibility = 'visible';

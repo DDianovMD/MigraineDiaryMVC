@@ -23,7 +23,7 @@
                     {
                         <h4 class="text-center article-title">Главоболие № @(headacheCounter * Model.CurrentPageIndex)</h4>
                         <hr />
-                        <input type="hidden" id="headacheID-@headacheCounter" value="@headache.Id">
+                        <input type="hidden" id="entityID-@headacheCounter" entitytype="Headache" value="@headache.Id">
                         <p>
                             Начало на главоболието: @headache.Onset.TimeOfDay.ToString().Substring(0, 5) ч. на
                             @headache.Onset.ToShortDateString()

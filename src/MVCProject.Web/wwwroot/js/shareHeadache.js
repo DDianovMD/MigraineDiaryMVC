@@ -1,6 +1,6 @@
 ﻿async function shareHeadache(entityCounterValue, headacheID, doctorID, doctorNames) {
     // Get "Share" button element.
-    let shareButton = document.getElementById(`share-headache-btn-${entityCounterValue}`);
+    let shareButton = document.getElementById(`share-entity-btn-${entityCounterValue}`);
 
     // Make "Share" button invisible.
     shareButton.style.visibility = 'hidden';
