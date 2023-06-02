@@ -12,12 +12,12 @@
                 return console.error(error.toString());
             })
             .then(function (jsonResult) {
-                if (jsonResult.length > 0) {
-                    // Get div element in which result is going to be attached to.
-                    let searchResultDiv = document.getElementById(`searchResult-${entityCounterValue}`);
+                // Get div element in which result is going to be attached to.
+                let searchResultsDiv = document.getElementById(`searchResults-${entityCounterValue}`);
 
+                if (jsonResult.length > 0) {
                     // Clear old results while typing.
-                    searchResultDiv.innerHTML = '';
+                    searchResultsDiv.innerHTML = '';
 
                     for (let i = 0; i < jsonResult.length; i++) {
                         // Create paragraph element.
@@ -31,15 +31,12 @@
                         pElement.innerText = `Д-р ${jsonResult[i].firstName} ${jsonResult[i].lastName}`;
 
                         // Append element to DOM tree.
-                        searchResultDiv.appendChild(pElement);
+                        searchResultsDiv.appendChild(pElement);
                     }
                 }
                 else {
-                    // Get div element in which result is going to be attached to.
-                    let searchResultDiv = document.getElementById(`searchResult-${entityCounterValue}`);
-
                     // Clear old results while typing.
-                    searchResultDiv.innerHTML = '';
+                    searchResultsDiv.innerHTML = '';
 
                     // Create paragraph element.
                     let pElement = document.createElement('p');
@@ -51,7 +48,7 @@
                     pElement.innerText = `Не са открити резултати.`;
 
                     // Append element to DOM tree.
-                    searchResultDiv.appendChild(pElement);
+                    searchResultsDiv.appendChild(pElement);
                 }
             })
             .catch(function (error) {
@@ -68,7 +65,7 @@ function removeSearchResults(entityCounterValue, resultCounter) {
     let resultValue;
 
     // Get div element in which results are nested.
-    let searchResultDiv = document.getElementById(`searchResult-${entityCounterValue}`);
+    let searchResultsDiv = document.getElementById(`searchResults-${entityCounterValue}`);
 
     // Get "Share" button element.
     let shareButton = document.getElementById(`share-headache-btn-${entityCounterValue}`);
@@ -105,5 +102,5 @@ function removeSearchResults(entityCounterValue, resultCounter) {
     }
 
     // Clear search results.
-    searchResultDiv.innerHTML = '';
+    searchResultsDiv.innerHTML = '';
 }
