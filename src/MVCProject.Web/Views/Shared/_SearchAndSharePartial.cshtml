@@ -1,0 +1,36 @@
+﻿@model IEnumerable<DoctorViewModel>
+
+@if (Model.Count() > 0)
+{
+    <p id="shared-paragraph-@ViewData["entityCounter"]">
+        <span>Споделено с: </span>
+        @{
+            DoctorViewModel[] orderedDoctors = @Model.OrderBy(x => x.FirstName).ThenBy(x => x.LastName).ToArray();
+        }
+        @for (int i = 0; i < orderedDoctors.Length; i++)
+        {
+            if (i < orderedDoctors.Length - 1)
+            {
+                <span>Д-р @orderedDoctors[i].FirstName @orderedDoctors[i].LastName, </span>
+            }
+            else
+            {
+                <span>Д-р @orderedDoctors[i].FirstName @orderedDoctors[i].LastName</span>
+            }
+        }
+    </p>
+}
+else
+{
+    <p id="shared-paragraph-@ViewData["entityCounter"]" style="display: none;"><span>Споделено с: </span></p>
+}
+
+<div>
+    <span>Сподели с: </span>
+    <input type="text" id="searchBar-@ViewData["entityCounter"]" placeholder="Намери лекар..." oninput="searchDoctor(@ViewData["entityCounter"]);" class="searchBar" />
+    <span id="share-headache-btn-@ViewData["entityCounter"]" class="btn btn-success share-headache-btn">Сподели</span>
+    <div id="searchResult-@ViewData["entityCounter"]"></div>
+</div>
+<div class="mt-2">
+    <button type="button" class="btn btn-primary" onclick="removeSearchResults(@ViewData["entityCounter"]);" style="margin-left: 132px;">Изчисти</button>
+</div>
