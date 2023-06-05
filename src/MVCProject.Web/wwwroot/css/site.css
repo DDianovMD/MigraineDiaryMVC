@@ -238,3 +238,16 @@ body {
     justify-content: center;
     margin-top: 10px;
 }
+
+.btn:focus{
+    outline: none;
+}
+
+.btn-primary:focus {
+    box-shadow: none;
+}
+
+.dropup-toggle::after {
+    border-top: 0;
+    border-bottom: 0.3em solid;
+}

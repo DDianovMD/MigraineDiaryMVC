@@ -1,0 +1,44 @@
+﻿@model PatientViewModel[]
+
+@{
+    ViewData["Title"] = "Пациенти";
+    int counter = 1;
+}
+
+@if (Model.Count() == 0)
+{
+    <p class="text-center article-title">Все още нямате пациенти.</p>
+}
+else
+{
+    @foreach (var patient in Model.OrderBy(p => p.FirstName).ThenBy(p => p.LastName))
+    {
+        <div class="row justify-content-center mb-2">
+            <button type="button" id="patient-dropdown-@counter" aria-expanded="false" data-bs-toggle="collapse" data-bs-target=".multi-collapse-@counter" aria-controls="shared-headaches-@counter shared-hit6-scales-@counter" onclick="changeDirection(@counter)" class="btn btn-primary dropdown-toggle col-6 col-sm-4 col-md-4 col-lg-3 col-xl-2">
+                @patient.FirstName @patient.LastName
+            </button>
+        </div>
+        <div class="row justify-content-center border-dark border-bottom mb-2">
+            <div class="col-2 offset-1">
+                <div class="collapse multi-collapse-@counter" id="shared-headaches-@counter">
+                    <a asp-controller="Patients" asp-action="Headaches" asp-route-patientId="@patient.PatientId" class="btn btn-danger">Главоболия</a>
+                </div>
+            </div>
+            <div class="col-2 mb-2">
+                <div class="collapse multi-collapse-@counter" id="shared-hit6-scales-@counter">
+                    <a asp-controller="Patients" asp-action="HIT6Scales" asp-route-patientId="@patient.PatientId" class="btn btn-warning">HIT-6 скали</a>
+                </div>
+            </div>
+            <div class="col-2 mb-2">
+                <div class="collapse multi-collapse-@counter" id="shared-hit6-scales-@counter">
+                    <a asp-controller="Patients" asp-action="ZungScales" asp-route-patientId="@patient.PatientId" class="btn btn-success">Скали на Zung</a>
+                </div>
+            </div>
+        </div>
+        counter++;
+    }
+}
+
+@section Scripts {
+    <script src="~/js/toggleCSSdropdownArrow.js"></script>
+}

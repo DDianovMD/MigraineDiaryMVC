@@ -1,10 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MigraineDiary.Data;
-using MigraineDiary.ViewModels;
-using MigraineDiary.Services.Contracts;
 using MigraineDiary.Data.DbModels;
-using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
+using MigraineDiary.Services.Contracts;
+using MigraineDiary.ViewModels;
 
 namespace MigraineDiary.Services
 {
@@ -121,6 +119,93 @@ namespace MigraineDiary.Services
             return await PaginatedList<RegisteredHeadacheViewModel>.CreateAsync(headaches, pageIndex, pageSize);
         }
 
+        public async Task<PaginatedList<SharedHeadacheViewModel>> GetSharedHeadachesAsync(string doctorId, string patientId, int pageIndex, int pageSize, string orderByDate)
+        {
+            ICollection<SharedHeadacheViewModel> headaches = null!;
+
+            if (orderByDate == "NewestFirst")
+            {
+                headaches = await this.dbContext.Users
+                                                .Where(user => user.Id == doctorId)
+                                                .Include(user => user.SharedWithMe.Where(headache => headache.PatientId == patientId))
+                                                .ThenInclude(headache => headache.MedicationsTaken)
+                                                .SelectMany(head => head.SharedWithMe.Select(headache => new SharedHeadacheViewModel
+                                                {
+                                                    HeadacheId = headache.Id,
+                                                    PatientFirstName = headache.Patient.FirstName!,
+                                                    PatientMiddleName = headache.Patient.MiddleName,
+                                                    PatientLastName = headache.Patient.LastName!,
+                                                    Onset = headache.Onset,
+                                                    EndTime = headache.EndTime,
+                                                    DurationDays = headache.DurationDays,
+                                                    DurationHours = headache.DurationHours,
+                                                    DurationMinutes = headache.DurationMinutes,
+                                                    Severity = headache.Severity,
+                                                    LocalizationSide = headache.LocalizationSide,
+                                                    PainCharacteristics = headache.PainCharacteristics,
+                                                    Photophoby = headache.Photophoby,
+                                                    Phonophoby = headache.Phonophoby,
+                                                    Nausea = headache.Nausea,
+                                                    Vomiting = headache.Vomiting,
+                                                    Aura = headache.Aura,
+                                                    AuraDescriptionNotes = headache.AuraDescriptionNotes,
+                                                    Triggers = headache.Triggers,
+                                                    UsedMedications = headache.MedicationsTaken.Select(m => new UsedMedicationViewModel
+                                                    {
+                                                        Name = m.Name,
+                                                        Units = m.Units,
+                                                        DosageTaken = this.medicationService.CalculateWholeTakenDosage(m.SinglePillDosage, m.NumberOfTakenPills),
+                                                        NumberOfTakenPills = m.NumberOfTakenPills,
+                                                        SinglePillDosage = m.SinglePillDosage,
+                                                    })
+                                                }))
+                                                .OrderByDescending(headache => headache.Onset)
+                                                .ToArrayAsync();
+                    
+            }
+            else
+            {
+                headaches = await this.dbContext.Users
+                                                .Where(user => user.Id == doctorId)
+                                                .Include(user => user.SharedWithMe.Where(headache => headache.PatientId == patientId))
+                                                .ThenInclude(headache => headache.MedicationsTaken)
+                                                .SelectMany(head => head.SharedWithMe.Select(headache => new SharedHeadacheViewModel
+                                                {
+                                                    HeadacheId = headache.Id,
+                                                    PatientFirstName = headache.Patient.FirstName!,
+                                                    PatientMiddleName = headache.Patient.MiddleName,
+                                                    PatientLastName = headache.Patient.LastName!,
+                                                    Onset = headache.Onset,
+                                                    EndTime = headache.EndTime,
+                                                    DurationDays = headache.DurationDays,
+                                                    DurationHours = headache.DurationHours,
+                                                    DurationMinutes = headache.DurationMinutes,
+                                                    Severity = headache.Severity,
+                                                    LocalizationSide = headache.LocalizationSide,
+                                                    PainCharacteristics = headache.PainCharacteristics,
+                                                    Photophoby = headache.Photophoby,
+                                                    Phonophoby = headache.Phonophoby,
+                                                    Nausea = headache.Nausea,
+                                                    Vomiting = headache.Vomiting,
+                                                    Aura = headache.Aura,
+                                                    AuraDescriptionNotes = headache.AuraDescriptionNotes,
+                                                    Triggers = headache.Triggers,
+                                                    UsedMedications = headache.MedicationsTaken.Select(m => new UsedMedicationViewModel
+                                                    {
+                                                        Name = m.Name,
+                                                        Units = m.Units,
+                                                        DosageTaken = this.medicationService.CalculateWholeTakenDosage(m.SinglePillDosage, m.NumberOfTakenPills),
+                                                        NumberOfTakenPills = m.NumberOfTakenPills,
+                                                        SinglePillDosage = m.SinglePillDosage,
+                                                    }),
+                                                }))
+                                                .OrderBy(headache => headache.Onset)
+                                                .ToArrayAsync();
+            }
+
+            return PaginatedList<SharedHeadacheViewModel>.CreateAsync(headaches, pageIndex, pageSize);
+        }
+
         public async Task<DoctorViewModel[]> GetDoctorUsersByNameAsync(string name)
         {
             DoctorViewModel[] doctorUsers = await dbContext.Roles
@@ -189,7 +274,7 @@ namespace MigraineDiary.Services
                     {
                         throw new ArgumentException("Headache is already shared.");
                     }
-                    
+
                 }
                 else
                 {

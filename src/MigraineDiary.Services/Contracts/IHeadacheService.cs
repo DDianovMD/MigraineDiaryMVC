@@ -8,6 +8,8 @@ namespace MigraineDiary.Services.Contracts
 
         public Task<PaginatedList<RegisteredHeadacheViewModel>> GetRegisteredHeadachesAsync(string userId, int pageIndex, int pageSize, string orderByDate);
 
+        public Task<PaginatedList<SharedHeadacheViewModel>> GetSharedHeadachesAsync(string doctorId, string patientId, int pageIndex, int pageSize, string orderByDate);
+
         public Task<DoctorViewModel[]> GetDoctorUsersByNameAsync(string name);
 
         public Task Share(string headacheId, string doctorID);
