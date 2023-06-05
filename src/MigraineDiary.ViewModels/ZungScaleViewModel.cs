@@ -4,6 +4,11 @@ namespace MigraineDiary.ViewModels
 {
     public class ZungScaleViewModel
     {
+        public ZungScaleViewModel()
+        {
+            this.Doctors = new HashSet<DoctorViewModel>();
+        }
+
         /// <summary>
         /// Primary key.
         /// </summary>
@@ -161,5 +166,7 @@ namespace MigraineDiary.ViewModels
         /// </summary>
         [Required]
         public DateTime CreatedOn { get; set; }
+
+        public IEnumerable<DoctorViewModel> Doctors { get; set; }
     }
 }

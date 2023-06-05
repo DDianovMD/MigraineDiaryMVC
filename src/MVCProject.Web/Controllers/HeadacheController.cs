@@ -166,7 +166,7 @@ namespace MigraineDiary.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ShareHeadache([FromBody] SharedHeadache headache)
+        public async Task<IActionResult> ShareHeadache([FromBody] SharedHeadacheAddModel headache)
         {
             if (String.IsNullOrEmpty(headache.DoctorID) == false)
             {

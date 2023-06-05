@@ -4,6 +4,12 @@ namespace MigraineDiary.ViewModels
 {
     public class HIT6ScaleViewModel
     {
+
+        public HIT6ScaleViewModel()
+        {
+            this.Doctors = new HashSet<DoctorViewModel>();
+        }
+
         [Required]
         public string Id { get; set; } = null!;
 
@@ -36,5 +42,7 @@ namespace MigraineDiary.ViewModels
 
         [Required]
         public DateTime CreatedOn { get; set; }
+
+        public IEnumerable<DoctorViewModel> Doctors { get; set; }
     }
 }

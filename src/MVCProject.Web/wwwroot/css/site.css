@@ -232,3 +232,9 @@ body {
     visibility: hidden;
     margin-left: 5px;
 }
+
+.edit-delete-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}

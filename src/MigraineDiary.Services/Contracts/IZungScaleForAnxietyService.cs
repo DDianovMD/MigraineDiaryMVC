@@ -16,6 +16,8 @@ namespace MigraineDiary.Services.Contracts
 
         public Task SoftDeleteAsync(string scaleId, string userId);
 
+        public Task Share(string scaleId, string doctorID);
+
         public bool ValidateAnswer(string answer);
     }
 }

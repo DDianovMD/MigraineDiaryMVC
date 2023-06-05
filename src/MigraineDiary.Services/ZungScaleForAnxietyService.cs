@@ -185,6 +185,12 @@ namespace MigraineDiary.Services
                                                      TwentiethQuestionAnswer = s.TwentiethQuestionAnswer,
                                                      TotalScore = s.TotalScore,
                                                      CreatedOn = s.CreatedOn,
+                                                     Doctors = s.SharedWith.Select(d => new DoctorViewModel
+                                                     {
+                                                         Id = d.Id,
+                                                         FirstName = d.FirstName!,
+                                                         LastName = d.LastName!,
+                                                     }),
                                                  })
                                                  .AsNoTracking();
             }
@@ -218,6 +224,12 @@ namespace MigraineDiary.Services
                                                      TwentiethQuestionAnswer = s.TwentiethQuestionAnswer,
                                                      TotalScore = s.TotalScore,
                                                      CreatedOn = s.CreatedOn,
+                                                     Doctors = s.SharedWith.Select(d => new DoctorViewModel
+                                                     {
+                                                         Id = d.Id,
+                                                         FirstName = d.FirstName!,
+                                                         LastName = d.LastName!,
+                                                     }),
                                                  })
                                                  .AsNoTracking();
             }
@@ -302,6 +314,60 @@ namespace MigraineDiary.Services
             else
             {
                 throw new ArgumentException("Скалата на Zung не съществува или не принадлежи на потребителя.");
+            }
+        }
+
+        public async Task Share(string scaleId, string doctorID)
+        {
+            // Get Doctor user.
+            ApplicationUser? doctor = await this.dbContext.Users
+                                                          .Include(u => u.SharedZungScalesForAnxietyWithMe)
+                                                          .FirstOrDefaultAsync(u => u.Id == doctorID);
+
+            // Get all role's names which are assigned to the user.
+            var userRoles = await this.dbContext.UserRoles.Where(ur => ur.UserId == doctorID)
+                                                          .Join(this.dbContext.Roles,
+                                                                ur => ur.RoleId,
+                                                                r => r.Id,
+                                                                (ur, r) => new
+                                                                {
+                                                                    UserId = ur.UserId,
+                                                                    Name = r.Name,
+                                                                })
+                                                          .AsNoTracking()
+                                                          .ToArrayAsync();
+
+            // Check if user exists and is in role "Doctor".
+            if (doctor != null && userRoles.Any(r => r.Name == "Doctor"))
+            {
+                // Get scale which is going to be shared with the chosen doctor.
+                var scale = this.dbContext.ZungScalesForAnxiety.FirstOrDefault(s => s.Id == scaleId);
+
+                // Check if scale exists.
+                if (scale != null)
+                {
+                    // Check if scale is not shared already.
+                    if (doctor.SharedZungScalesForAnxietyWithMe.Contains(scale) == false)
+                    {
+                        // Add existing scale to doctor user's collection of shared headaches.
+                        doctor.SharedZungScalesForAnxietyWithMe.Add(scale);
+
+                        // Save changes.
+                        await this.dbContext.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Scale is already shared.");
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException("Scale doesn't exist.");
+                }
+            }
+            else
+            {
+                throw new ArgumentException("User doesn't exists or isn't in role \"Doctor\"");
             }
         }
 

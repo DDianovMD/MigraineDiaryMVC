@@ -293,6 +293,27 @@ namespace MigraineDiary.Web.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ShareHIT6Scale([FromBody] SharedHIT6ScaleAddModel scale)
+        {
+            if (String.IsNullOrEmpty(scale.DoctorID) == false)
+            {
+                try
+                {
+                    await this.HIT6ScaleService.Share(scale.ScaleID, scale.DoctorID);
+
+                    return Ok("Successfuly shared!");
+                }
+                catch (ArgumentException ex)
+                {
+                    // TODO: Log exception.
+                    return BadRequest(ex.Message);
+                }
+            }
+
+            return BadRequest();
+        }
+
         [HttpGet]
         public IActionResult AddZungScale()
         {
@@ -736,6 +757,27 @@ namespace MigraineDiary.Web.Controllers
             {
                 return NotFound();
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ShareZungScale([FromBody] SharedZungScaleForAnxietyAddModel scale)
+        {
+            if (String.IsNullOrEmpty(scale.DoctorID) == false)
+            {
+                try
+                {
+                    await this.ZungScaleForAnxietyService.Share(scale.ScaleID, scale.DoctorID);
+
+                    return Ok("Successfuly shared!");
+                }
+                catch (ArgumentException ex)
+                {
+                    // TODO: Log exception.
+                    return BadRequest(ex.Message);
+                }
+            }
+
+            return BadRequest();
         }
     }
 }

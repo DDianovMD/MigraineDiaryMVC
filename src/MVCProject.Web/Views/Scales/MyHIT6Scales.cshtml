@@ -5,6 +5,8 @@
     ViewData["PartialViewController"] = "Scales";
     ViewData["PartialViewAction"] = "MyHIT6Scales";
     ViewData["itemsType"] = "Скали";
+    ViewData["entityCounter"] = 1;
+
     int scaleCounter = 1;
 }
 
@@ -21,167 +23,176 @@
             <h3 class="text-center">Регистрирани HIT-6 скали</h3>
             <partial name="_PageItemsOrderingNavigation" view-data="ViewData" />
             <div class="container mt-4">
-                    <div class="row">
-                        @foreach (var scale in Model)
+                <div class="row">
+                    @foreach (var scale in Model)
+                    {
+                        <h4 class="text-center article-title">HIT-6 скала № @(scaleCounter * Model.CurrentPageIndex)</h4>
+                        <input type="hidden" id="entityID-@scaleCounter" entitytype="HIT6scale" value="@scale.Id">
+                        <p class="text-center mb-5">Дата на добавяне: @scale.CreatedOn.ToShortDateString()</p>
+                        <p><i>1. Когато имате главоболие, колко често болката е много силна?</i></p>
+                        @if (scale.FirstQuestionAnswer == "Never")
                         {
-                            <h4 class="text-center article-title">HIT-6 скала № @(scaleCounter * Model.CurrentPageIndex)</h4>
-                            <p class="text-center mb-5">Дата на добавяне: @scale.CreatedOn.ToShortDateString()</p>
-                            <p><i>1. Когато имате главоболие, колко често болката е много силна?</i></p>
-                            @if (scale.FirstQuestionAnswer == "Never")
-                            {
-                                <p>Отговор: никога.</p>
-                            }
-                            else if (scale.FirstQuestionAnswer == "Rarely")
-                            {
-                                <p>Отговор: рядко.</p>
-                            }
-                            else if (scale.FirstQuestionAnswer == "Sometimes")
-                            {
-                                <p>Отговор: понякога.</p>
-                            }
-                            else if (scale.FirstQuestionAnswer == "Very often")
-                            {
-                                <p>Отговор: много често.</p>
-                            }
-                            else if (scale.FirstQuestionAnswer == "Always")
-                            {
-                                <p>Отговор: винаги.</p>
-                            }
+                            <p>Отговор: никога.</p>
+                        }
+                        else if (scale.FirstQuestionAnswer == "Rarely")
+                        {
+                            <p>Отговор: рядко.</p>
+                        }
+                        else if (scale.FirstQuestionAnswer == "Sometimes")
+                        {
+                            <p>Отговор: понякога.</p>
+                        }
+                        else if (scale.FirstQuestionAnswer == "Very often")
+                        {
+                            <p>Отговор: много често.</p>
+                        }
+                        else if (scale.FirstQuestionAnswer == "Always")
+                        {
+                            <p>Отговор: винаги.</p>
+                        }
 
-                            <p>
-                                <i>
-                                    2. Колко често главоболията са ограничавали Вашите обичайни дейности, напр.<br />
-                                    домакинска работа, професионална работа, учебна дейност, социални активности?
-                                </i>
-                            </p>
-                            @if (scale.SecondQuestionAnswer == "Never")
-                            {
-                                <p>Отговор: никога.</p>
-                            }
-                            else if (scale.SecondQuestionAnswer == "Rarely")
-                            {
-                                <p>Отговор: рядко.</p>
-                            }
-                            else if (scale.SecondQuestionAnswer == "Sometimes")
-                            {
-                                <p>Отговор: понякога.</p>
-                            }
-                            else if (scale.SecondQuestionAnswer == "Very often")
-                            {
-                                <p>Отговор: много често.</p>
-                            }
-                            else if (scale.SecondQuestionAnswer == "Always")
-                            {
-                                <p>Отговор: винаги.</p>
-                            }
+                        <p>
+                            <i>
+                                2. Колко често главоболията са ограничавали Вашите обичайни дейности, напр.<br />
+                                домакинска работа, професионална работа, учебна дейност, социални активности?
+                            </i>
+                        </p>
+                        @if (scale.SecondQuestionAnswer == "Never")
+                        {
+                            <p>Отговор: никога.</p>
+                        }
+                        else if (scale.SecondQuestionAnswer == "Rarely")
+                        {
+                            <p>Отговор: рядко.</p>
+                        }
+                        else if (scale.SecondQuestionAnswer == "Sometimes")
+                        {
+                            <p>Отговор: понякога.</p>
+                        }
+                        else if (scale.SecondQuestionAnswer == "Very often")
+                        {
+                            <p>Отговор: много често.</p>
+                        }
+                        else if (scale.SecondQuestionAnswer == "Always")
+                        {
+                            <p>Отговор: винаги.</p>
+                        }
 
-                            <p><i>3. Когато имате главоболие, колко често Ви се е приисквало да полегнете?</i></p>
-                            @if (scale.ThirdQuestionAnswer == "Never")
-                            {
-                                <p>Отговор: никога.</p>
-                            }
-                            else if (scale.ThirdQuestionAnswer == "Rarely")
-                            {
-                                <p>Отговор: рядко.</p>
-                            }
-                            else if (scale.ThirdQuestionAnswer == "Sometimes")
-                            {
-                                <p>Отговор: понякога.</p>
-                            }
-                            else if (scale.ThirdQuestionAnswer == "Very often")
-                            {
-                                <p>Отговор: много често.</p>
-                            }
-                            else if (scale.ThirdQuestionAnswer == "Always")
-                            {
-                                <p>Отговор: винаги.</p>
-                            }
+                        <p><i>3. Когато имате главоболие, колко често Ви се е приисквало да полегнете?</i></p>
+                        @if (scale.ThirdQuestionAnswer == "Never")
+                        {
+                            <p>Отговор: никога.</p>
+                        }
+                        else if (scale.ThirdQuestionAnswer == "Rarely")
+                        {
+                            <p>Отговор: рядко.</p>
+                        }
+                        else if (scale.ThirdQuestionAnswer == "Sometimes")
+                        {
+                            <p>Отговор: понякога.</p>
+                        }
+                        else if (scale.ThirdQuestionAnswer == "Very often")
+                        {
+                            <p>Отговор: много често.</p>
+                        }
+                        else if (scale.ThirdQuestionAnswer == "Always")
+                        {
+                            <p>Отговор: винаги.</p>
+                        }
 
-                            <p>
-                                <i>
-                                    4. Колко често сте се чувствали твърде изморени за извършване на Вашите<br />
-                                    професионални и всекидневни задължения заради Вашите главоболия?
-                                </i>
-                            </p>
-                            @if (scale.FourthQuestionAnswer == "Never")
-                            {
-                                <p>Отговор: никога.</p>
-                            }
-                            else if (scale.FourthQuestionAnswer == "Rarely")
-                            {
-                                <p>Отговор: рядко.</p>
-                            }
-                            else if (scale.FourthQuestionAnswer == "Sometimes")
-                            {
-                                <p>Отговор: понякога.</p>
-                            }
-                            else if (scale.FourthQuestionAnswer == "Very often")
-                            {
-                                <p>Отговор: много често.</p>
-                            }
-                            else if (scale.FourthQuestionAnswer == "Always")
-                            {
-                                <p>Отговор: винаги.</p>
-                            }
+                        <p>
+                            <i>
+                                4. Колко често сте се чувствали твърде изморени за извършване на Вашите<br />
+                                професионални и всекидневни задължения заради Вашите главоболия?
+                            </i>
+                        </p>
+                        @if (scale.FourthQuestionAnswer == "Never")
+                        {
+                            <p>Отговор: никога.</p>
+                        }
+                        else if (scale.FourthQuestionAnswer == "Rarely")
+                        {
+                            <p>Отговор: рядко.</p>
+                        }
+                        else if (scale.FourthQuestionAnswer == "Sometimes")
+                        {
+                            <p>Отговор: понякога.</p>
+                        }
+                        else if (scale.FourthQuestionAnswer == "Very often")
+                        {
+                            <p>Отговор: много често.</p>
+                        }
+                        else if (scale.FourthQuestionAnswer == "Always")
+                        {
+                            <p>Отговор: винаги.</p>
+                        }
 
-                            <p><i>5. Колко често Ви е идвало до гуша или сте се чувствали раздразнени поради Вашите главоболия?</i></p>
-                            @if (scale.FifthQuestionAnswer == "Never")
-                            {
-                                <p>Отговор: никога.</p>
-                            }
-                            else if (scale.FifthQuestionAnswer == "Rarely")
-                            {
-                                <p>Отговор: рядко.</p>
-                            }
-                            else if (scale.FifthQuestionAnswer == "Sometimes")
-                            {
-                                <p>Отговор: понякога.</p>
-                            }
-                            else if (scale.FifthQuestionAnswer == "Very often")
-                            {
-                                <p>Отговор: много често.</p>
-                            }
-                            else if (scale.FifthQuestionAnswer == "Always")
-                            {
-                                <p>Отговор: винаги.</p>
-                            }
+                        <p><i>5. Колко често Ви е идвало до гуша или сте се чувствали раздразнени поради Вашите главоболия?</i></p>
+                        @if (scale.FifthQuestionAnswer == "Never")
+                        {
+                            <p>Отговор: никога.</p>
+                        }
+                        else if (scale.FifthQuestionAnswer == "Rarely")
+                        {
+                            <p>Отговор: рядко.</p>
+                        }
+                        else if (scale.FifthQuestionAnswer == "Sometimes")
+                        {
+                            <p>Отговор: понякога.</p>
+                        }
+                        else if (scale.FifthQuestionAnswer == "Very often")
+                        {
+                            <p>Отговор: много често.</p>
+                        }
+                        else if (scale.FifthQuestionAnswer == "Always")
+                        {
+                            <p>Отговор: винаги.</p>
+                        }
 
-                            <p><i>6. Колко често главоболията са пречили на концентрацията Ви?</i></p>
-                            @if (scale.SixthQuestionAnswer == "Never")
-                            {
-                                <p>Отговор: никога.</p>
-                            }
-                            else if (scale.SixthQuestionAnswer == "Rarely")
-                            {
-                                <p>Отговор: рядко.</p>
-                            }
-                            else if (scale.SixthQuestionAnswer == "Sometimes")
-                            {
-                                <p>Отговор: понякога.</p>
-                            }
-                            else if (scale.SixthQuestionAnswer == "Very often")
-                            {
-                                <p>Отговор: много често.</p>
-                            }
-                            else if (scale.SixthQuestionAnswer == "Always")
-                            {
-                                <p>Отговор: винаги.</p>
-                            }
+                        <p><i>6. Колко често главоболията са пречили на концентрацията Ви?</i></p>
+                        @if (scale.SixthQuestionAnswer == "Never")
+                        {
+                            <p>Отговор: никога.</p>
+                        }
+                        else if (scale.SixthQuestionAnswer == "Rarely")
+                        {
+                            <p>Отговор: рядко.</p>
+                        }
+                        else if (scale.SixthQuestionAnswer == "Sometimes")
+                        {
+                            <p>Отговор: понякога.</p>
+                        }
+                        else if (scale.SixthQuestionAnswer == "Very often")
+                        {
+                            <p>Отговор: много често.</p>
+                        }
+                        else if (scale.SixthQuestionAnswer == "Always")
+                        {
+                            <p>Отговор: винаги.</p>
+                        }
 
-                            <p><b>Резултат: <a href="#" title="Разбери как да тълкуваш резултата като кликнеш тук.">@scale.TotalScore</a> точки.</b></p>
+                        <p><b>Резултат: <a href="#" title="Разбери как да тълкуваш резултата като кликнеш тук.">@scale.TotalScore</a> точки.</b></p>
 
+                        <partial name="_SearchAndSharePartial" model="@scale.Doctors" view-data="ViewData" />
+
+                        <div class="edit-delete-container">
                             <div class="mb-3">
                                 <a asp-controller="Scales" asp-action="EditHIT6Scale" asp-route-id="@scale.Id" class="btn btn-warning border-dark">Редактирай</a>
 
                                 <a asp-controller="Scales" asp-action="DeleteHIT6Scale" asp-route-hit6scaleId="@scale.Id" asp-route-currentUserId=@ViewData["currentUserId"] class="btn btn-danger border-dark" style="position:relative; right: -30px;" onclick="confirmDelete(event, @scaleCounter);">Изтрий</a>
                             </div>
-                            <hr />
-                            scaleCounter++;
-                        }
-                    </div>
+                        </div>
+                        
+                        <hr />
+                        scaleCounter++;
+                        ViewData["entityCounter"] = scaleCounter;
+                    }
                 </div>
+            </div>
         </section>
         <partial name="_PagesNavigation" view-data="ViewData" />
     }
 </main>
 <script src="~/js/confirmDelete.js"></script>
+<script src="~/js/search.js"></script>
+<script src="~/js/shareHIT6scale.js"></script>

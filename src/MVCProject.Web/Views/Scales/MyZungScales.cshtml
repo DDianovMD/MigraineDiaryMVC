@@ -5,6 +5,8 @@
     ViewData["PartialViewController"] = "Scales";
     ViewData["PartialViewAction"] = "MyZungScales";
     ViewData["itemsType"] = "Скали";
+    ViewData["entityCounter"] = 1;
+
     int scaleCounter = 1;
 
     // Answers constants
@@ -39,6 +41,7 @@
                     @foreach (var scale in Model)
                     {
                         <h4 class="text-center article-title">Скала на Zung № @(scaleCounter * Model.CurrentPageIndex)</h4>
+                        <input type="hidden" id="entityID-@scaleCounter" entitytype="ZungScaleForAnxiety" value="@scale.Id">
                         <p class="text-center mb-5">Дата на добавяне: @scale.CreatedOn.ToShortDateString()</p>
                         <p><i>1. Чувствам се по-нервен и тревожен от обикновено.</i></p>
                         @if (scale.FirstQuestionAnswer == neverOrRarely)
@@ -422,13 +425,19 @@
 
                         <p><b>Резултат: <a href="#" title="Разбери как да тълкуваш резултата като кликнеш тук.">@scale.TotalScore</a> точки.</b></p>
 
-                        <div class="mb-3">
-                            <a asp-controller="Scales" asp-action="EditZungScale" asp-route-id="@scale.Id" class="btn btn-warning border-dark">Редактирай</a>
+                        <partial name="_SearchAndSharePartial" model="@scale.Doctors" view-data="ViewData" />
 
-                            <a asp-controller="Scales" asp-action="DeleteZungScale" asp-route-zungScaleId="@scale.Id" asp-route-currentUserId=@ViewData["currentUserId"] class="btn btn-danger border-dark" style="position:relative; right: -30px;" onclick="confirmDelete(event, @scaleCounter);">Изтрий</a>
+                        <div class="edit-delete-container">
+                            <div class="mb-3">
+                                <a asp-controller="Scales" asp-action="EditZungScale" asp-route-id="@scale.Id" class="btn btn-warning border-dark">Редактирай</a>
+
+                                <a asp-controller="Scales" asp-action="DeleteZungScale" asp-route-zungScaleId="@scale.Id" asp-route-currentUserId=@ViewData["currentUserId"] class="btn btn-danger border-dark" style="position:relative; right: -30px;" onclick="confirmDelete(event, @scaleCounter);">Изтрий</a>
+                            </div>
                         </div>
+
                         <hr />
                         scaleCounter++;
+                        ViewData["entityCounter"] = scaleCounter;
                     }
                 </div>
             </div>
@@ -437,3 +446,5 @@
     }
 </main>
 <script src="~/js/confirmDelete.js"></script>
+<script src="~/js/search.js"></script>
+<script src="~/js/shareZungScaleForAnxiety.js"></script>
