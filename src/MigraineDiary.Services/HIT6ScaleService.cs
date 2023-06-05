@@ -209,6 +209,62 @@ namespace MigraineDiary.Services
             }
         }
 
+        public async Task<PaginatedList<SharedHIT6ScaleViewModel>> GetSharedScalesAsync(string doctorId, string patientId, int pageIndex, int pageSize, string orderByDate)
+        {
+            IQueryable<SharedHIT6ScaleViewModel> sharedScales = null!;
+
+            if (orderByDate == "NewestFirst")
+            {
+                sharedScales = this.dbContext.Users
+                                             .Where(user => user.Id == doctorId)
+                                             .Include(user => user.SharedHIT6ScalesWithMe
+                                             .Where(scale => scale.PatientId == patientId && scale.IsDeleted == false))
+                                             .SelectMany(user => user.SharedHIT6ScalesWithMe
+                                             .Select(scale => new SharedHIT6ScaleViewModel
+                                             {
+                                                 HIT6ScaleId = scale.Id,
+                                                 PatientFirstName = scale.Patient.FirstName!,
+                                                 PatientMiddleName = scale.Patient.MiddleName,
+                                                 PatientLastName = scale.Patient.LastName!,
+                                                 CreatedOn = scale.CreatedOn,
+                                                 FirstQuestionAnswer = scale.FirstQuestionAnswer,
+                                                 SecondQuestionAnswer = scale.SecondQuestionAnswer,
+                                                 ThirdQuestionAnswer = scale.ThirdQuestionAnswer,
+                                                 FourthQuestionAnswer = scale.FourthQuestionAnswer,
+                                                 FifthQuestionAnswer = scale.FifthQuestionAnswer,
+                                                 SixthQuestionAnswer = scale.SixthQuestionAnswer,
+                                                 TotalScore = scale.TotalScore,
+                                             }))
+                                             .OrderByDescending(scale => scale.CreatedOn);
+            }
+            else
+            {
+                sharedScales = this.dbContext.Users
+                                             .Where(user => user.Id == doctorId)
+                                             .Include(user => user.SharedHIT6ScalesWithMe
+                                             .Where(scale => scale.PatientId == patientId && scale.IsDeleted == false))
+                                             .SelectMany(user => user.SharedHIT6ScalesWithMe
+                                             .Select(scale => new SharedHIT6ScaleViewModel
+                                             {
+                                                 HIT6ScaleId = scale.Id,
+                                                 PatientFirstName = scale.Patient.FirstName!,
+                                                 PatientMiddleName = scale.Patient.MiddleName,
+                                                 PatientLastName = scale.Patient.LastName!,
+                                                 CreatedOn = scale.CreatedOn,
+                                                 FirstQuestionAnswer = scale.FirstQuestionAnswer,
+                                                 SecondQuestionAnswer = scale.SecondQuestionAnswer,
+                                                 ThirdQuestionAnswer = scale.ThirdQuestionAnswer,
+                                                 FourthQuestionAnswer = scale.FourthQuestionAnswer,
+                                                 FifthQuestionAnswer = scale.FifthQuestionAnswer,
+                                                 SixthQuestionAnswer = scale.SixthQuestionAnswer,
+                                                 TotalScore = scale.TotalScore,
+                                             }))
+                                             .OrderBy(scale => scale.CreatedOn);
+            }
+
+            return await PaginatedList<SharedHIT6ScaleViewModel>.CreateAsync(sharedScales, pageIndex, pageSize);
+        }
+
         public async Task SoftDeleteAsync(string scaleId, string userId)
         {
             // Get HIT-6 scale that is going to be deleted.

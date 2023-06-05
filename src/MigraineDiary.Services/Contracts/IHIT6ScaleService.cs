@@ -14,6 +14,8 @@ namespace MigraineDiary.Services.Contracts
 
         public Task<PaginatedList<HIT6ScaleViewModel>> GetAllAsync(string userId, int pageIndex, int pageSize, string orderByDate);
 
+        public Task<PaginatedList<SharedHIT6ScaleViewModel>> GetSharedScalesAsync(string doctorId, string patientId, int pageIndex, int pageSize, string orderByDate);
+
         public Task SoftDeleteAsync(string scaleId, string userId);
 
         public Task Share(string scaleId, string doctorID);
