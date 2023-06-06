@@ -1,0 +1,430 @@
+﻿@model PaginatedList<SharedZungScaleForAnxietyViewModel>
+
+@{
+    ViewData["Title"] = "My Zung Scales";
+    ViewData["PartialViewController"] = "Patients";
+    ViewData["PartialViewAction"] = "ZungScales";
+    ViewData["itemsType"] = "Скали";
+    int scaleCounter = 1;
+
+    // Answers constants
+    const string neverOrRarely = "Never or rarely";
+    const string sometimes = "Sometimes";
+    const string often = "Often";
+    const string veryOftenOrAlways = "Very often or always";
+
+    // Translated answers constants
+    const string neverOrRarelyBG = "никога или рядко";
+    const string sometimesBG = "понякога";
+    const string oftenBG = "често";
+    const string veryOftenOrAlwaysBG = "много често или винаги";
+
+    string givenAnswer = string.Empty;
+}
+
+
+@if (Model.Count == 0)
+{
+    <section>
+        <p class="text-center article-title">Не са открити споделени скали на Zung за тревожност с Вас.</p>
+    </section>
+}
+else
+{
+    <section>
+        <h3 class="text-center">Споделени скали на Zung за тревожност на @Model.ElementAt(0).PatientFirstName @(Model.ElementAt(0).PatientMiddleName == null ? "" : Model.ElementAt(0).PatientMiddleName) @Model.ElementAt(0).PatientLastName</h3>
+        <partial name="_PageItemsOrderingNavigation" view-data="ViewData" />
+        <div class="container mt-4">
+            <div class="row">
+                @foreach (var scale in Model)
+                {
+                    <h4 class="text-center article-title">Скала на Zung № @(scaleCounter * Model.CurrentPageIndex)</h4>
+                    <p class="text-center mb-5">Дата на добавяне: @scale.CreatedOn.ToShortDateString()</p>
+                    <p><i>1. Чувствам се по-нервен и тревожен от обикновено.</i></p>
+                    @if (scale.FirstQuestionAnswer == neverOrRarely)
+                    {
+                        givenAnswer = neverOrRarelyBG;
+                    }
+                    else if (scale.FirstQuestionAnswer == sometimes)
+                    {
+                        givenAnswer = sometimesBG;
+                    }
+                    else if (scale.FirstQuestionAnswer == often)
+                    {
+                        givenAnswer = oftenBG;
+                    }
+                    else if (scale.FirstQuestionAnswer == veryOftenOrAlways)
+                    {
+                        givenAnswer = veryOftenOrAlwaysBG;
+                    }
+                    <p>Отговор: @givenAnswer.</p>
+
+                    <p><i>2. Страхувам се без причина.</i></p>
+                    @if (scale.SecondQuestionAnswer == neverOrRarely)
+                    {
+                        givenAnswer = neverOrRarelyBG;
+                    }
+                    else if (scale.SecondQuestionAnswer == sometimes)
+                    {
+                        givenAnswer = sometimesBG;
+                    }
+                    else if (scale.SecondQuestionAnswer == often)
+                    {
+                        givenAnswer = oftenBG;
+                    }
+                    else if (scale.SecondQuestionAnswer == veryOftenOrAlways)
+                    {
+                        givenAnswer = veryOftenOrAlwaysBG;
+                    }
+                    <p>Отговор: @givenAnswer.</p>
+
+                    <p><i>3. Разстройвам се лесно или изпадам в паника.</i></p>
+                    @if (scale.ThirdQuestionAnswer == neverOrRarely)
+                    {
+                        givenAnswer = neverOrRarelyBG;
+                    }
+                    else if (scale.ThirdQuestionAnswer == sometimes)
+                    {
+                        givenAnswer = sometimesBG;
+                    }
+                    else if (scale.ThirdQuestionAnswer == often)
+                    {
+                        givenAnswer = oftenBG;
+                    }
+                    else if (scale.ThirdQuestionAnswer == veryOftenOrAlways)
+                    {
+                        givenAnswer = veryOftenOrAlwaysBG;
+                    }
+                    <p>Отговор: @givenAnswer.</p>
+
+                    <p><i>4. Чувствам, че се разпадам и че катастрофирам.</i></p>
+                    @if (scale.FourthQuestionAnswer == neverOrRarely)
+                    {
+                        givenAnswer = neverOrRarelyBG;
+                    }
+                    else if (scale.FourthQuestionAnswer == sometimes)
+                    {
+                        givenAnswer = sometimesBG;
+                    }
+                    else if (scale.FourthQuestionAnswer == often)
+                    {
+                        givenAnswer = oftenBG;
+                    }
+                    else if (scale.FourthQuestionAnswer == veryOftenOrAlways)
+                    {
+                        givenAnswer = veryOftenOrAlwaysBG;
+                    }
+                    <p>Отговор: @givenAnswer.</p>
+
+                    <p><i>5. Чувствам, че всичко е наред и нищо лошо няма да се случи.</i></p>
+                    @if (scale.FifthQuestionAnswer == neverOrRarely)
+                    {
+                        givenAnswer = neverOrRarelyBG;
+                    }
+                    else if (scale.FifthQuestionAnswer == sometimes)
+                    {
+                        givenAnswer = sometimesBG;
+                    }
+                    else if (scale.FifthQuestionAnswer == often)
+                    {
+                        givenAnswer = oftenBG;
+                    }
+                    else if (scale.FifthQuestionAnswer == veryOftenOrAlways)
+                    {
+                        givenAnswer = veryOftenOrAlwaysBG;
+                    }
+                    <p>Отговор: @givenAnswer.</p>
+
+                    <p><i>6. Ръцете и краката ми треперят.</i></p>
+                    @if (scale.SixthQuestionAnswer == neverOrRarely)
+                    {
+                        givenAnswer = neverOrRarelyBG;
+                    }
+                    else if (scale.SixthQuestionAnswer == sometimes)
+                    {
+                        givenAnswer = sometimesBG;
+                    }
+                    else if (scale.SixthQuestionAnswer == often)
+                    {
+                        givenAnswer = oftenBG;
+                    }
+                    else if (scale.SixthQuestionAnswer == veryOftenOrAlways)
+                    {
+                        givenAnswer = veryOftenOrAlwaysBG;
+                    }
+                    <p>Отговор: @givenAnswer.</p>
+
+                    <p><i>7. Имам болки в главата, шията или в гърба.</i></p>
+                    @if (scale.SeventhQuestionAnswer == neverOrRarely)
+                    {
+                        givenAnswer = neverOrRarelyBG;
+                    }
+                    else if (scale.SeventhQuestionAnswer == sometimes)
+                    {
+                        givenAnswer = sometimesBG;
+                    }
+                    else if (scale.SeventhQuestionAnswer == often)
+                    {
+                        givenAnswer = oftenBG;
+                    }
+                    else if (scale.SeventhQuestionAnswer == veryOftenOrAlways)
+                    {
+                        givenAnswer = veryOftenOrAlwaysBG;
+                    }
+                    <p>Отговор: @givenAnswer.</p>
+
+                    <p><i>8. Чувствам се слаб и се уморявам лесно.</i></p>
+                    @if (scale.EighthQuestionAnswer == neverOrRarely)
+                    {
+                        givenAnswer = neverOrRarelyBG;
+                    }
+                    else if (scale.EighthQuestionAnswer == sometimes)
+                    {
+                        givenAnswer = sometimesBG;
+                    }
+                    else if (scale.EighthQuestionAnswer == often)
+                    {
+                        givenAnswer = oftenBG;
+                    }
+                    else if (scale.EighthQuestionAnswer == veryOftenOrAlways)
+                    {
+                        givenAnswer = veryOftenOrAlwaysBG;
+                    }
+                    <p>Отговор: @givenAnswer.</p>
+
+                    <p><i>9. Чувствам се спокоен и мога да седя лесно.</i></p>
+                    @if (scale.NinthQuestionAnswer == neverOrRarely)
+                    {
+                        givenAnswer = neverOrRarelyBG;
+                    }
+                    else if (scale.NinthQuestionAnswer == sometimes)
+                    {
+                        givenAnswer = sometimesBG;
+                    }
+                    else if (scale.NinthQuestionAnswer == often)
+                    {
+                        givenAnswer = oftenBG;
+                    }
+                    else if (scale.NinthQuestionAnswer == veryOftenOrAlways)
+                    {
+                        givenAnswer = veryOftenOrAlwaysBG;
+                    }
+                    <p>Отговор: @givenAnswer.</p>
+
+                    <p><i>10. Усещам, че сърцето ми бие бързо.</i></p>
+                    @if (scale.TenthQuestionAnswer == neverOrRarely)
+                    {
+                        givenAnswer = neverOrRarelyBG;
+                    }
+                    else if (scale.TenthQuestionAnswer == sometimes)
+                    {
+                        givenAnswer = sometimesBG;
+                    }
+                    else if (scale.TenthQuestionAnswer == often)
+                    {
+                        givenAnswer = oftenBG;
+                    }
+                    else if (scale.TenthQuestionAnswer == veryOftenOrAlways)
+                    {
+                        givenAnswer = veryOftenOrAlwaysBG;
+                    }
+                    <p>Отговор: @givenAnswer.</p>
+
+                    <p><i>11. Имам пристъпи от световъртеж.</i></p>
+                    @if (scale.EleventhQuestionAnswer == neverOrRarely)
+                    {
+                        givenAnswer = neverOrRarelyBG;
+                    }
+                    else if (scale.EleventhQuestionAnswer == sometimes)
+                    {
+                        givenAnswer = sometimesBG;
+                    }
+                    else if (scale.EleventhQuestionAnswer == often)
+                    {
+                        givenAnswer = oftenBG;
+                    }
+                    else if (scale.EleventhQuestionAnswer == veryOftenOrAlways)
+                    {
+                        givenAnswer = veryOftenOrAlwaysBG;
+                    }
+                    <p>Отговор: @givenAnswer.</p>
+
+                    <p><i>12.Имам припадъци или имам чувството, че ще припадна.</i></p>
+                    @if (scale.TwelfthQuestionAnswer == neverOrRarely)
+                    {
+                        givenAnswer = neverOrRarelyBG;
+                    }
+                    else if (scale.TwelfthQuestionAnswer == sometimes)
+                    {
+                        givenAnswer = sometimesBG;
+                    }
+                    else if (scale.TwelfthQuestionAnswer == often)
+                    {
+                        givenAnswer = oftenBG;
+                    }
+                    else if (scale.TwelfthQuestionAnswer == veryOftenOrAlways)
+                    {
+                        givenAnswer = veryOftenOrAlwaysBG;
+                    }
+                    <p>Отговор: @givenAnswer.</p>
+
+                    <p><i>13. Мога лесно да вдишвам и да издишвам.</i></p>
+                    @if (scale.ThirteenthQuestionAnswer == neverOrRarely)
+                    {
+                        givenAnswer = neverOrRarelyBG;
+                    }
+                    else if (scale.ThirteenthQuestionAnswer == sometimes)
+                    {
+                        givenAnswer = sometimesBG;
+                    }
+                    else if (scale.ThirteenthQuestionAnswer == often)
+                    {
+                        givenAnswer = oftenBG;
+                    }
+                    else if (scale.ThirteenthQuestionAnswer == veryOftenOrAlways)
+                    {
+                        givenAnswer = veryOftenOrAlwaysBG;
+                    }
+                    <p>Отговор: @givenAnswer.</p>
+
+                    <p><i>14. Имам чувство на изтръпване пръстите на ръцете или краката.</i></p>
+                    @if (scale.FourteenthQuestionAnswer == neverOrRarely)
+                    {
+                        givenAnswer = neverOrRarelyBG;
+                    }
+                    else if (scale.FourteenthQuestionAnswer == sometimes)
+                    {
+                        givenAnswer = sometimesBG;
+                    }
+                    else if (scale.FourteenthQuestionAnswer == often)
+                    {
+                        givenAnswer = oftenBG;
+                    }
+                    else if (scale.FourteenthQuestionAnswer == veryOftenOrAlways)
+                    {
+                        givenAnswer = veryOftenOrAlwaysBG;
+                    }
+                    <p>Отговор: @givenAnswer.</p>
+
+                    <p><i>15. Имам болки в стомаха или лошо храносмилане.</i></p>
+                    @if (scale.FifteenthQuestionAnswer == neverOrRarely)
+                    {
+                        givenAnswer = neverOrRarelyBG;
+                    }
+                    else if (scale.FifteenthQuestionAnswer == sometimes)
+                    {
+                        givenAnswer = sometimesBG;
+                    }
+                    else if (scale.FifteenthQuestionAnswer == often)
+                    {
+                        givenAnswer = oftenBG;
+                    }
+                    else if (scale.FifteenthQuestionAnswer == veryOftenOrAlways)
+                    {
+                        givenAnswer = veryOftenOrAlwaysBG;
+                    }
+                    <p>Отговор: @givenAnswer.</p>
+
+                    <p><i>16. Ходя по малка нужда по-често от обикновено.</i></p>
+                    @if (scale.SixteenthQuestionAnswer == neverOrRarely)
+                    {
+                        givenAnswer = neverOrRarelyBG;
+                    }
+                    else if (scale.SixteenthQuestionAnswer == sometimes)
+                    {
+                        givenAnswer = sometimesBG;
+                    }
+                    else if (scale.SixteenthQuestionAnswer == often)
+                    {
+                        givenAnswer = oftenBG;
+                    }
+                    else if (scale.SixteenthQuestionAnswer == veryOftenOrAlways)
+                    {
+                        givenAnswer = veryOftenOrAlwaysBG;
+                    }
+                    <p>Отговор: @givenAnswer.</p>
+
+                    <p><i>17. Ръцете ми обикновено са сухи и топли.</i></p>
+                    @if (scale.SeventeenthQuestionAnswer == neverOrRarely)
+                    {
+                        givenAnswer = neverOrRarelyBG;
+                    }
+                    else if (scale.SeventeenthQuestionAnswer == sometimes)
+                    {
+                        givenAnswer = sometimesBG;
+                    }
+                    else if (scale.SeventeenthQuestionAnswer == often)
+                    {
+                        givenAnswer = oftenBG;
+                    }
+                    else if (scale.SeventeenthQuestionAnswer == veryOftenOrAlways)
+                    {
+                        givenAnswer = veryOftenOrAlwaysBG;
+                    }
+                    <p>Отговор: @givenAnswer.</p>
+
+                    <p><i>18. Лицето ми става горещо и се изчервява.</i></p>
+                    @if (scale.EighteenthQuestionAnswer == neverOrRarely)
+                    {
+                        givenAnswer = neverOrRarelyBG;
+                    }
+                    else if (scale.EighteenthQuestionAnswer == sometimes)
+                    {
+                        givenAnswer = sometimesBG;
+                    }
+                    else if (scale.EighteenthQuestionAnswer == often)
+                    {
+                        givenAnswer = oftenBG;
+                    }
+                    else if (scale.EighteenthQuestionAnswer == veryOftenOrAlways)
+                    {
+                        givenAnswer = veryOftenOrAlwaysBG;
+                    }
+                    <p>Отговор: @givenAnswer.</p>
+                    <p><i>19. Лесно заспивам и си почивам добре.</i></p>
+                    @if (scale.NineteenthQuestionAnswer == neverOrRarely)
+                    {
+                        givenAnswer = neverOrRarelyBG;
+                    }
+                    else if (scale.NineteenthQuestionAnswer == sometimes)
+                    {
+                        givenAnswer = sometimesBG;
+                    }
+                    else if (scale.NineteenthQuestionAnswer == often)
+                    {
+                        givenAnswer = oftenBG;
+                    }
+                    else if (scale.NineteenthQuestionAnswer == veryOftenOrAlways)
+                    {
+                        givenAnswer = veryOftenOrAlwaysBG;
+                    }
+                    <p>Отговор: @givenAnswer.</p>
+                    <p><i>20. Имам кошмари.</i></p>
+                    @if (scale.TwentiethQuestionAnswer == neverOrRarely)
+                    {
+                        givenAnswer = neverOrRarelyBG;
+                    }
+                    else if (scale.TwentiethQuestionAnswer == sometimes)
+                    {
+                        givenAnswer = sometimesBG;
+                    }
+                    else if (scale.TwentiethQuestionAnswer == often)
+                    {
+                        givenAnswer = oftenBG;
+                    }
+                    else if (scale.TwentiethQuestionAnswer == veryOftenOrAlways)
+                    {
+                        givenAnswer = veryOftenOrAlwaysBG;
+                    }
+                    <p>Отговор: @givenAnswer.</p>
+
+                    <p><b>Резултат: <a href="#" title="Разбери как да тълкуваш резултата като кликнеш тук.">@scale.TotalScore</a> точки.</b></p>
+
+                    <hr />
+                    scaleCounter++;
+                }
+            </div>
+        </div>
+    </section>
+    <partial name="_PagesNavigation" view-data="ViewData" />
+}

@@ -89,5 +89,31 @@ namespace MigraineDiary.Web.Controllers
 
             return View(sharedHIT6ScalesViewModel);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ZungScales(string patientId, int pageIndex = 1, int pageSize = 1, string orderByDate = "NewestFirst")
+        {
+            // Custom validation against web parameter tampering.
+            if ((pageSize != 1 &&
+                 pageSize != 5 &&
+                 pageSize != 10) ||
+                (orderByDate != "NewestFirst" &&
+                 orderByDate != "OldestFirst"))
+            {
+                return BadRequest();
+            }
+
+            // Get logged user's ID.
+            string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Get shared headaches with logged user in role "Doctor".
+            PaginatedList<SharedZungScaleForAnxietyViewModel> sharedZungScalesViewModel = await this.zungScaleForAnxietyService.GetSharedScalesAsync(currentUserId, patientId, pageIndex, pageSize, orderByDate);
+
+            // Send pagination size and ordering criteria to the view.
+            ViewData["pageSize"] = pageSize;
+            ViewData["orderByDate"] = orderByDate;
+
+            return View(sharedZungScalesViewModel);
+        }
     }
 }

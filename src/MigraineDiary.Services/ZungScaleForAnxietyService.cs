@@ -237,6 +237,90 @@ namespace MigraineDiary.Services
             return await PaginatedList<ZungScaleViewModel>.CreateAsync(registeredScales, pageIndex, pageSize);
         }
 
+        public async Task<PaginatedList<SharedZungScaleForAnxietyViewModel>> GetSharedScalesAsync(string doctorId, string patientId, int pageIndex, int pageSize, string orderByDate)
+        {
+            IQueryable<SharedZungScaleForAnxietyViewModel> sharedScales = null!;
+
+            if (orderByDate == "NewestFirst")
+            {
+                sharedScales = this.dbContext.Users
+                                             .Where(user => user.Id == doctorId)
+                                             .Include(user => user.SharedZungScalesForAnxietyWithMe
+                                             .Where(scale => scale.PatientId == patientId && scale.IsDeleted == false))
+                                             .SelectMany(user => user.SharedZungScalesForAnxietyWithMe
+                                             .Select(scale => new SharedZungScaleForAnxietyViewModel
+                                             {
+                                                 ZungScaleId = scale.Id,
+                                                 PatientFirstName = scale.Patient.FirstName!,
+                                                 PatientMiddleName = scale.Patient.MiddleName,
+                                                 PatientLastName = scale.Patient.LastName!,
+                                                 CreatedOn = scale.CreatedOn,
+                                                 FirstQuestionAnswer = scale.FirstQuestionAnswer,
+                                                 SecondQuestionAnswer = scale.SecondQuestionAnswer,
+                                                 ThirdQuestionAnswer = scale.ThirdQuestionAnswer,
+                                                 FourthQuestionAnswer = scale.FourthQuestionAnswer,
+                                                 FifthQuestionAnswer = scale.FifthQuestionAnswer,
+                                                 SixthQuestionAnswer = scale.SixthQuestionAnswer,
+                                                 SeventhQuestionAnswer = scale.SeventhQuestionAnswer,
+                                                 EighthQuestionAnswer = scale.EighthQuestionAnswer,
+                                                 NinthQuestionAnswer = scale.NinthQuestionAnswer,
+                                                 TenthQuestionAnswer = scale.TenthQuestionAnswer,
+                                                 EleventhQuestionAnswer = scale.EleventhQuestionAnswer,
+                                                 TwelfthQuestionAnswer = scale.TwelfthQuestionAnswer,
+                                                 ThirteenthQuestionAnswer = scale.ThirteenthQuestionAnswer,
+                                                 FourteenthQuestionAnswer = scale.FourteenthQuestionAnswer,
+                                                 FifteenthQuestionAnswer = scale.FifteenthQuestionAnswer,
+                                                 SixteenthQuestionAnswer = scale.SixteenthQuestionAnswer,
+                                                 SeventeenthQuestionAnswer = scale.SeventeenthQuestionAnswer,
+                                                 EighteenthQuestionAnswer = scale.EighteenthQuestionAnswer,
+                                                 NineteenthQuestionAnswer = scale.NineteenthQuestionAnswer,
+                                                 TwentiethQuestionAnswer = scale.TwentiethQuestionAnswer,
+                                                 TotalScore = scale.TotalScore,
+                                             }))
+                                             .OrderByDescending(scale => scale.CreatedOn);
+            }
+            else
+            {
+                sharedScales = this.dbContext.Users
+                                             .Where(user => user.Id == doctorId)
+                                             .Include(user => user.SharedZungScalesForAnxietyWithMe
+                                             .Where(scale => scale.PatientId == patientId && scale.IsDeleted == false))
+                                             .SelectMany(user => user.SharedZungScalesForAnxietyWithMe
+                                             .Select(scale => new SharedZungScaleForAnxietyViewModel
+                                             {
+                                                 ZungScaleId = scale.Id,
+                                                 PatientFirstName = scale.Patient.FirstName!,
+                                                 PatientMiddleName = scale.Patient.MiddleName,
+                                                 PatientLastName = scale.Patient.LastName!,
+                                                 CreatedOn = scale.CreatedOn,
+                                                 FirstQuestionAnswer = scale.FirstQuestionAnswer,
+                                                 SecondQuestionAnswer = scale.SecondQuestionAnswer,
+                                                 ThirdQuestionAnswer = scale.ThirdQuestionAnswer,
+                                                 FourthQuestionAnswer = scale.FourthQuestionAnswer,
+                                                 FifthQuestionAnswer = scale.FifthQuestionAnswer,
+                                                 SixthQuestionAnswer = scale.SixthQuestionAnswer,
+                                                 SeventhQuestionAnswer = scale.SeventhQuestionAnswer,
+                                                 EighthQuestionAnswer = scale.EighthQuestionAnswer,
+                                                 NinthQuestionAnswer = scale.NinthQuestionAnswer,
+                                                 TenthQuestionAnswer = scale.TenthQuestionAnswer,
+                                                 EleventhQuestionAnswer = scale.EleventhQuestionAnswer,
+                                                 TwelfthQuestionAnswer = scale.TwelfthQuestionAnswer,
+                                                 ThirteenthQuestionAnswer = scale.ThirteenthQuestionAnswer,
+                                                 FourteenthQuestionAnswer = scale.FourteenthQuestionAnswer,
+                                                 FifteenthQuestionAnswer = scale.FifteenthQuestionAnswer,
+                                                 SixteenthQuestionAnswer = scale.SixteenthQuestionAnswer,
+                                                 SeventeenthQuestionAnswer = scale.SeventeenthQuestionAnswer,
+                                                 EighteenthQuestionAnswer = scale.EighteenthQuestionAnswer,
+                                                 NineteenthQuestionAnswer = scale.NineteenthQuestionAnswer,
+                                                 TwentiethQuestionAnswer = scale.TwentiethQuestionAnswer,
+                                                 TotalScore = scale.TotalScore,
+                                             }))
+                                             .OrderBy(scale => scale.CreatedOn);
+            }
+
+            return await PaginatedList<SharedZungScaleForAnxietyViewModel>.CreateAsync(sharedScales, pageIndex, pageSize);
+        }
+
         public async Task<ZungScaleViewModel> GetByIdAsync(string scaleId, string userId)
         {
             // Get Zung's scale.
