@@ -1,0 +1,20 @@
+﻿@model DeleteRoleViewModel
+
+@{
+    ViewData["Title"] = "Create role";
+}
+
+<header>
+    <h3 class="text-center">Изтрий роля</h3>
+</header>
+<main>
+    <form asp-controller="Admin" asp-action="DeleteRole" method="post" class="create-role-container">
+        <div class="set-role-flex-item text-center mb-3">
+            <label for="role" class="mb-1">Роля</label>
+            <select class="form-select" asp-items="@Model.RolesDropdown" id="role" name="roleId"></select>
+        </div>
+        <div class="create-role-flex-item">
+            <input type="submit" value="Изтрий" class="btn btn-danger" />
+        </div>
+    </form>
+</main>

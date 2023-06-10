@@ -42,6 +42,21 @@ namespace MigraineDiary.Services
             await this.dbContext.SaveChangesAsync();
         }
 
+        public async Task DeleteRoleAsync(string roleId)
+        {
+            IdentityRole? role = await this.dbContext.Roles.FirstOrDefaultAsync(role => role.Id == roleId);
+
+            if (role != null)
+            {
+                await this.roleManager.DeleteAsync(role);
+                await this.dbContext.SaveChangesAsync();
+            }
+            else
+            {
+                throw new ArgumentException($"Role doesn't exist.");
+            }
+        }
+
         public SetRoleViewModel PopulateUsersAndRoles(SetRoleViewModel model)
         {
             var users = this.dbContext.Users
@@ -77,6 +92,29 @@ namespace MigraineDiary.Services
             }
 
             return model;
+        }
+
+        public DeleteRoleViewModel GetRoles()
+        {
+            var deleteModel = new DeleteRoleViewModel();
+
+            var roles = this.dbContext.Roles
+                                      .Select(x => new
+                                      {
+                                          x.Id,
+                                          x.Name
+                                      });
+
+            foreach (var role in roles)
+            {
+                SelectListItem item = new SelectListItem();
+                item.Text = role.Name;
+                item.Value = role.Id;
+
+                deleteModel.RolesDropdown.Add(item);
+            }
+
+            return deleteModel;
         }
 
         public async Task<Dictionary<string, List<string>>> GetUsersAndRolesAsync()
@@ -120,6 +158,19 @@ namespace MigraineDiary.Services
             }
 
             return usersRolesNames;
+        }
+
+        public async Task<string> GetUserFullName(string id)
+        {
+            var user = await this.dbContext.Users
+                                               .Where(u => u.Id == id)
+                                               .Select(u => new
+                                               {
+                                                   FullName = $"{u.FirstName} {u.LastName}"
+                                               })
+                                               .FirstAsync();
+
+            return user.FullName;
         }
     }
 }

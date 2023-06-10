@@ -1,0 +1,108 @@
+﻿@inject IAdminService adminService;
+
+@{
+    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    string userFullName = await adminService.GetUserFullName(userId);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="~/css/adminLTE/adminlte.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body class="hold-transition sidebar-mini" style="margin-bottom: 0px;">
+    <div class="wrapper">
+        @*Navbar*@
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link">Към сайта</a>
+                </li>
+            </ul>
+        </nav>
+        @*Sidebar*@
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            @*Brand Logo*@
+            <a asp-area="Admin" asp-controller="Admin" asp-action="Index" class="brand-link text-center">
+                <span class="brand-text font-weight-light">Admin panel</span>
+            </a>
+            <div>
+                @*Sidebar user*@
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="info text-center">
+                        <a asp-area="Identity" asp-controller="Account" asp-action="Manage" class="d-block">@userFullName</a>
+                    </div>
+                </div>
+                @*Sidebar menu*@
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        @*Users*@
+                        <li class="nav-item">
+                            <a asp-area="Admin" asp-controller="Admin" asp-action="UsersAudit" class="nav-link">
+                                <i class="nav-icon fa fa-users"></i>
+                                <p>Потребители</p>
+                            </a>
+                        </li>
+                        @*Messages*@
+                        <li class="nav-item">
+                            <a asp-area="Admin" asp-controller="Admin" asp-action="Inbox" class="nav-link">
+                                <i class="nav-icon far fa-envelope"></i>
+                                <p>Съобщения</p>
+                            </a>
+                        </li>
+                        @*RolesManagement*@
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fa-solid fa-masks-theater ml-1 mr-1"></i>
+                                <p>Управление на роли</p>
+                                <i class="right fas fa-angle-down"></i>
+                            </a>
+
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a asp-area="Admin" asp-controller="Admin" asp-action="CreateRole" class="nav-link">
+                                        <i class="fa-regular fa-plus ml-1 mr-2"></i>
+                                        <p>Създай роля</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-area="Admin" asp-controller="Admin" asp-action="SetRole" class="nav-link">
+                                        <i class="fa-solid fa-gear ml-1 mr-2"></i>
+                                        <p>Настрой роля</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-area="Admin" asp-controller="Admin" asp-action="DeleteRole" class="nav-link">
+                                        <i class="fa-solid fa-trash-can ml-1 mr-2"></i>
+                                        <p>Изтрий роля</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        @*Page content*@
+        <div class="content-wrapper">
+            @*Main*@
+            <section class="content">
+                @RenderBody()
+            </section>
+        </div>
+        <footer class="main-footer text-center">
+            <strong>Copyright &copy; 2014-@(DateTime.Now.Year). All rights reserved.</strong>
+        </footer>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <script src="~/js/adminLTE/adminlte.min.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

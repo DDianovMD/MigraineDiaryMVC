@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "Set user role";
 }
-
 <header>
     <h3 class="text-center">Настрой роля</h3>
 </header>
@@ -18,9 +17,10 @@
                 <label for="role" class="mb-1">Роля</label>
                 <select class="form-select" asp-items="@Model.RolesDropdown" id="role" name="roleId"></select>
             </div>
-            <div class="set-role-flex-item">
+            <div class="set-role-flex-item text-center">
                 <input type="submit" value="Добави в роля" class="btn btn-success" />
             </div>
         </form>
     </div>
 </main>
+

@@ -16,6 +16,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\css\adminLTE\alt\adminlte.components.css.map" />
+    <None Include="wwwroot\css\adminLTE\alt\adminlte.components.min.css.map" />
+    <None Include="wwwroot\css\adminLTE\alt\adminlte.core.css.map" />
+    <None Include="wwwroot\css\adminLTE\alt\adminlte.core.min.css.map" />
+    <None Include="wwwroot\css\adminLTE\alt\adminlte.extra-components.css.map" />
+    <None Include="wwwroot\css\adminLTE\alt\adminlte.extra-components.min.css.map" />
+    <None Include="wwwroot\css\adminLTE\alt\adminlte.light.css.map" />
+    <None Include="wwwroot\css\adminLTE\alt\adminlte.light.min.css.map" />
+    <None Include="wwwroot\css\adminLTE\alt\adminlte.pages.css.map" />
+    <None Include="wwwroot\css\adminLTE\alt\adminlte.pages.min.css.map" />
+    <None Include="wwwroot\css\adminLTE\alt\adminlte.plugins.css.map" />
+    <None Include="wwwroot\css\adminLTE\alt\adminlte.plugins.min.css.map" />
     <None Include="wwwroot\js\addHeadache.js" />
   </ItemGroup>
 
@@ -28,7 +40,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.12" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.13" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,25 +1,34 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MigraineDiary.Data.DbModels;
 using MigraineDiary.Services.Contracts;
 using MigraineDiary.ViewModels;
+using System.Security.Claims;
 
-namespace MigraineDiary.Web.Controllers
+namespace MigraineDiary.Web.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly IAdminService adminService;
         private readonly IMessageService messageService;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public AdminController(IAdminService adminService,
-                                    IMessageService messageService)
+        public AdminController(UserManager<ApplicationUser> userManager,
+                                              IAdminService adminService,
+                                            IMessageService messageService)
         {
             this.adminService = adminService;
             this.messageService = messageService;
+            this.userManager = userManager;
         }
 
         public IActionResult Index()
         {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             return View();
         }
 
@@ -33,7 +42,7 @@ namespace MigraineDiary.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateRole(string roleName)
         {
-            await this.adminService.CreateRoleAsync(roleName);
+            await adminService.CreateRoleAsync(roleName);
 
             // Get controller's name and action's name without using magic strings.
             string actionName = nameof(AdminController.Index);
@@ -55,19 +64,19 @@ namespace MigraineDiary.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SetRole(string userId, string roleId)
         {
-            await this.adminService.AssignRoleAsync(userId, roleId);
+            await adminService.AssignRoleAsync(userId, roleId);
 
             // Get controller's name and action's name without using magic strings.
-            string actionName = nameof(AdminController.RolesAudit);
+            string actionName = nameof(AdminController.UsersAudit);
             string controllerName = nameof(AdminController).Substring(0, nameof(AdminController).Length - "Controller".Length);
 
             return RedirectToAction(actionName, controllerName);
         }
 
         [HttpGet]
-        public async Task<IActionResult> RolesAudit() 
+        public async Task<IActionResult> UsersAudit()
         {
-            Dictionary<string, List<string>> auditViewModel = await this.adminService.GetUsersAndRolesAsync();
+            Dictionary<string, List<string>> auditViewModel = await adminService.GetUsersAndRolesAsync();
 
             return View(auditViewModel);
         }
@@ -76,16 +85,16 @@ namespace MigraineDiary.Web.Controllers
         public async Task<IActionResult> Inbox(int pageIndex = 1, int pageSize = 1, string orderByDate = "NewestFirst")
         {
             // Custom validation against web parameter tampering
-            if ((pageSize != 1 &&
+            if (pageSize != 1 &&
                  pageSize != 5 &&
-                 pageSize != 10) ||
-                (orderByDate != "NewestFirst" &&
-                 orderByDate != "OldestFirst"))
+                 pageSize != 10 ||
+                orderByDate != "NewestFirst" &&
+                 orderByDate != "OldestFirst")
             {
                 return BadRequest();
             }
 
-            PaginatedList<MessageViewModel> messages = await this.messageService.GetAllAsync(pageIndex, pageSize, orderByDate);
+            PaginatedList<MessageViewModel> messages = await messageService.GetAllAsync(pageIndex, pageSize, orderByDate);
 
             // Send pagination size and ordering criteria to the view.
             ViewData["pageSize"] = pageSize;
@@ -99,7 +108,7 @@ namespace MigraineDiary.Web.Controllers
         {
             try
             {
-                await this.messageService.DeleteAsync(messageId);
+                await messageService.DeleteAsync(messageId);
 
                 // Get controller name and action name without using magic strings
                 string actionName = nameof(AdminController.Inbox);
@@ -123,7 +132,7 @@ namespace MigraineDiary.Web.Controllers
         {
             try
             {
-                await this.messageService.SoftDeleteAsync(messageId);
+                await messageService.SoftDeleteAsync(messageId);
 
                 // Get controller name and action name without using magic strings
                 string actionName = nameof(AdminController.Inbox);
@@ -147,10 +156,40 @@ namespace MigraineDiary.Web.Controllers
         public async Task<JsonResult> GetMessagesCount()
         {
             // Get messages count.
-            int msgCount = await this.messageService.GetMessagesCountAsync();
+            int msgCount = await messageService.GetMessagesCountAsync();
 
             // Return count as JSON.
-            return Json(new {Count = msgCount});
+            return Json(new { Count = msgCount });
+        }
+
+        [HttpGet]
+        public IActionResult DeleteRole()
+        {
+            // Get all roles.
+            DeleteRoleViewModel viewModel = this.adminService.GetRoles();
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteRole(string roleId)
+        {
+            try
+            {
+                await this.adminService.DeleteRoleAsync(roleId);
+
+            }
+            catch (ArgumentException ex)
+            {
+                // TODO: Log exception
+                return NotFound(ex.Message);
+            }
+
+            // Get controller's name and action's name without using magic strings.
+            string actionName = nameof(AdminController.UsersAudit);
+            string controllerName = nameof(AdminController).Substring(0, nameof(AdminController).Length - "Controller".Length);
+
+            return RedirectToAction(actionName, controllerName);
         }
     }
 }
