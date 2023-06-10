@@ -31,7 +31,7 @@ function addAuraDescription() {
         // Set textarea's attributes
         textAreaElement.setAttribute('name', 'AuraDescriptionNotes');
         textAreaElement.setAttribute('id', 'AuraDescriptionNotes');
-        textAreaElement.setAttribute('rows', '10');
+        textAreaElement.setAttribute('rows', '5');
         textAreaElement.setAttribute('cols', '80');
 
         // Toggle onclick attribute
@@ -217,12 +217,43 @@ function addNumberOfPillsInput() {
     divElement.appendChild(numberOfPillsTakenElement);
 }
 
+function createRemoveMedicationButton() {
+    // Get div element in which button is going to be nested.
+    let divElement = document.getElementById(`medication-${indexCounter}`);
+
+    // Create button element.
+    let buttonElement = document.createElement('button');
+
+    // Set button attributes.
+    buttonElement.setAttribute('type', 'button');
+    buttonElement.setAttribute('id', `remove-medication-${indexCounter}`);
+    buttonElement.setAttribute('divId', `medication-${indexCounter}`);
+    buttonElement.setAttribute('class', 'btn btn-danger');
+    buttonElement.innerText = 'Премахни';
+
+    // Set button's style.
+    buttonElement.style.marginLeft = '20px';
+
+    // Add event listeners.
+    buttonElement.addEventListener('click', (event) => {
+        // Get div's element which is going to be removed id.
+        let divId = event.target.getAttribute('divid');
+
+        document.getElementById(divId).remove();
+
+    });
+
+    // Append button to divElement.
+    divElement.appendChild(buttonElement);
+}
+
 function аddMedication() {
 
     addNameInput();
     addMedicationDosage();
     addUnitsDropdown();
-    addNumberOfPillsInput()
+    addNumberOfPillsInput();
+    createRemoveMedicationButton();
 
     // Increment indexCounter
     indexCounter++;
