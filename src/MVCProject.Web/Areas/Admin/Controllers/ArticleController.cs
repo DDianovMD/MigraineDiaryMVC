@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using MigraineDiary.Services.Contracts;
 using MigraineDiary.ViewModels;
+using MigraineDiary.Web.Controllers;
 using System.Security.Claims;
 
-namespace MigraineDiary.Web.Controllers
+namespace MigraineDiary.Web.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     [Authorize]
     public class ArticleController : Controller
     {
@@ -35,14 +37,14 @@ namespace MigraineDiary.Web.Controllers
                 return View(addModel);
             }
 
-            string currentUserId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            await this.articleService.CreateArticle(addModel, currentUserId);
+            string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            await articleService.CreateArticle(addModel, currentUserId);
 
             // Get controller's name and action's name without using magic strings.
             string actionName = nameof(HomeController.Index);
             string controllerName = nameof(HomeController).Substring(0, nameof(HomeController).Length - "Controller".Length);
 
-            return RedirectToAction(actionName, controllerName);
+            return RedirectToAction(actionName, controllerName, new { area = "" });
         }
     }
 }
