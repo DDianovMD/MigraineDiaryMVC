@@ -4,7 +4,7 @@
     @if (User.IsInRole("Admin"))
     {
         <li class="nav-item" style="margin: 0 10px">
-            <a href="/Admin/Inbox" class="fa-regular fa-envelope fa-2xl" title="Messages" style="color:white; text-decoration: none;"></a>
+            <a asp-area="Admin" asp-controller="Admin" asp-action="Inbox" class="fa-regular fa-envelope fa-2xl" title="Messages" style="color:white; text-decoration: none;"></a>
         </li>
     }
     else

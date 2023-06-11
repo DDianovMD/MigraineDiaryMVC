@@ -9,7 +9,7 @@
 </header>
 <main>
     <form asp-controller="Admin" asp-action="DeleteRole" method="post" class="create-role-container">
-        <div class="set-role-flex-item text-center mb-3">
+        <div class="text-center mb-3">
             <label for="role" class="mb-1">Роля</label>
             <select class="form-select" asp-items="@Model.RolesDropdown" id="role" name="roleId"></select>
         </div>
