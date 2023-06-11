@@ -22,4 +22,8 @@
     <ProjectReference Include="..\MVCProject.Web\MigraineDiary.Web.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>
