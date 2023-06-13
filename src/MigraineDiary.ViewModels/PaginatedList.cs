@@ -6,7 +6,15 @@ namespace MigraineDiary.ViewModels
     {
         public PaginatedList(List<T> items, int count, int pageIndex, int pageSize)
         {
-            this.CurrentPageIndex = pageIndex;
+            if (items.Count == 0)
+            {
+                this.CurrentPageIndex = 1;
+            }
+            else
+            {
+                this.CurrentPageIndex = pageIndex;
+            }
+
             if (count != 0)
             {
                 this.TotalPagesCount = (int)Math.Ceiling(count / (double)pageSize);
