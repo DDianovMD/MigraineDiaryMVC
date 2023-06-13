@@ -10,12 +10,12 @@
 @if (Model.Count == 0)
 {
     <div>
-        <h4 class="text-center article-title mt-5">Нямате нови съобщения.</h4>
+        <h4 class="text-center article-title mt-0">Нямате нови съобщения.</h4>
     </div>
 }
 else
 {
-        <h3 class="text-center mb-5" style="margin-top: 0px;">Получени съобщения</h3>
+        <h3 class="text-center mb-5 mt-0">Получени съобщения</h3>
         <partial name="_PageItemsOrderingNavigation" view-data="ViewData" />
         @foreach (var message in Model)
         {

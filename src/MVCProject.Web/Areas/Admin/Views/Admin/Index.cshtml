@@ -5,18 +5,19 @@
 
 <div class="admin-container">
     <div class="admin-flex-item">
-        <a asp-controller="Admin" asp-action="RolesAudit" class="btn btn-warning">Справка за потребители и роли</a>
+        <a asp-area="Admin" asp-controller="Admin" asp-action="UsersAudit" class="btn btn-warning">Справка за потребители и роли</a>
     </div>
     <div class="admin-flex-item btn-group dropdown">
         <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
             Управление на роли
         </button>
         <ul class="admin-dropdown dropdown-menu bg-warning">
-            <li><a asp-controller="Admin" asp-action="CreateRole" class="dropdown-item text-center">Създай роля</a></li>
-            <li><a asp-controller="Admin" asp-action="SetRole" class="dropdown-item text-center">Настрой роля</a></li>
+            <li><a asp-area="Admin" asp-controller="Admin" asp-action="CreateRole" class="dropdown-item text-center">Създай роля</a></li>
+            <li><a asp-area="Admin" asp-controller="Admin" asp-action="SetRole" class="dropdown-item text-center">Настрой роля</a></li>
+            <li><a asp-area="Admin" asp-controller="Admin" asp-action="DeleteRole" class="dropdown-item text-center">Изтрий роля</a></li>
         </ul>
     </div>
     <div class="admin-flex-item">
-        <a asp-controller="Admin" asp-action="Inbox" class="btn btn-warning">Получени съобщения</a>
+        <a asp-area="Admin" asp-controller="Admin" asp-action="Inbox" class="btn btn-warning">Получени съобщения</a>
     </div>
 </div>
