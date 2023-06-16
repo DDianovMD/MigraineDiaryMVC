@@ -14,6 +14,7 @@ namespace MigraineDiary.Data.DbModels
             this.SharedWithMe = new List<Headache>();
             this.HIT6Scales = new List<HIT6Scale>();
             this.SharedHIT6ScalesWithMe = new List<HIT6Scale>();
+            this.SharedZungScalesForAnxietyWithMe = new List<ZungScaleForAnxiety>();
         }
 
         /// <summary>
