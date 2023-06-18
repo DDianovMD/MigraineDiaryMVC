@@ -99,9 +99,9 @@ namespace MigraineDiary.Services
 
                 await this.dbContext.SaveChangesAsync();
             }
-            catch (NullReferenceException nre)
+            catch (ArgumentNullException nre)
             {
-                throw new NullReferenceException($"Подаденото Id ({messageId}) на съобщението не съществува.", nre);
+                throw new ArgumentNullException($"Подаденото Id ({messageId}) на съобщението не съществува.", nre);
             }
         }
 
