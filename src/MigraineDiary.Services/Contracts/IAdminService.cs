@@ -12,7 +12,7 @@ namespace MigraineDiary.Services.Contracts
 
         public DeleteRoleViewModel GetRoles();
 
-        public SetRoleViewModel PopulateUsersAndRoles(SetRoleViewModel model);
+        public SetRoleViewModel PopulateUsersAndRoles();
 
         public Task<Dictionary<string, List<string>>> GetUsersAndRolesAsync();
 

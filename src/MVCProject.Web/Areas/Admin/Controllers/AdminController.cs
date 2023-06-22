@@ -54,8 +54,7 @@ namespace MigraineDiary.Web.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult SetRole()
         {
-            SetRoleViewModel viewModel = new SetRoleViewModel();
-            this.adminService.PopulateUsersAndRoles(viewModel);
+            SetRoleViewModel viewModel = this.adminService.PopulateUsersAndRoles();
 
             return View(viewModel);
         }

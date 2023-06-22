@@ -26,7 +26,7 @@ namespace MigraineDiary.Services
         public async Task AssignRoleAsync(string userId, string roleId)
         {
             ApplicationUser? user = await this.dbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
-            IdentityRole role = await this.roleManager.FindByIdAsync(roleId);
+            IdentityRole? role = await this.dbContext.Roles.FirstOrDefaultAsync(r => r.Id == roleId);
 
             if (user != null && role != null)
             {
@@ -57,8 +57,10 @@ namespace MigraineDiary.Services
             }
         }
 
-        public SetRoleViewModel PopulateUsersAndRoles(SetRoleViewModel model)
+        public SetRoleViewModel PopulateUsersAndRoles()
         {
+            SetRoleViewModel model = new SetRoleViewModel();
+
             var users = this.dbContext.Users
                                       .Select(x => new
                                       {
@@ -163,12 +165,12 @@ namespace MigraineDiary.Services
         public async Task<string> GetUserFullName(string id)
         {
             var user = await this.dbContext.Users
-                                               .Where(u => u.Id == id)
-                                               .Select(u => new
-                                               {
-                                                   FullName = $"{u.FirstName} {u.LastName}"
-                                               })
-                                               .FirstAsync();
+                                           .Where(u => u.Id == id)
+                                           .Select(u => new
+                                           {
+                                               FullName = $"{u.FirstName} {u.LastName}"
+                                           })
+                                           .FirstAsync();
 
             return user.FullName;
         }
