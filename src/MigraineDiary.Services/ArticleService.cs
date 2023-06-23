@@ -36,28 +36,30 @@ namespace MigraineDiary.Services
             if (orderByDate == "NewestFirst")
             {
                 articles = this.dbContext.Articles
-                                         .OrderByDescending(x => x.CreatedOn)
-                                         .Select(x => new ArticleViewModel
+                                         .OrderByDescending(a => a.CreatedOn)
+                                         .Select(a => new ArticleViewModel
                                          {
-                                             Title = x.Title,
-                                             Content = x.Content,
-                                             Author = x.Author,
-                                             SourceUrl = x.SourceUrl,
-                                             CreatedOn = x.CreatedOn
+                                             Id = a.Id,
+                                             Title = a.Title,
+                                             Content = a.Content,
+                                             Author = a.Author,
+                                             SourceUrl = a.SourceUrl,
+                                             CreatedOn = a.CreatedOn
                                          })
                                          .AsNoTracking();
             }
             else
             {
                 articles = this.dbContext.Articles
-                                         .OrderBy(x => x.CreatedOn)
-                                         .Select(x => new ArticleViewModel
+                                         .OrderBy(a => a.CreatedOn)
+                                         .Select(a => new ArticleViewModel
                                          {
-                                             Title = x.Title,
-                                             Content = x.Content,
-                                             Author = x.Author,
-                                             SourceUrl = x.SourceUrl,
-                                             CreatedOn = x.CreatedOn
+                                             Id = a.Id,
+                                             Title = a.Title,
+                                             Content = a.Content,
+                                             Author = a.Author,
+                                             SourceUrl = a.SourceUrl,
+                                             CreatedOn = a.CreatedOn
                                          })
                                          .AsNoTracking();
             }

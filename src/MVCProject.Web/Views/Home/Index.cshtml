@@ -33,7 +33,20 @@ else
                         @if (article.SourceUrl != null)
                         {
                             <div class="text-center mt-3">
-                                Източник: @article.SourceUrl
+                                <span>Източник: @article.SourceUrl</span>
+                            </div>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <div class="article-admin-area-container">
+                                <form asp-area="Admin" asp-controller="Article" asp-action="Edit" method="get">
+                                    <input type="hidden" name="articleId" value="@article.Id" />
+                                    <button type="submit" class="btn btn-warning border-dark">Редактирай</button>
+                                </form>
+                                <form asp-area="Admin" asp-controller="Article" asp-action="Delete" method="post">
+                                    <input type="hidden" name="articleId" value="@article.Id" />
+                                    <button type="submit" class="btn btn-danger border-dark">Изтрий</button>
+                                </form>
                             </div>
                         }
                     </article>

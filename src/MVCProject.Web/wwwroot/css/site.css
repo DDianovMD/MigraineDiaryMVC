@@ -98,6 +98,14 @@ body {
     align-self: center;
 }
 
+.article-admin-area-container {
+    display:flex;
+    justify-content: space-around;
+    align-self: center;
+    width: 70%;
+    margin-top: 50px;
+}
+
 .nav-bar-container {
     display: flex;
     flex-direction: row;
