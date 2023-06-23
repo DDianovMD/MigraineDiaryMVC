@@ -1,0 +1,46 @@
+﻿@model ArticleEditModel
+
+@{
+    ViewData["Title"] = "Редактирай публикация";
+}
+
+<link href="~/css/froala/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
+
+<header>
+    <h3 class="text-center mb-3">Редактирай публикация</h3>
+</header>
+<main>
+    <div class="add-article-container">
+        <form asp-area="Admin" asp-controller="Article" asp-action="Edit" method="post" class="add-article-flex-item text-center">
+            <input type="hidden" asp-for="@Model.Id" value="@Model.Id" />
+            <div>
+                <label asp-for="@Model.Title" class="mt-3">Заглавие</label>
+                <input type="text" asp-for="@Model.Title" class="form-control" />
+                <span asp-validation-for="@Model.Title" class="text-danger"></span>
+            </div>
+
+            <div>
+                <label asp-for="@Model.Content" class="mt-3">Съдържание</label>
+                <textarea id="content" name="content">@Model.Content</textarea>
+                <span asp-validation-for="@Model.Content" class="text-danger"></span>
+            </div>
+
+            <div>
+                <label asp-for="@Model.Author" class="mt-3">Автор(и)</label>
+                <input type="text" asp-for="@Model.Author" class="form-control" />
+                <span asp-validation-for="@Model.Author" class="text-danger"></span>
+            </div>
+
+            <div>
+                <label asp-for="@Model.SourceUrl" class="mt-3">URL на източник</label>
+                <input type="text" asp-for="@Model.SourceUrl" class="form-control" />
+                <span asp-validation-for="@Model.SourceUrl" class="text-danger"></span>
+            </div>
+
+            <input type="submit" value="Запази" class="btn btn-success mt-3" />
+        </form>
+    </div>
+</main>
+
+<script type="text/javascript" src="~/js/froala/froala_editor.pkgd.min.js"></script>
+<script type="text/javascript" src="~/js/InitializeFroala.js"></script>
