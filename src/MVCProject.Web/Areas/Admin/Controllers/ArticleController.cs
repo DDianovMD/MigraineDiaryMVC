@@ -75,6 +75,7 @@ namespace MigraineDiary.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ArticleEditModel editedArticle)
         {
             if (!ModelState.IsValid)
@@ -86,6 +87,68 @@ namespace MigraineDiary.Web.Areas.Admin.Controllers
             {
                 // Edit existing article.
                 await this.articleService.EditAsync(editedArticle);
+
+                // Get controller name and action name without using magic strings
+                string actionName = nameof(HomeController.Index);
+                string controllerName = nameof(HomeController).Substring(0, nameof(HomeController).Length - "Controller".Length);
+
+                return RedirectToAction(actionName, controllerName, new { area = "area" });
+            }
+            catch (ArgumentException ae)
+            {
+                // TODO: Log exception.
+
+                // Return bad request if parameter tampering is detected and article with sent Id does not exist.
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Archive(string articleId)
+        {
+            // Return bad request if hidden input field with correct articleId is deleted from HTML form.
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                // Mark article as deleted.
+                await this.articleService.SoftDeleteAsync(articleId);
+
+                // Get controller name and action name without using magic strings
+                string actionName = nameof(HomeController.Index);
+                string controllerName = nameof(HomeController).Substring(0, nameof(HomeController).Length - "Controller".Length);
+
+                return RedirectToAction(actionName, controllerName, new { area = "area" });
+            }
+            catch (ArgumentException ae)
+            {
+                // TODO: Log exception.
+
+                // Return bad request if parameter tampering is detected and article with sent Id does not exist.
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(string articleId)
+        {
+            // Return bad request if hidden input field with correct articleId is deleted from HTML form.
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                // Delete article
+                await this.articleService.DeleteAsync(articleId);
 
                 // Get controller name and action name without using magic strings
                 string actionName = nameof(HomeController.Index);

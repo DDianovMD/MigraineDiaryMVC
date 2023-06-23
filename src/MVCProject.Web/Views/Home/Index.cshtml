@@ -41,11 +41,15 @@ else
                             <div class="article-admin-area-container">
                                 <form asp-area="Admin" asp-controller="Article" asp-action="Edit" method="get">
                                     <input type="hidden" name="articleId" value="@article.Id" />
-                                    <button type="submit" class="btn btn-warning border-dark">Редактирай</button>
+                                    <button type="submit" class="btn btn-primary border-dark">Редактиране</button>
+                                </form>
+                                <form asp-area="Admin" asp-controller="Article" asp-action="Archive" method="post">
+                                    <input type="hidden" name="articleId" value="@article.Id" />
+                                    <button type="submit" class="btn btn-warning border-dark" title="Скрива публикацията от потребителите.">Архивиране</button>
                                 </form>
                                 <form asp-area="Admin" asp-controller="Article" asp-action="Delete" method="post">
                                     <input type="hidden" name="articleId" value="@article.Id" />
-                                    <button type="submit" class="btn btn-danger border-dark">Изтрий</button>
+                                    <button type="submit" class="btn btn-danger border-dark">Изтриване</button>
                                 </form>
                             </div>
                         }
