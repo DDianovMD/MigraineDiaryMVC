@@ -228,7 +228,7 @@ function deletePracticioner(childNumber) {
     // Make div element invisible.
     divElement.style = 'display: none;';
 
-    // Set entity IsDeletet property to true.
+    // Set entity IsDeleted property to true.
     // 1. Create input element.
     let inputElement = document.createElement('input');
     inputElement.setAttribute('type', 'radio');
@@ -236,6 +236,16 @@ function deletePracticioner(childNumber) {
     inputElement.setAttribute('value', 'true');
     inputElement.setAttribute('checked', 'checked');
 
-    // 2. Append inputElement to invisible div element.
+    // 2. Get FirstName and LastName input fields.
+    let firstNameInputElement = document.querySelector(`input[id=\'Practicioners[${childNumber}].FirstName\']`);
+    let lastNameInputElement = document.querySelector(`input[id=\'Practicioners[${childNumber}].LastName\']`);
+
+    // 3. Put dummy values in case names were deleted/partialy deleted before pressing "Remove" button
+    // so ModelState becomes valid. Else on pressing "Save" button form is submitted with invalid input
+    // minlength/maxlength values of hidden node and ModelState is invalid.
+    firstNameInputElement.value = 'dummy-valid-value';
+    lastNameInputElement.value = 'dummy-valid-value';
+
+    // 4. Append inputElement to invisible div element.
     divElement.appendChild(inputElement);
 }
