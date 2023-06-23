@@ -1,0 +1,54 @@
+﻿@model PaginatedList<ArticleViewModel>
+
+@{
+    ViewData["Title"] = "Архивирани публикации";
+    ViewData["PartialViewController"] = "Home";
+    ViewData["PartialViewAction"] = "Index";
+    ViewData["itemsType"] = "Публикации";
+}
+
+<link href="~/css/froala/froala_style.min.css" rel="stylesheet" type="text/css" />
+
+@if (Model.Count == 0)
+{
+    <p class="text-center article-title mt-0">Не са открити архивирани публикации.</p>
+}
+else
+{
+    <main>
+        <h3 class="text-center">Архивирани публикации</h3>
+        <partial name="_PageItemsOrderingNavigation" view-data="ViewData">
+            <section>
+                @foreach (var article in Model)
+                {
+                    <article class="article-container">
+                        <h5 class="article-title">@article.Title</h5>
+                        <div class="article-info">
+                            <div>Автори: @article.Author</div>
+                            <div>Публикувано: @article.CreatedOn.ToShortDateString()</div>
+                        </div>
+                        <div class="fr-view article-content">
+                            @Html.Raw(article.Content)
+                        </div>
+                        @if (article.SourceUrl != null)
+                        {
+                            <div class="text-center mt-3">
+                                <span>Източник: @article.SourceUrl</span>
+                            </div>
+                        }
+                        <div class="article-admin-area-container">
+                            <form asp-area="Admin" asp-controller="Article" asp-action="UndoDelete" method="post">
+                                <input type="hidden" name="articleId" value="@article.Id" />
+                                <button type="submit" class="btn btn-success border-dark" title="Прави публикацията отново видима за потребителите.">Възстанови</button>
+                            </form>
+                            <form asp-area="Admin" asp-controller="Article" asp-action="Delete" method="post">
+                                <input type="hidden" name="articleId" value="@article.Id" />
+                                <button type="submit" class="btn btn-danger border-dark">Изтриване</button>
+                            </form>
+                        </div>
+                    </article>
+                }
+            </section>
+            <partial name="_PagesNavigation" view-data="ViewData">
+    </main>
+}

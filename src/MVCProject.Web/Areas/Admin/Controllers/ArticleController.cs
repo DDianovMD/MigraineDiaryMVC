@@ -164,5 +164,57 @@ namespace MigraineDiary.Web.Areas.Admin.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UndoDelete(string articleId)
+        {
+            // Return bad request if hidden input field with correct articleId is deleted from HTML form.
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                // Undo soft delete.
+                await this.articleService.UndoDeleteAsync(articleId);
+
+                // Get controller name and action name without using magic strings
+                string actionName = nameof(ArticleController.Archived);
+                string controllerName = nameof(ArticleController).Substring(0, nameof(ArticleController).Length - "Controller".Length);
+
+                return RedirectToAction(actionName, controllerName/*, new { area = "area" }*/);
+            }
+            catch (ArgumentException ae)
+            {
+                // TODO: Log exception.
+
+                // Return bad request if parameter tampering is detected and article with sent Id does not exist.
+                return BadRequest();
+            }
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Archived(int pageIndex = 1, int pageSize = 1, string orderByDate = "NewestFirst")
+        {
+            // Custom validation against web parameter tampering
+            if ((pageSize != 1 &&
+                 pageSize != 5 &&
+                 pageSize != 10) ||
+                (orderByDate != "NewestFirst" &&
+                 orderByDate != "OldestFirst"))
+            {
+                return BadRequest();
+            }
+
+            PaginatedList<ArticleViewModel> articles = await this.articleService.GetArchivedArticles(pageIndex, pageSize, orderByDate);
+
+            ViewData["pageSize"] = pageSize;
+            ViewData["orderByDate"] = orderByDate;
+            return View(articles);
+        }
     }
 }

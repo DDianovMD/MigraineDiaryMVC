@@ -10,10 +10,14 @@ namespace MigraineDiary.Services.Contracts
 
         public Task<ArticleEditModel> GetByIdAsync(string articleId);
 
+        public Task<PaginatedList<ArticleViewModel>> GetArchivedArticles(int pageIndex, int pageSize, string orderByDate);
+
         public Task EditAsync(ArticleEditModel editedArticle);
 
         public Task SoftDeleteAsync(string articleId);
 
         public Task DeleteAsync(string articleId);
+
+        public Task UndoDeleteAsync(string articleId);
     }
 }
