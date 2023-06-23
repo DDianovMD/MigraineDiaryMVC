@@ -86,10 +86,26 @@
                         </li>
                         @*Articles*@
                         <li class="nav-item">
-                            <a asp-area="Admin" asp-controller="Article" asp-action="Add" class="nav-link">
+                            <a href="#" class="nav-link">
                                 <i class="fa-regular fa-newspaper ml-1 mr-2"></i>
                                 <p>Публикации</p>
+                                <i class="right fas fa-angle-down"></i>
                             </a>
+
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a asp-area="Admin" asp-controller="Article" asp-action="Add" class="nav-link">
+                                        <i class="fa-regular fa-plus ml-1 mr-2"></i>
+                                        <p>Добави</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-area="Admin" asp-controller="Article" asp-action="Archived" class="nav-link">
+                                        <i class="fa-regular fa-folder-open ml-1 mr-2"></i>
+                                        <p>Архив</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </nav>
