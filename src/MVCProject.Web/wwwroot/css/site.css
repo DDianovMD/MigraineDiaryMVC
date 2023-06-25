@@ -263,3 +263,12 @@ body {
 textarea {
     resize: none;
 }
+
+.VAS-description {
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 10px;
+    margin-top: 15px;
+    padding: 5px;
+    width: fit-content;
+}

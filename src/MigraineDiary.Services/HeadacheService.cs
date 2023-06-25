@@ -29,6 +29,48 @@ namespace MigraineDiary.Services
             return daysHoursMinutes;
         }
 
+        public async Task AddAsync(HeadacheAddFormModel addModel, Dictionary<string, int> headacheDuration, string currentUserId)
+        {
+            Headache headache = new Headache
+            {
+                PatientId = currentUserId,
+                Aura = addModel.Aura == "yes" ? true : false,
+                AuraDescriptionNotes = addModel.AuraDescriptionNotes,
+                Onset = addModel.Onset,
+                EndTime = addModel.EndTime,
+                DurationDays = headacheDuration["Days"],
+                DurationHours = headacheDuration["Hours"],
+                DurationMinutes = headacheDuration["Minutes"],
+                Severity = addModel.Severity,
+                LocalizationSide = addModel.LocalizationSide,
+                PainCharacteristics = addModel.PainCharacteristics,
+                Photophoby = addModel.Photophoby == "yes" ? true : false,
+                Phonophoby = addModel.Phonophoby == "yes" ? true : false,
+                Nausea = addModel.Nausea == "yes" ? true : false,
+                Vomiting = addModel.Vomiting == "yes" ? true : false,
+                Triggers = addModel.Triggers,
+            };
+
+            if (addModel.MedicationsTaken.Count > 0)
+            {
+                foreach (MedicationAddFormModel medication in addModel.MedicationsTaken)
+                {
+                    Medication currentMedication = new Medication
+                    {
+                        Name = medication.Name,
+                        SinglePillDosage = medication.SinglePillDosage,
+                        Units = medication.Units,
+                        NumberOfTakenPills = medication.NumberOfTakenPills,
+                    };
+
+                    headache.MedicationsTaken.Add(currentMedication);
+                }
+            }
+
+            await this.dbContext.Headaches.AddAsync(headache);
+            await this.dbContext.SaveChangesAsync();
+        }
+
         public async Task<PaginatedList<RegisteredHeadacheViewModel>> GetRegisteredHeadachesAsync(string userId, int pageIndex, int pageSize, string orderByDate)
         {
             IQueryable<RegisteredHeadacheViewModel> headaches = null!;

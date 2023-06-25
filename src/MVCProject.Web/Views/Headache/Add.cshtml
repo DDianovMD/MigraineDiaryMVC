@@ -7,87 +7,196 @@
 <div class="row text-center">
     <form asp-controller="Headache" asp-action="Add" asp-route-currentUserId=@ViewData["currentUserId"] method="post">
         <div class="mb-3">
-            <label asp-for=Onset>Начало на главоболието:</label> <br />
-            <input type="datetime-local" asp-for=Onset min="2022-01-01T00:00" max="2099-01-01T00:00" required/> <br />
-            <span asp-validation-for="Onset" class="text-danger"></span>
+            <label asp-for=@Model.Onset>Начало на главоболието:</label> <br />
+            @*Escape default behaviour (populating the field with default datetime value on HttpGet)*@
+            @if (Model.Onset == DateTime.MinValue)
+            {
+                <input type="datetime-local" asp-for="@Model.Onset" min="2022-01-01T00:00" max="2099-01-01T00:00" value="" /> <br />
+            }
+            else
+            {
+                <input type="datetime-local" asp-for="@Model.Onset" min="2022-01-01T00:00" max="2099-01-01T00:00" /> <br />
+            }
+            <span asp-validation-for="@Model.Onset" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <Label asp-for="EndTime">Край на главоболието:</Label> <br />
-            <input type="datetime-local" asp-for="EndTime" min="2022-01-01T00:00" max="2099-01-01T00:00" required/> <br />
-            <span asp-validation-for="EndTime" class="text-danger"></span>
+            <Label asp-for="@Model.EndTime">Край на главоболието:</Label> <br />
+            @*Escape default behaviour (populating the field with default datetime value on HttpGet)*@
+            @if (Model.EndTime == DateTime.MinValue)
+            {
+                <input type="datetime-local" asp-for="@Model.EndTime" min="2022-01-01T00:00" max="2099-01-01T00:00" value="" /> <br />
+            }
+            else
+            {
+                <input type="datetime-local" asp-for="@Model.EndTime" min="2022-01-01T00:00" max="2099-01-01T00:00" /> <br />
+            }
+            <span asp-validation-for="@Model.EndTime" class="text-danger"></span>
         </div>
-        <div class="mb-6">
-            <label asp-for="LocalizationSide">Посочете в коя част на главата изпитвахте болка:</label> <br />
-            <textarea asp-for="LocalizationSide" rows="5" cols="80" placeholder="Левостранно/десностранно/тилно/челно..."></textarea> <br />
-            <span asp-validation-for="LocalizationSide" class="text-danger"></span>
+        <div class="mb-4">
+            <label asp-for="@Model.LocalizationSide">Посочете в коя част на главата изпитвахте болка:</label> <br />
+            <textarea asp-for="@Model.LocalizationSide" rows="5" cols="80" placeholder="Левостранно/десностранно/тилно/челно..."></textarea> <br />
+            <span asp-validation-for="@Model.LocalizationSide" class="text-danger"></span>
+        </div>
+        <div class="mb-4">
+            <label asp-for="@Model.PainCharacteristics">Опишете характеристиката на болката:</label> <br />
+            <textarea asp-for="@Model.PainCharacteristics" rows="5" cols="80" placeholder="Пулсираща/стягаща/остра/постепенно настъпваща..."></textarea> <br />
+            <span asp-validation-for="@Model.PainCharacteristics" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label asp-for="PainCharacteristics">Опишете характеристиката на болката:</label> <br />
-            <textarea asp-for="PainCharacteristics" rows="5" cols="80" placeholder="Пулсираща/стягаща/остра/постепенно настъпваща..."></textarea> <br />
-            <span asp-validation-for="PainCharacteristics" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for=Severity style="margin-right: 15px;">Посочете силата на главоболието от 0 до 10:</label>
-            <select asp-for="Severity">
-                @{
-                    for (int i = 0; i <= 10; i++)
-                    {
-                        <option value="@i">@i</option>
-                    }
+            <label asp-for="@Model.Severity" style="margin-right: 15px;">Посочете силата на главоболието от 1 до 10:</label>
+            <select asp-for="@Model.Severity">
+                <option value="0" selected="selected">--</option>
+                @for (int i = 1; i <= 10; i++)
+                {
+                    <option value="@i">@i</option>
                 }
             </select> <br />
-            <span asp-validation-for="Severity" class="text-danger"></span>
-            <i style="color: red; font-size: 12px;">
-                <span>0 - липса на болка;</span> <br />
-                <span>10 - най-силната болка, която си представяте, че съществува.</span>
-            </i>
+            <div style="display: flex; justify-content: center;">
+                <div class="VAS-description">
+                    <i style="font-size: 12px;">
+                        <span>0 - липса на болка</span> <br />
+                        <span>10 - най-силната болка, която си представяте, че съществува.</span>
+                    </i>
+                </div>
+            </div>
+            <span asp-validation-for="@Model.Severity" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label asp-for="Photophoby">Главоболието Ви влошаваше ли се от светлината?</label> <br />
-            Да <input type="radio" asp-for="Photophoby" value="true" />
-            Не <input type="radio" asp-for="Photophoby" value="false" /> <br />
-            <span asp-validation-for="Photophoby" class="text-danger"></span>
+            <label asp-for="@Model.Photophoby">Главоболието Ви влошаваше ли се от светлината?</label> <br />
+            <input type="radio" asp-for="@Model.Photophoby" name="Photophoby" value="noAnswer" checked="checked" class="d-none" />
+            <span>Да</span>
+            <input type="radio" asp-for="@Model.Photophoby" name="Photophoby" value="true" />
+            <span>Не</span>
+            <input type="radio" asp-for="@Model.Photophoby" name="Photophoby" value="false" /> <br />
+            <span asp-validation-for="@Model.Photophoby" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label asp-for="Phonophoby">Главоболието Ви влошаваше ли се от шума?</label> <br />
-            Да <input type="radio" asp-for="Phonophoby" value="true" />
-            Не <input type="radio" asp-for="Phonophoby" value="false" /> <br />
-            <span asp-validation-for="Phonophoby" class="text-danger"></span>
+            <label asp-for="@Model.Phonophoby">Главоболието Ви влошаваше ли се от шума?</label> <br />
+            <input type="radio" asp-for="@Model.Phonophoby" value="noAnswer" checked class="d-none" />
+            <span>Да</span>
+            <input type="radio" asp-for="@Model.Phonophoby" value="true" />
+            <span>Не</span>
+            <input type="radio" asp-for="@Model.Phonophoby" value="false" /> <br />
+            <span asp-validation-for="@Model.Phonophoby" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label asp-for="Nausea">Изпитвахте ли гадене?</label> <br />
-            Да <input type="radio" asp-for="Nausea" value="true" />
-            Не <input type="radio" asp-for="Nausea" value="false" /> <br />
-            <span asp-validation-for="Nausea" class="text-danger"></span>
+            <label asp-for="@Model.Nausea">Изпитвахте ли гадене?</label> <br />
+            <input type="radio" asp-for="@Model.Nausea" value="noAnswer" checked class="d-none" />
+            <span>Да</span>
+            <input type="radio" asp-for="@Model.Nausea" value="true" />
+            <span>Не</span>
+            <input type="radio" asp-for="@Model.Nausea" value="false" /> <br />
+            <span asp-validation-for="@Model.Nausea" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label asp-for="Vomiting">Имахте ли повръщане?</label> <br />
-            Да <input type="radio" asp-for="Vomiting" value="true" />
-            Не <input type="radio" asp-for="Vomiting" value="false" /> <br />
-            <span asp-validation-for="Vomiting" class="text-danger"></span>
+            <label asp-for="@Model.Vomiting">Имахте ли повръщане?</label> <br />
+            <input type="radio" asp-for="@Model.Vomiting" value="noAnswer" checked class="d-none" />
+            <span>Да</span>
+            <input type="radio" asp-for="@Model.Vomiting" value="true" />
+            <span>Не</span>
+            <input type="radio" asp-for="@Model.Vomiting" value="false" /> <br />
+            <span asp-validation-for="@Model.Vomiting" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label asp-for="Aura">Имахте ли аура?</label> <br />
-            Да <input type="radio" asp-for="Aura" value="true" class="aura-yes" onclick="addAuraDescription();" />
-            Не <input type="radio" asp-for="Aura" value="false" class="aura-no" /> <br />
-            <span asp-validation-for="Aura" class="text-danger"></span>
+            <label asp-for="@Model.Aura">Имахте ли аура?</label> <br />
+            <input type="radio" asp-for="@Model.Aura" value="noAnswer" checked class="d-none" />
+            @if (Model.Aura != "true")
+            {
+                <span>Да</span>
+                <input type="radio" asp-for="@Model.Aura" value="true" class="aura-yes" onclick="addAuraDescription();" />
+                <span>Не</span>
+                <input type="radio" asp-for="@Model.Aura" value="false" class="aura-no" /> <br />
+            }
+            else
+            {
+                <span>Да</span>
+                <input type="radio" asp-for="@Model.Aura" value="true" class="aura-yes" />
+                <span>Не</span>
+                <input type="radio" asp-for="@Model.Aura" value="false" class="aura-no" onclick="removeAuraDescription();" /> <br />
+            }
+            <span asp-validation-for="@Model.Aura" class="text-danger"></span>
         </div>
         <div class="mb-3 aura-description">
-            <span asp-validation-for="AuraDescriptionNotes" class="text-danger"></span>
+            @if (Model.Aura == "true")
+            {
+                <label asp-for="@Model.AuraDescriptionNotes">Oпишете аурата си:</label> <br>
+                <textarea asp-for="@Model.AuraDescriptionNotes" rows="5" cols="80"></textarea>
+            }
+            <span asp-validation-for="@Model.AuraDescriptionNotes" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label asp-for="Triggers">Опишете фактори, които са провокирали мигренозния пристъп:</label> <br />
-            <textarea asp-for="Triggers" rows="5" cols="80" placeholder="Определени храни, напитки и др."></textarea> <br />
-            <span asp-validation-for="Triggers" class="text-danger"></span>
+            <label asp-for="@Model.Triggers">Опишете фактори, които са провокирали мигренозния пристъп:</label> <br />
+            <textarea asp-for="@Model.Triggers" rows="5" cols="80" placeholder="Определени храни, напитки и др."></textarea> <br />
+            <span asp-validation-for="@Model.Triggers" class="text-danger"></span>
         </div>
-        <div class="mb-3" id="medication-usage">
-            <label for="medication-usage">Употребихте ли медикамент(и)?</label> <br />
-            Да <input type="radio" id="medication-usage-yes" name="medication-usage" value="yes" onclick="createAddButton();" oninvalid="this.setCustomValidity('Необходимо е да посочите използвахте ли медикамент(и).')">
-            Не <input type="radio" id="medication-usage-no" name="medication-usage" value="no">
-        </div>
-        <div id="used-medications-container" class="mb-3"></div>
-        <div id="add-medication-button" class="mb-3"></div>
-        <input type="submit" class="btn btn-primary" value="Добави"/>
+        @if (Model.MedicationsTaken.Count == 0)
+        {
+            <div class="mb-3" id="medication-usage">
+                <label for="medication-usage">Употребихте ли медикамент(и)?</label> <br />
+                <span>Да</span>
+                <input type="radio" id="medication-usage-yes" name="medication-usage" value="yes" onclick="createAddButton();" oninvalid="this.setCustomValidity('Необходимо е да посочите използвахте ли медикамент(и).')">
+                <span>Не</span>
+                <input type="radio" id="medication-usage-no" name="medication-usage" value="no">
+            </div>
+            <div id="used-medications-container" class="mb-3"></div>
+            <div id="add-medication-button" class="mb-3"></div>
+        }
+        else
+        {
+            <div class="mb-3" id="medication-usage">
+                <label for="medication-usage">Употребихте ли медикамент(и)?</label> <br />
+                <span>Да</span>
+                <input type="radio" id="medication-usage-yes" name="medication-usage" value="yes" checked oninvalid="this.setCustomValidity('Необходимо е да посочите използвахте ли медикамент(и).')">
+                <span>Не</span>
+                <input type="radio" id="medication-usage-no" name="medication-usage" value="no" onclick="removeAddButton();">
+            </div>
+            <div id="used-medications-container" class="mb-3">
+
+                @for (int i = 0; i < Model.MedicationsTaken.Count; i++)
+                {
+                    <div id="medication-@i">
+                        <input type="text" name="MedicationsTaken[@i].Name" value="@Model.MedicationsTaken[i].Name" placeholder="Име на медикамента" class="text-center" style="margin-right: 20px;">
+                        <input type="number" name="MedicationsTaken[@i].SinglePillDosage" value="@Model.MedicationsTaken[i].SinglePillDosage" placeholder="Доза" class="text-center" min="0" max="2000" step="0.25" style="margin-right: 20px;">
+                        <select name="MedicationsTaken[@i].Units" class="mb-3" style="margin-right: 20px;">
+                            @if (Model.MedicationsTaken[i].Units == "mcg")
+                            {
+                                <option value="mcg" selected="selected">mcg</option>
+                                <option value="mg">mg</option>
+                                <option value="g">g</option>
+                                <option value="ml">ml</option>
+                            }
+                            else if (Model.MedicationsTaken[i].Units == "mg")
+                            {
+                                <option value="mcg">mcg</option>
+                                <option value="mg" selected="selected">mg</option>
+                                <option value="g">g</option>
+                                <option value="ml">ml</option>
+                            }
+                            else if (Model.MedicationsTaken[i].Units == "g")
+                            {
+                                <option value="mcg">mcg</option>
+                                <option value="mg">mg</option>
+                                <option value="g" selected="selected">g</option>
+                                <option value="ml">ml</option>
+                            }
+                            else if (Model.MedicationsTaken[i].Units == "ml")
+                            {
+                                <option value="mcg">mcg</option>
+                                <option value="mg">mg</option>
+                                <option value="g">g</option>
+                                <option value="ml" selected="selected">ml</option>
+                            }
+                        </select>
+                        <input type="number" name="MedicationsTaken[@i].NumberOfTakenPills" value="@Model.MedicationsTaken[i].NumberOfTakenPills" placeholder="Брой приети таблетки" class="text-center" min="0" max="10" step="0.25" style="width: 200px;">
+                        <button type="button" id="remove-medication-@i" onclick="removeMedication('medication-@i')" class="btn btn-danger" style="margin-left: 20px;">Премахни</button>
+                    </div>
+                }
+            </div>
+            <div id="add-medication-button" class="mb-3">
+                <button type="button" id="addMedication" class="btn btn-success" onclick="аddMedication();">Добави медикамент</button>
+            </div>
+        }
+        <input type="submit" class="btn btn-primary" value="Добави" />
     </form>
 </div>
 <script src="~/js/addHeadache.js"></script>

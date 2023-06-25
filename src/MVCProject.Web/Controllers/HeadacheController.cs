@@ -6,6 +6,7 @@ using MigraineDiary.ViewModels;
 using MigraineDiary.Data;
 using MigraineDiary.Data.DbModels;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace MigraineDiary.Web.Controllers
 {
@@ -28,9 +29,11 @@ namespace MigraineDiary.Web.Controllers
         [HttpGet]
         public IActionResult Add()
         {
+            HeadacheAddFormModel model = new HeadacheAddFormModel();
+
             ViewData["currentUserId"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            return View();
+            return View(model);
         }
 
         [HttpPost]
@@ -41,20 +44,30 @@ namespace MigraineDiary.Web.Controllers
             // If not routed on next submission currentUserId is null and ModelState is not valid again.
             ViewData["currentUserId"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Reset custom added model errors for next validation cycle.
-            // If reset is skipped even with correct data submission on next user input, ModelState continues to not be valid!
-            ModelState[nameof(addModel.EndTime)]?.Errors.Clear();
-
-            // Check if all forms submitted have values.
-            if (!ModelState.IsValid)
-            {
-                return View(addModel);
-            }
-
-            // Get the headache duration so it can be custom validated not only if data is submitted.
+            // Calculate headache duration so it can be custom validated.
             Dictionary<string, int> headacheDuration = this.headacheService.CalculateDuration(addModel.Onset, addModel.EndTime);
 
-            // Custom headache duration validations.
+            // Custom headache validations.
+
+            // Check if form is submitted with default value which is not DateTime (user didn't select value).
+            if (ModelState["Onset"]!.Errors.Any(x => x.ErrorMessage == "The value '' is invalid."))
+            {
+                // Remove default ErrorMessage.
+                ModelState.Remove("Onset");
+
+                // Add custom ErrorMessage.
+                ModelState.AddModelError(nameof(addModel.Onset), "Необходимо е да въведете начало на главоболието.");
+            }
+
+            // Check if form is submitted with default value which is not DateTime (user didn't select value).
+            if (ModelState["EndTime"]!.Errors.Any(x => x.ErrorMessage == "The value '' is invalid."))
+            {
+                // Remove default ErrorMessage .
+                ModelState.Remove("EndTime");
+
+                // Add custom ErrorMessage.
+                ModelState.AddModelError(nameof(addModel.EndTime), "Необходимо е да въведете край на главоболието.");
+            }
 
             // If headache ended before it started scenario.
             if (headacheDuration["Days"] < 0 ||
@@ -62,8 +75,6 @@ namespace MigraineDiary.Web.Controllers
                 headacheDuration["Minutes"] < 0)
             {
                 ModelState.AddModelError(nameof(addModel.EndTime), "Края на главоболието не може да бъде преди началото му.");
-
-                return View(addModel);
             }
             // Else if headache ended at the moment it just started scenario.
             else if (headacheDuration["Days"] <= 0 &&
@@ -73,52 +84,47 @@ namespace MigraineDiary.Web.Controllers
                 ModelState.AddModelError(nameof(addModel.EndTime), "Началото и краят на главоболието не могат да съвпадат.");
             }
 
-            // Check again for added model errors on custom validation.
+            // Check if form is submitted without selecting severity.
+            if (addModel.Severity == 0)
+            {
+                ModelState.AddModelError(nameof(addModel.Severity), "Необходимо е да посочите сила на главоболието.");
+            }
+
+            // Check if hidden inputs values are submitted (user didn't chose answer).
+            if (addModel.Photophoby == "noAnswer")
+            {
+                ModelState.AddModelError(nameof(addModel.Photophoby), "Необходимо е да посочите отговор.");
+            }
+
+            if (addModel.Phonophoby == "noAnswer")
+            {
+                ModelState.AddModelError(nameof(addModel.Phonophoby), "Необходимо е да посочите отговор.");
+            }
+
+            if (addModel.Nausea == "noAnswer")
+            {
+                ModelState.AddModelError(nameof(addModel.Nausea), "Необходимо е да посочите отговор.");
+            }
+
+            if (addModel.Vomiting == "noAnswer")
+            {
+                ModelState.AddModelError(nameof(addModel.Vomiting), "Необходимо е да посочите отговор.");
+            }
+
+            if (addModel.Aura == "noAnswer")
+            {
+                ModelState.AddModelError(nameof(addModel.Aura), "Необходимо е да посочите отговор.");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(addModel);
             }
 
-            Headache headache = new Headache
-            {
-                PatientId = currentUserId,
-                Aura = addModel.Aura,
-                AuraDescriptionNotes = addModel.AuraDescriptionNotes,
-                Onset = addModel.Onset,
-                EndTime = addModel.EndTime,
-                DurationDays = headacheDuration["Days"],
-                DurationHours = headacheDuration["Hours"],
-                DurationMinutes = headacheDuration["Minutes"],
-                Severity = addModel.Severity,
-                LocalizationSide = addModel.LocalizationSide,
-                PainCharacteristics = addModel.PainCharacteristics,
-                Photophoby = addModel.Photophoby,
-                Phonophoby = addModel.Phonophoby,
-                Nausea = addModel.Nausea,
-                Vomiting = addModel.Vomiting,
-                Triggers = addModel.Triggers,
-            };
+            // Add headache.
+            await this.headacheService.AddAsync(addModel, headacheDuration, currentUserId);
 
-            if (addModel.MedicationsTaken.Count > 0)
-            {
-                foreach (var medication in addModel.MedicationsTaken)
-                {
-                    Medication currentMedication = new Medication
-                    {
-                        Name = medication.Name,
-                        SinglePillDosage = medication.SinglePillDosage,
-                        Units = medication.Units,
-                        NumberOfTakenPills = medication.NumberOfTakenPills,
-                    };
-
-                    headache.MedicationsTaken.Add(currentMedication);
-                }
-            }
-
-            await this.dbContext.Headaches.AddAsync(headache);
-            await this.dbContext.SaveChangesAsync();
-
-            // Get controller name and action name without using magic strings
+            // Get controller name and action name without using magic strings.
             string actionName = nameof(HeadacheController.GetAll);
             string controllerName = nameof(HeadacheController).Substring(0, nameof(HeadacheController).Length - "Controller".Length);
 

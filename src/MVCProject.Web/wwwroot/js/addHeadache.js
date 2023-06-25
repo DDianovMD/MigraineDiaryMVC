@@ -9,7 +9,7 @@ let medicationUsageYesElement = document.getElementById('medication-usage-yes');
 let medicationUsageNoElement = document.getElementById('medication-usage-no');
 
 let addButtonContainer = document.getElementById('add-medication-button');
-let indexCounter = 0;
+let indexCounter = document.getElementById('used-medications-container').children.length;
 
 function addAuraDescription() {
 
@@ -45,15 +45,10 @@ function addAuraDescription() {
 }
 function removeAuraDescription() {
 
-    // Select textarea for aura description
-    let auraDescriptionElement = document.getElementById('AuraDescriptionNotes');
-    let labelElement = document.getElementById('aura-description-label');
-
-    if (auraDescriptionElement != undefined && labelElement != undefined) {
+    if (auraContainer.hasChildNodes) {
 
         // Remove DOM element
-        auraDescriptionElement.remove();
-        labelElement.remove();
+        auraContainer.innerHTML = '';
 
         // Toggle onclick attribute
         hasAuraNoElement.removeAttribute('onclick');
@@ -227,21 +222,12 @@ function createRemoveMedicationButton() {
     // Set button attributes.
     buttonElement.setAttribute('type', 'button');
     buttonElement.setAttribute('id', `remove-medication-${indexCounter}`);
-    buttonElement.setAttribute('divId', `medication-${indexCounter}`);
     buttonElement.setAttribute('class', 'btn btn-danger');
+    buttonElement.setAttribute('onclick', `removeMedication('medication-${indexCounter}')`);
     buttonElement.innerText = 'Премахни';
 
     // Set button's style.
     buttonElement.style.marginLeft = '20px';
-
-    // Add event listeners.
-    buttonElement.addEventListener('click', (event) => {
-        // Get div's element which is going to be removed id.
-        let divId = event.target.getAttribute('divid');
-
-        document.getElementById(divId).remove();
-
-    });
 
     // Append button to divElement.
     divElement.appendChild(buttonElement);
@@ -258,3 +244,27 @@ function аddMedication() {
     // Increment indexCounter
     indexCounter++;
 };
+
+function removeMedication(divId) {
+
+    // Remove medication.
+    document.getElementById(divId).remove();
+
+    fixIndexes();
+}
+
+function fixIndexes() {
+
+    let usedMedicationsContainerChilds = document.getElementById('used-medications-container').children;
+    indexCounter = 0;
+
+    for (let child of usedMedicationsContainerChilds) {
+        child.id = `medication-${indexCounter}`;
+        child.children[0].name = `MedicationsTaken[${indexCounter}].Name`;
+        child.children[1].name = `MedicationsTaken[${indexCounter}].SinglePillDosage`;
+        child.children[2].name = `MedicationsTaken[${indexCounter}].Units`;
+        child.children[3].name = `MedicationsTaken[${indexCounter}].NumberOfTakenPills`;
+        child.children[4].id = `remove-medication-${indexCounter}`;
+        child.children[4].setAttribute('onclick', `removeMedication('medication-${indexCounter++}')`);
+    }
+}

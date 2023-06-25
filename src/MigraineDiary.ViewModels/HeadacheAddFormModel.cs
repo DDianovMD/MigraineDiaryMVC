@@ -27,19 +27,19 @@ namespace MigraineDiary.ViewModels
         public string PainCharacteristics { get; set; } = null!;
 
         [Required(ErrorMessage = "Полето е задължително.")]
-        public bool Photophoby { get; set; }
+        public string Photophoby { get; set; } = null!;
 
         [Required(ErrorMessage = "Полето е задължително.")]
-        public bool Phonophoby { get; set; }
+        public string Phonophoby { get; set; } = null!;
 
         [Required(ErrorMessage = "Полето е задължително.")]
-        public bool Nausea { get; set; }
+        public string Nausea { get; set; } = null!;
 
         [Required(ErrorMessage = "Полето е задължително.")]
-        public bool Vomiting { get; set; }
+        public string Vomiting { get; set; } = null!;
 
         [Required(ErrorMessage = "Полето е задължително.")]
-        public bool Aura { get; set; }
+        public string Aura { get; set; } = null!;
 
         [MaxLength(350, ErrorMessage = "Описанието на аурата не може да бъде повече от 350 символа.")]
         public string? AuraDescriptionNotes { get; set; }
