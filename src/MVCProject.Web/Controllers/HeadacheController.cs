@@ -50,23 +50,29 @@ namespace MigraineDiary.Web.Controllers
             // Custom headache validations.
 
             // Check if form is submitted with default value which is not DateTime (user didn't select value).
-            if (ModelState["Onset"]!.Errors.Any(x => x.ErrorMessage == "The value '' is invalid."))
+            if (ModelState["Onset"] != null)
             {
-                // Remove default ErrorMessage.
-                ModelState.Remove("Onset");
+                if (ModelState["Onset"]!.Errors.Any(x => x.ErrorMessage == "The value '' is invalid."))
+                {
+                    // Remove default ErrorMessage.
+                    ModelState.Remove("Onset");
 
-                // Add custom ErrorMessage.
-                ModelState.AddModelError(nameof(addModel.Onset), "Необходимо е да въведете начало на главоболието.");
+                    // Add custom ErrorMessage.
+                    ModelState.AddModelError(nameof(addModel.Onset), "Необходимо е да въведете начало на главоболието.");
+                }
             }
 
             // Check if form is submitted with default value which is not DateTime (user didn't select value).
-            if (ModelState["EndTime"]!.Errors.Any(x => x.ErrorMessage == "The value '' is invalid."))
+            if (ModelState["EndTime"] != null)
             {
-                // Remove default ErrorMessage .
-                ModelState.Remove("EndTime");
+                if (ModelState["EndTime"]!.Errors.Any(x => x.ErrorMessage == "The value '' is invalid."))
+                {
+                    // Remove default ErrorMessage.
+                    ModelState.Remove("EndTime");
 
-                // Add custom ErrorMessage.
-                ModelState.AddModelError(nameof(addModel.EndTime), "Необходимо е да въведете край на главоболието.");
+                    // Add custom ErrorMessage.
+                    ModelState.AddModelError(nameof(addModel.EndTime), "Необходимо е да въведете край на главоболието.");
+                }
             }
 
             // If headache ended before it started scenario.
