@@ -60,6 +60,8 @@ function createAddButton() {
 
     if (medicationUsageYesElement.value == 'yes') {
 
+        аddMedication();
+
         // Create button and set it's attributes
         let buttonElement = document.createElement('button');
         buttonElement.setAttribute('type', 'button');
@@ -90,29 +92,22 @@ function removeAddButton() {
     }
 
     // Remove all input fields along with the button
-    removeMedicationInputs(medicationsContainer);
+    removeMedicationInputs();
 };
 
-function removeMedicationInputs(parentElement) {
+function removeMedicationInputs() {
 
-    while (parentElement.firstChild) {
-        parentElement.removeChild(parentElement.firstChild);
-    }
+    medicationsContainer.innerHTML = '';
+    indexCounter = document.getElementById('used-medications-container').children.length;
 }
 
 function addNameInput() {
 
     let divElement = document.createElement('div');
     let medicationNameElement = document.createElement('input');
-    //let labelElement = document.createElement('label');
-    //let brElement = document.createElement('br');
 
     // Set div element's id attribute
     divElement.setAttribute('id', `medication-${indexCounter}`);
-
-    // Set label element
-    //labelElement.innerText = 'Въведете използвания медикамент';
-    //labelElement.appendChild(brElement);
 
     // Set attributes for "Name" input
     medicationNameElement.style.marginRight = "20px";
@@ -122,7 +117,6 @@ function addNameInput() {
     medicationNameElement.setAttribute('placeholder', 'Име на медикамента');
 
     // Add "Name" input in the HTML
-    //labelElement.appendChild(medicationNameElement);
     divElement.appendChild(medicationNameElement);
     medicationsContainer.appendChild(divElement);
 };
@@ -131,12 +125,6 @@ function addMedicationDosage() {
 
     let divElement = document.getElementById(`medication-${indexCounter}`);
     let medicationSinglePillDosageElement = document.createElement('input');
-    //let labelElement = document.createElement('label');
-    //let brElement = document.createElement('br');
-
-    // Set label element
-    //labelElement.innerText = 'Доза';
-    //labelElement.appendChild(brElement);
 
     // Set attributes for Dosage input
     medicationSinglePillDosageElement.style.marginRight = "20px";
@@ -144,12 +132,9 @@ function addMedicationDosage() {
     medicationSinglePillDosageElement.setAttribute('name', `MedicationsTaken[${indexCounter}].SinglePillDosage`);
     medicationSinglePillDosageElement.setAttribute('placeholder', 'Доза');
     medicationSinglePillDosageElement.setAttribute('class', 'text-center');
-    medicationSinglePillDosageElement.setAttribute('min', '0');
-    medicationSinglePillDosageElement.setAttribute('max', '2000');
     medicationSinglePillDosageElement.setAttribute('step', '0.25');
 
     // Add "Dosage" input in the HTML
-    //labelElement.appendChild(medicationSinglePillDosageElement);
     divElement.appendChild(medicationSinglePillDosageElement);
     medicationsContainer.appendChild(divElement);
 };
@@ -204,8 +189,6 @@ function addNumberOfPillsInput() {
     numberOfPillsTakenElement.setAttribute('name', `MedicationsTaken[${indexCounter}].NumberOfTakenPills`);
     numberOfPillsTakenElement.setAttribute('placeholder', 'Брой приети таблетки');
     numberOfPillsTakenElement.setAttribute('class', 'text-center');
-    numberOfPillsTakenElement.setAttribute('min', '0');
-    numberOfPillsTakenElement.setAttribute('max', '10');
     numberOfPillsTakenElement.setAttribute('step', '0.25');
 
     // Add input element in HTML

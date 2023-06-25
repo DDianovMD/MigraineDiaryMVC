@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using MigraineDiary.Services.Contracts;
-using MigraineDiary.ViewModels;
 using MigraineDiary.Data;
 using MigraineDiary.Data.DbModels;
+using MigraineDiary.Services.Contracts;
+using MigraineDiary.ViewModels;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace MigraineDiary.Web.Controllers
 {
@@ -120,6 +119,35 @@ namespace MigraineDiary.Web.Controllers
             if (addModel.Aura == "noAnswer")
             {
                 ModelState.AddModelError(nameof(addModel.Aura), "Необходимо е да посочите отговор.");
+            }
+
+            for (int i = 0; i < addModel.MedicationsTaken.Count; i++)
+            {
+                if (ModelState[$"MedicationsTaken[{i}].SinglePillDosage"] != null &&
+                    ModelState[$"MedicationsTaken[{i}].SinglePillDosage"]!.Errors.Any(e => e.ErrorMessage == "The value '' is invalid."))
+                {
+                    // Remove default ErrorMessage.
+                    ModelState.Remove($"MedicationsTaken[{i}].SinglePillDosage");
+
+                    // Add custom ErrorMessage.
+                    ModelState.AddModelError($"MedicationsTaken[{i}].SinglePillDosage", "Необходимо е да въведете доза на медикамента.");
+
+                    // Set custom value for view logic to escape default behavior.
+                    addModel.MedicationsTaken[i].SinglePillDosage = int.MinValue;
+                }
+
+                if (ModelState[$"MedicationsTaken[{i}].NumberOfTakenPills"] != null &&
+                    ModelState[$"MedicationsTaken[{i}].NumberOfTakenPills"]!.Errors.Any(e => e.ErrorMessage == "The value '' is invalid."))
+                {
+                    // Remove default ErrorMessage.
+                    ModelState.Remove($"MedicationsTaken[{i}].NumberOfTakenPills");
+
+                    // Add custom ErrorMessage.
+                    ModelState.AddModelError($"MedicationsTaken[{i}].NumberOfTakenPills", "Необходимо е да въведете брой приети таблетки.");
+
+                    // Set custom value for view logic to escape default behavior.
+                    addModel.MedicationsTaken[i].NumberOfTakenPills = int.MinValue;
+                }
             }
 
             if (!ModelState.IsValid)

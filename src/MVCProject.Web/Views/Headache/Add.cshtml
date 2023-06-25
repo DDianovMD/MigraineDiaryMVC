@@ -151,12 +151,18 @@
                 <input type="radio" id="medication-usage-no" name="medication-usage" value="no" onclick="removeAddButton();">
             </div>
             <div id="used-medications-container" class="mb-3">
-
                 @for (int i = 0; i < Model.MedicationsTaken.Count; i++)
                 {
                     <div id="medication-@i">
                         <input type="text" name="MedicationsTaken[@i].Name" value="@Model.MedicationsTaken[i].Name" placeholder="Име на медикамента" class="text-center" style="margin-right: 20px;">
-                        <input type="number" name="MedicationsTaken[@i].SinglePillDosage" value="@Model.MedicationsTaken[i].SinglePillDosage" placeholder="Доза" class="text-center" min="0" max="2000" step="0.25" style="margin-right: 20px;">
+                        @if (Model.MedicationsTaken[@i].SinglePillDosage < 0)
+                        {
+                            <input type="number" name="MedicationsTaken[@i].SinglePillDosage" value="" placeholder="Доза" class="text-center" step="0.25" style="margin-right: 20px;">
+                        }
+                        else
+                        {
+                            <input type="number" name="MedicationsTaken[@i].SinglePillDosage" value="@Model.MedicationsTaken[i].SinglePillDosage" placeholder="Доза" class="text-center" step="0.25" style="margin-right: 20px;">
+                        }
                         <select name="MedicationsTaken[@i].Units" class="mb-3" style="margin-right: 20px;">
                             @if (Model.MedicationsTaken[i].Units == "mcg")
                             {
@@ -187,8 +193,21 @@
                                 <option value="ml" selected="selected">ml</option>
                             }
                         </select>
-                        <input type="number" name="MedicationsTaken[@i].NumberOfTakenPills" value="@Model.MedicationsTaken[i].NumberOfTakenPills" placeholder="Брой приети таблетки" class="text-center" min="0" max="10" step="0.25" style="width: 200px;">
-                        <button type="button" id="remove-medication-@i" onclick="removeMedication('medication-@i')" class="btn btn-danger" style="margin-left: 20px;">Премахни</button>
+                        @if (Model.MedicationsTaken[i].NumberOfTakenPills < 0)
+                        {
+                            <input type="number" name="MedicationsTaken[@i].NumberOfTakenPills" value="" placeholder="Брой приети таблетки" class="text-center" step="0.25" style="width: 200px;">
+                        }
+                        else
+                        {
+                            <input type="number" name="MedicationsTaken[@i].NumberOfTakenPills" value="@Model.MedicationsTaken[i].NumberOfTakenPills" placeholder="Брой приети таблетки" class="text-center" step="0.25" style="width: 200px;">
+                        }
+                        <button type="button" id="remove-medication-@i" onclick="removeMedication('medication-@i')" class="btn btn-danger" style="margin-left: 20px;">Премахни</button> <br />
+                        <div class="d-flex flex-column mb-4">
+                            <span asp-validation-for="@Model.MedicationsTaken[i].Name" class="text-danger"></span>
+                            <span asp-validation-for="@Model.MedicationsTaken[i].SinglePillDosage" class="text-danger"></span>
+                            <span asp-validation-for="@Model.MedicationsTaken[i].Units" class="text-danger"></span>
+                            <span asp-validation-for="@Model.MedicationsTaken[i].NumberOfTakenPills" class="text-danger"></span>
+                        </div>
                     </div>
                 }
             </div>
