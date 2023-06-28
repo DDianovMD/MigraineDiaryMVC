@@ -250,27 +250,70 @@ namespace MigraineDiary.Services
 
         public async Task<DoctorViewModel[]> GetDoctorUsersByNameAsync(string name)
         {
-            DoctorViewModel[] doctorUsers = await dbContext.Roles
-                                                           .Where(r => r.Name == "Doctor")
-                                                           .Join(this.dbContext.UserRoles,
-                                                                 r => r.Id,
-                                                                 ur => ur.RoleId,
-                                                                 (r, ur) => new
-                                                                 {
-                                                                     userId = ur.UserId,
-                                                                 })
-                                                           .Join(this.dbContext.Users.Where(u => EF.Functions.Like(u.FirstName!, $"%{name}%") ||
-                                                                                                 EF.Functions.Like(u.LastName!, $"%{name}%")),
-                                                                 ur => ur.userId,
-                                                                 u => u.Id,
-                                                                 (ur, u) => new DoctorViewModel
-                                                                 {
-                                                                     Id = u.Id,
-                                                                     FirstName = u.FirstName!,
-                                                                     LastName = u.LastName!,
-                                                                 })
-                                                           .AsNoTracking()
-                                                           .ToArrayAsync();
+            string firstName = string.Empty;
+            string lastName = string.Empty;
+
+            if (name.Contains(' '))
+            {
+                string[] names = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                firstName = names[0];
+                lastName = names[1];
+            }
+            else
+            {
+                firstName = name;
+            }
+
+            DoctorViewModel[] doctorUsers;
+
+            if (lastName == string.Empty)
+            {
+                doctorUsers = await dbContext.Roles
+                                             .Where(r => r.Name == "Doctor")
+                                             .Join(this.dbContext.UserRoles,
+                                                   r => r.Id,
+                                                   ur => ur.RoleId,
+                                                   (r, ur) => new
+                                                   {
+                                                       userId = ur.UserId,
+                                                   })
+                                             .Join(this.dbContext.Users.Where(u => EF.Functions.Like(u.FirstName!, $"%{firstName}%")),
+                                                   ur => ur.userId,
+                                                   u => u.Id,
+                                                   (ur, u) => new DoctorViewModel
+                                                   {
+                                                       Id = u.Id,
+                                                       FirstName = u.FirstName!,
+                                                       LastName = u.LastName!,
+                                                   })
+                                             .AsNoTracking()
+                                             .ToArrayAsync();
+            }
+            else
+            {
+                doctorUsers = await dbContext.Roles
+                                             .Where(r => r.Name == "Doctor")
+                                             .Join(this.dbContext.UserRoles,
+                                                   r => r.Id,
+                                                   ur => ur.RoleId,
+                                                   (r, ur) => new
+                                                   {
+                                                       userId = ur.UserId,
+                                                   })
+                                             .Join(this.dbContext.Users.Where(u => EF.Functions.Like(u.FirstName!, $"%{firstName}%") &&
+                                                                                   EF.Functions.Like(u.LastName!, $"%{lastName}%")),
+                                                   ur => ur.userId,
+                                                   u => u.Id,
+                                                   (ur, u) => new DoctorViewModel
+                                                   {
+                                                       Id = u.Id,
+                                                       FirstName = u.FirstName!,
+                                                       LastName = u.LastName!,
+                                                   })
+                                             .AsNoTracking()
+                                             .ToArrayAsync();
+            }
+             
 
             return doctorUsers;
         }

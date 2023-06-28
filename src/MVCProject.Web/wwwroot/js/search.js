@@ -20,15 +20,48 @@
                     searchResultsDiv.innerHTML = '';
 
                     for (let i = 0; i < jsonResult.length; i++) {
+                        // Get firstName and lastName.
+                        let firstName = searchCriteria.split(/\s+/)[0];
+                        let lastName = searchCriteria.split(/\s+/)[1];
+
+                        // RegEx 
+                        let firstNameRegEx = new RegExp(`^${firstName.toLowerCase()}`, 'i');
+
+                        if (firstNameRegEx.test(jsonResult[i].firstName.toLowerCase())) {
+                            // Insert <b> tag and capitalize first letter.
+                            firstName = jsonResult[i].firstName.toLowerCase().replace(firstName, `<b>${firstName[0].toUpperCase()}${firstName.slice(1)}</b>`);
+                        } else {
+                            // Insert only <b> tag.
+                            firstName = jsonResult[i].firstName.replace(firstName, `<b>${firstName}</b>`);
+                        }
+
+                        if (lastName === undefined || lastName === '') {
+                            // If lastName is undefined that means user input doesn't contain whitespace symbol(s).
+                            lastName = jsonResult[i].lastName;
+                        } else {
+                            // RegEx
+                            let lastNameRegEx = new RegExp(`^${lastName.toLowerCase()}`, 'i');
+
+                            if (lastNameRegEx.test(jsonResult[i].lastName.toLowerCase())) {
+                                // Insert <b> tag and capitalize first letter.
+                                lastName = jsonResult[i].lastName.toLowerCase().replace(lastName, `<b>${lastName[0].toUpperCase()}${lastName.slice(1)}</b>`);
+                            } else {
+                                // Insert only <b> taglastName.
+                                lastName = jsonResult[i].lastName.replace(lastName, `<b>${firstName}</b>`);
+                            }
+                        }
+
                         // Create paragraph element.
                         let pElement = document.createElement('p');
-                        
+
                         // Set element's attributes.
                         pElement.setAttribute('id', `searchResult-${i}`);
                         pElement.setAttribute('class', 'searchResult');
                         pElement.setAttribute('doctorID', `${jsonResult[i].id}`);
                         pElement.setAttribute('onclick', `removeSearchResults(${entityCounterValue}, ${i});`);
-                        pElement.innerText = `Д-р ${jsonResult[i].firstName} ${jsonResult[i].lastName}`;
+
+                        // Set paragraph's innerHTML
+                        pElement.innerHTML = `Д-р ${firstName} ${lastName}`;
 
                         // Append element to DOM tree.
                         searchResultsDiv.appendChild(pElement);
