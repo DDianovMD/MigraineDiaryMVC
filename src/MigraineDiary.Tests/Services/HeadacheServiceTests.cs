@@ -51,6 +51,60 @@ namespace MigraineDiary.Tests.Services
             Assert.That(result["Minutes"], Is.EqualTo(minutes));
         }
 
+        [Test]
+        public async Task AddAsync_IsAddingHeadacheAndUsedMedicationsInDatabase()
+        {
+            // Arrange
+            HeadacheAddFormModel addModel = new HeadacheAddFormModel
+            {
+                Onset = DateTime.UtcNow,
+                EndTime = DateTime.UtcNow.AddHours(8),
+                Severity = 9,
+                LocalizationSide = "left side",
+                Nausea = "No",
+                Vomiting = "No",
+                Photophoby = "Yes",
+                Phonophoby = "Yes",
+                Aura = "No",
+                AuraDescriptionNotes = null,
+                Triggers = "None.",
+                PainCharacteristics = "Sharp",
+                MedicationsTaken = new List<MedicationAddFormModel>
+                {
+                    new MedicationAddFormModel
+                    {
+                        Name = "Nalgesin Forte",
+                        NumberOfTakenPills = 1,
+                        SinglePillDosage = 550,
+                        Units = "mg"
+                    },
+
+                    new MedicationAddFormModel
+                    {
+                        Name = "Paracetamol",
+                        NumberOfTakenPills = 2,
+                        SinglePillDosage = 500,
+                        Units = "mg"
+                    }
+                }
+            };
+
+            Dictionary<string, int> headacheDuration = new Dictionary<string, int>
+            {
+                {"Days", 0},
+                {"Hours", 8},
+                {"Minutes", 0},
+            };
+
+            // Act
+            Task result = this.headacheService.AddAsync(addModel, headacheDuration, doctorId);
+            await result;
+
+            // Assert
+            Assert.That(this.dbContext.Headaches.Count, Is.EqualTo(3));
+            Assert.That(this.dbContext.Medications.Count, Is.EqualTo(2));
+        }
+
         [TestCase(patientId, 1, 2, "NewestFirst")]
         [TestCase(patientId, 1, 5, "NewestFirst")]
         [TestCase(patientId, 1, 2, "OldestFirst")]
@@ -122,6 +176,42 @@ namespace MigraineDiary.Tests.Services
             // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result.All(n => n.FirstName == "TestDoctor"), Is.True);
+        }
+
+        [Test]
+        public async Task GetDoctorUsersByNameAsync_ReturnsDoctorsWithPartialMatchInFirstName()
+        {
+            // Arrange
+            var doctor = await this.dbContext.Users.FirstOrDefaultAsync(d => d.Id == doctorId);
+            string searchByFirstNameCriteria = doctor!.FirstName!.Substring(2, 3);
+
+            // Act
+            var result = await this.headacheService.GetDoctorUsersByNameAsync(searchByFirstNameCriteria);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.All(d => d.FirstName.Contains(searchByFirstNameCriteria)), Is.True);
+        }
+
+        [Test]
+        public async Task GetDoctorUsersByNameAsync_ReturnsDoctorsWithPartialMatchInBothNames()
+        {
+            // Arrange
+            var doctor = await this.dbContext.Users.FirstOrDefaultAsync(d => d.Id == doctorId);
+            doctor!.LastName = "TestLastName";
+            await this.dbContext.SaveChangesAsync();
+
+            string searchByFirstNameCriteria = doctor.FirstName!.Substring(2, 3);
+            string searchByLastNameCriteria = doctor.LastName.Substring(3, 4);
+            string searchCriteria = searchByFirstNameCriteria + " " + searchByLastNameCriteria;
+
+            // Act
+            var result = await this.headacheService.GetDoctorUsersByNameAsync(searchCriteria);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.All(d => d.FirstName.Contains(searchByFirstNameCriteria)), Is.True);
+            Assert.That(result.All(d => d.LastName.Contains(searchByLastNameCriteria)), Is.True);
         }
 
         [Test]
