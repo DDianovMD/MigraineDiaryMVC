@@ -1,5 +1,7 @@
 html {
     font-size: 14px;
+    position: relative;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
@@ -8,14 +10,19 @@ html {
     }
 }
 
-html {
-    position: relative;
-    min-height: 100%;
+body {
+    display:flex;
+    flex-direction: column;
+    background-color: lightskyblue;
+    min-height: 100vh;
 }
 
-body {
-    margin-bottom: 60px;
-    background-color: lightskyblue;
+.container {
+    min-height: 75vh;
+}
+
+#footer {
+    line-height: normal;
 }
 
 .audit-roles-heading {
@@ -108,10 +115,44 @@ body {
 
 .nav-bar-container {
     display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    flex-flow: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
 }
+
+.nav-bar-container > ul {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    padding: 0px;
+}
+
+.nav-bar-container > ul > li {
+    margin: 0px;
+    list-style-type: none;
+    line-height: 18px;
+    align-self: center;
+}
+
+.nav-bar-container > ul > li > a:link {
+    color: white;
+    text-decoration: none;
+    line-height: normal;
+}
+
+.nav-bar-container > ul > li > a:visited {
+    color: white;
+    text-decoration: none;
+    line-height: normal;
+}
+
+.nav-bar-container > ul > li > a:hover {
+    color: white;
+    text-decoration: underline;
+    line-height: normal;
+}
+
 
 #ordering-navigation {
     background-color: white;

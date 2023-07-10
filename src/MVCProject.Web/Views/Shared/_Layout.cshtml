@@ -81,12 +81,6 @@
                                 <a class="nav-link text-white" asp-area="" asp-controller="Trial" asp-action="Index">Клинични проучвания</a>
                             </li>
                         }
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Поверителност</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Contacts" asp-action="Index">Контакти</a>
-                        </li>
                     </ul>
                     @if (User.IsInRole("Admin"))
                     {
@@ -108,10 +102,20 @@
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top footer bg-primary h-5 text-white">
+    <footer id="footer" class="border-top bg-primary h-5 text-white">
         <div class="nav-bar-container">
-            <div>
+            <ul class="footer-links">
+                <li>
+                    <a asp-controller="Home" asp-action="TermsAndConditions" class="test">Общи условия</a>
+                </li>
+                <li>
+                    <a asp-controller="Home" asp-action="Privacy" class="test">Поверителност</a>
+                </li>
+                <li>
+                    <a asp-controller="Contacts" asp-action="Index">Контакти</a>
+                </li>
+            </ul>
+            <div class="row mb-3">
                 Migraine diary - ASP.NET project by Daniel Dianov, M.D. &copy; 2023 - @DateTime.UtcNow.Year
             </div>
         </div>

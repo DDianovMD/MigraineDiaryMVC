@@ -11,78 +11,76 @@
     string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 }
 
-<main>
-    <section>
-        @if (Model.Count > 0)
-        {
-            <h3 class="text-center">Регистрирани главоболия</h3>
-            <partial name="_PageItemsOrderingNavigation" view-data="ViewData" />
-            <div class="container mt-4">
-                <div class="row">
-                    @foreach (var headache in Model)
+<section>
+    @if (Model.Count > 0)
+    {
+        <h3 class="text-center">Регистрирани главоболия</h3>
+        <partial name="_PageItemsOrderingNavigation" view-data="ViewData" />
+        <div class="container mt-4">
+            <div class="row">
+                @foreach (var headache in Model)
+                {
+                    <h4 class="text-center article-title">Главоболие № @(headacheCounter * Model.CurrentPageIndex)</h4>
+                    <hr />
+                    <input type="hidden" id="entityID-@headacheCounter" entitytype="Headache" value="@headache.Id">
+                    <p>
+                        Начало на главоболието: @headache.Onset.TimeOfDay.ToString().Substring(0, 5) ч. на
+                        @headache.Onset.ToShortDateString()
+                    </p>
+                    <p>
+                        Край на главоболието: @headache.EndTime.TimeOfDay.ToString().Substring(0, 5) ч. на
+                        @headache.EndTime.ToShortDateString()
+                    </p>
+                    <p>Продължителност на главоболието: @headache.DurationDays @(headache.DurationDays == 1 ? "ден" : "дни"), @headache.DurationHours @(headache.DurationHours == 1 ? "час" : "часа") и @headache.DurationMinutes минути</p>
+                    <p>Сила на болката (0-10): @headache.Severity</p>
+                    <p>Локализация на болката: @headache.LocalizationSide</p>
+                    <p>Характеристика на болката: @headache.PainCharacteristics</p>
+                    <p>Фотофобия: @(headache.Photophoby == true ? "да" : "не")</p>
+                    <p>Фонофобия: @(headache.Phonophoby == true ? "да" : "не")</p>
+                    <p>Гадене: @(headache.Nausea == true ? "да" : "не")</p>
+                    <p>Повръщане: @(headache.Vomiting == true ? "да" : "не")</p>
+                    <p>Наличие на аура: @(headache.Vomiting == true ? "да" : "не")</p>
+
+                    @if (headache.Aura == true)
                     {
-                        <h4 class="text-center article-title">Главоболие № @(headacheCounter * Model.CurrentPageIndex)</h4>
-                        <hr />
-                        <input type="hidden" id="entityID-@headacheCounter" entitytype="Headache" value="@headache.Id">
-                        <p>
-                            Начало на главоболието: @headache.Onset.TimeOfDay.ToString().Substring(0, 5) ч. на
-                            @headache.Onset.ToShortDateString()
-                        </p>
-                        <p>
-                            Край на главоболието: @headache.EndTime.TimeOfDay.ToString().Substring(0, 5) ч. на
-                            @headache.EndTime.ToShortDateString()
-                        </p>
-                        <p>Продължителност на главоболието: @headache.DurationDays @(headache.DurationDays == 1 ? "ден" : "дни"), @headache.DurationHours @(headache.DurationHours == 1 ? "час" : "часа") и @headache.DurationMinutes минути</p>
-                        <p>Сила на болката (0-10): @headache.Severity</p>
-                        <p>Локализация на болката: @headache.LocalizationSide</p>
-                        <p>Характеристика на болката: @headache.PainCharacteristics</p>
-                        <p>Фотофобия: @(headache.Photophoby == true ? "да" : "не")</p>
-                        <p>Фонофобия: @(headache.Phonophoby == true ? "да" : "не")</p>
-                        <p>Гадене: @(headache.Nausea == true ? "да" : "не")</p>
-                        <p>Повръщане: @(headache.Vomiting == true ? "да" : "не")</p>
-                        <p>Наличие на аура: @(headache.Vomiting == true ? "да" : "не")</p>
-
-                        @if (headache.Aura == true)
-                        {
-                            <p>Описание на аурата: @(headache.AuraDescriptionNotes != null ? headache.AuraDescriptionNotes : "липсва oписание") </p>
-                        }
-
-                        <p>Провокиращи главоболието фактори: @(headache.Triggers != null ? headache.Triggers : "липсват данни")</p>
-
-                        @if (headache.UsedMedications.Count() == 0)
-                        {
-                            <p>Употребени медикаменти: липсват данни</p>
-                        }
-                        else
-                        {
-                            <p>Употребени медикаменти:</p>
-                            <ul style="margin-left: 50px">
-                                @for (int i = 0; i < headache.UsedMedications.Count(); i++)
-                                {
-                                    var medication = @headache.UsedMedications.ElementAt(i);
-
-                                    <li>@medication.Name @medication.SinglePillDosage @medication.Units - @($"{@medication.DosageTaken:F2}") @medication.Units</li>
-                                }
-                            </ul>
-                        }
-
-                        <partial name="_SearchAndSharePartial" model="@headache.Doctors" view-data="ViewData" />
-                        headacheCounter++;
-                        ViewData["entityCounter"] = headacheCounter;
+                        <p>Описание на аурата: @(headache.AuraDescriptionNotes != null ? headache.AuraDescriptionNotes : "липсва oписание") </p>
                     }
-                </div>
+
+                    <p>Провокиращи главоболието фактори: @(headache.Triggers != null ? headache.Triggers : "липсват данни")</p>
+
+                    @if (headache.UsedMedications.Count() == 0)
+                    {
+                        <p>Употребени медикаменти: липсват данни</p>
+                    }
+                    else
+                    {
+                        <p>Употребени медикаменти:</p>
+                        <ul style="margin-left: 50px">
+                            @for (int i = 0; i < headache.UsedMedications.Count(); i++)
+                            {
+                                var medication = @headache.UsedMedications.ElementAt(i);
+
+                                <li>@medication.Name @medication.SinglePillDosage @medication.Units - @($"{@medication.DosageTaken:F2}") @medication.Units</li>
+                            }
+                        </ul>
+                    }
+
+                    <partial name="_SearchAndSharePartial" model="@headache.Doctors" view-data="ViewData" />
+                    headacheCounter++;
+                    ViewData["entityCounter"] = headacheCounter;
+                }
             </div>
-            <hr />
-            <partial name="_PagesNavigation" view-data="ViewData" />
-        }
-        else
-        {
-            <div>
-                <p>Изглежда все още нямате регистрирани главоболия. Защо не регистрирате първото си главоболие от <a asp-controller="Headache" asp-action="Add" asp-route-id=@currentUserId>тук</a>?</p>
-            </div>
-        }
-    </section>
-</main>
+        </div>
+        <hr />
+        <partial name="_PagesNavigation" view-data="ViewData" />
+    }
+    else
+    {
+        <div>
+            <p>Изглежда все още нямате регистрирани главоболия. Защо не регистрирате първото си главоболие от <a asp-controller="Headache" asp-action="Add" asp-route-id=@currentUserId>тук</a>?</p>
+        </div>
+    }
+</section>
 
 @section Scripts {
     <script src="~/js/search.js" asp-append-version="true"></script>
