@@ -48,8 +48,11 @@ namespace MigraineDiary.Services
 
             if (role != null)
             {
-                await this.roleManager.DeleteAsync(role);
-                await this.dbContext.SaveChangesAsync();
+                if (role.NormalizedName != "ADMIN" && role.NormalizedName != "DOCTOR")
+                {
+                    await this.roleManager.DeleteAsync(role);
+                    await this.dbContext.SaveChangesAsync();
+                }
             }
             else
             {
