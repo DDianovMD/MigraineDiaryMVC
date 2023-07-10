@@ -1,0 +1,24 @@
+﻿@model SetRoleViewModel
+
+@{
+    ViewData["Title"] = "Set user role";
+}
+
+<h3 class="text-center">Добави роля</h3>
+<div class="set-role-container">
+    <form asp-controller="Admin" asp-action="AssignRole" method="post">
+        <div class="set-role-flex-item text-center">
+            <label for="user" class="mb-1">Потребител</label>
+            <select class="form-select" asp-items="@Model.UsersDropdown" id="user" name="userId"></select>
+        </div>
+        <div class="set-role-flex-item text-center">
+            <label for="role" class="mb-1">Роля</label>
+            <select class="form-select" asp-items="@Model.RolesDropdown" id="role" name="roleId"></select>
+        </div>
+        <div class="set-role-flex-item text-center">
+            <input type="submit" value="Добави роля" class="btn btn-success" />
+        </div>
+    </form>
+</div>
+
+

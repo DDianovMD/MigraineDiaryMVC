@@ -8,6 +8,8 @@ namespace MigraineDiary.Services.Contracts
 
         public Task AssignRoleAsync(string userId, string roleId);
 
+        public Task RemoveFromRoleAsync(string userId, string roleId);
+
         public Task DeleteRoleAsync(string roleId);
 
         public DeleteRoleViewModel GetRoles();

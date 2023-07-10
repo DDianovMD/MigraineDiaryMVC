@@ -36,6 +36,19 @@ namespace MigraineDiary.Services
             await this.dbContext.SaveChangesAsync();
         }
 
+        public async Task RemoveFromRoleAsync(string userId, string roleId)
+        {
+            ApplicationUser? user = await this.dbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            IdentityRole? role = await this.dbContext.Roles.FirstOrDefaultAsync(r => r.Id == roleId);
+
+            if (user != null && role != null)
+            {
+                await this.userManager.RemoveFromRoleAsync(user, role.Name);
+            }
+
+            await this.dbContext.SaveChangesAsync();
+        }
+
         public async Task CreateRoleAsync(string roleName)
         {
             await this.roleManager.CreateAsync(new IdentityRole(roleName));

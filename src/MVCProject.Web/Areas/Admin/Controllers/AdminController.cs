@@ -52,7 +52,7 @@ namespace MigraineDiary.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult SetRole()
+        public IActionResult AssignRole()
         {
             SetRoleViewModel viewModel = this.adminService.PopulateUsersAndRoles();
 
@@ -61,9 +61,30 @@ namespace MigraineDiary.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SetRole(string userId, string roleId)
+        public async Task<IActionResult> AssignRole(string userId, string roleId)
         {
             await adminService.AssignRoleAsync(userId, roleId);
+
+            // Get controller's name and action's name without using magic strings.
+            string actionName = nameof(AdminController.UsersAudit);
+            string controllerName = nameof(AdminController).Substring(0, nameof(AdminController).Length - "Controller".Length);
+
+            return RedirectToAction(actionName, controllerName);
+        }
+
+        [HttpGet]
+        public IActionResult RemoveRole()
+        {
+            SetRoleViewModel viewModel = this.adminService.PopulateUsersAndRoles();
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveRole(string userId, string roleId)
+        {
+            await adminService.RemoveFromRoleAsync(userId, roleId);
 
             // Get controller's name and action's name without using magic strings.
             string actionName = nameof(AdminController.UsersAudit);
